@@ -1,0 +1,27 @@
+@model CAPCO.Infrastructure.Domain.ContentSection
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Content Section</legend>
+
+    <div class="display-label">Title</div>
+    <div class="display-field">@Model.Title</div>
+
+    <div class="display-label">Section Name</div>
+    <div class="display-field">@Model.SectionName</div>
+
+    
+    <div class="display-field">@Html.Raw(Model.Text)</div>
+
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

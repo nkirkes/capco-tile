@@ -1,0 +1,79 @@
+@model IEnumerable<CAPCO.Infrastructure.Domain.AccountRequest>
+
+@{
+    ViewBag.Title = "Manage Account Requests";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Company Name
+        </th>
+        <th>
+            First Name
+        </th>
+        <th>
+            Last Name
+        </th>
+        <th>
+            Phone
+        </th>
+        <th>
+            Fax
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Account Number
+        </th>
+        <th>
+            Has Been Verified
+        </th>
+        <th>
+            Created On
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("View", "Show", new { id=item.Id })
+        </td>
+        <td>
+			@item.CompanyName
+        </td>
+        <td>
+			@item.FirstName
+        </td>
+        <td>
+			@item.LastName
+        </td>
+        <td>
+			@item.Phone
+        </td>
+        <td>
+			@item.Fax
+        </td>
+        <td>
+			@item.Email
+        </td>
+        <td>
+			@item.AccountNumber
+        </td>
+        <td>
+			@item.HasBeenVerified
+        </td>
+        <td>
+			@String.Format("{0:d}", item.CreatedOn)
+        </td>
+    </tr>
+}
+
+</table>
+
+

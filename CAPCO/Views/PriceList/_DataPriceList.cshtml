@@ -1,0 +1,82 @@
+﻿@model CAPCO.Models.PriceListViewModel
+@{
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
+    var products = Model.PriceListProducts.Where(p => p.ProductSeries != null).GroupBy(x => x.Manufacturer)
+        .ToDictionary(
+            g => g.Key,
+            g => g.GroupBy(b => b.ProductSeries)
+               .ToDictionary(e => e.Key, e => e));
+}
+
+<div style="width:750px;font-weight:bold;text-align:center;">Price list for @DateTime.Today.ToString("MMMM dd yyyy")</div>
+    @if (Model.PriceListProducts != null && Model.PriceListProducts.Any())
+    {
+        <table style="width: 750px;" border="1" cellpadding="3" cellspacing="0">
+            <tr style="background-color: #CCC; font-weight: bold; font-size: 1.0em;">
+                <th>Item</th>
+                <th>Description</th>
+                <th>Section</th>
+                <th>Series</th>
+                <th>Var</th>
+                <th>Size</th>
+                <th>UOM</th>
+                <th>UPP</th>
+                <th>CTN</th>
+                <th>Use</th>
+                <th>Updated</th>
+                @switch (Model.PriceDisplayPreference)
+                {
+                    case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                        <th>Retail</th>
+                        break;
+                    case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                        <th>Cost</th>
+                        break;
+                    case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                        <th>Retail</th>
+                        <th>Cost</th>
+                        break;
+                    default:
+                        break;
+                }
+            </tr>
+            
+                @foreach (var prod in Model.PriceListProducts.Where(x => x.ProductSeries != null).OrderBy(x => x.Section).ThenBy(x => x.ProductSeries.Name).ThenBy(x => x.ItemNumber))
+                { 
+                    <tr>
+                        <td>@prod.ItemNumber</td>
+                        <td style="width: 300px;">@prod.Description</td>
+                        <td>@prod.Section</td>
+                        <td>@(prod.ProductSeries != null ? prod.ProductSeries.Name : prod.Series)</td>
+                        <td>@(prod.Variation != null ? "V" + prod.Variation.Code : "")</td>
+                        <td>@prod.SizeDescription</td>
+                        <td>@(prod.UnitOfMeasure != null ? prod.UnitOfMeasure.Code : "")</td>
+                        <td>@prod.UnitsPerPiece</td>
+                        <td>@prod.CartonQuantity</td>
+                        <td>@prod.Usage.Code</td>
+                        <td>@(prod.StatusChangedOn.HasValue ? prod.StatusChangedOn.Value.ToShortDateString() : "")</td>
+                        @{
+                            var ppc = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.PriceCode);
+                            var ppr = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.RetailCode);
+                        }
+                        @switch (Model.PriceDisplayPreference)
+                        {
+                            case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                                <td>@String.Format("{0:c}", ppr != null ? ppr.Price : prod.RetailPrice)</td>
+                               break;
+                            case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                                <td>@String.Format("{0:c}", ppc != null ? ppc.Price : prod.RetailPrice)</td>
+                               break;
+                            case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                                <td>@String.Format("{0:c}", ppr != null ? ppr.Price : prod.RetailPrice)</td>
+                                <td>@String.Format("{0:c}", ppc != null ? ppc.Price : prod.RetailPrice)</td>
+                               break;
+                            default:
+                               break;
+                        }
+                        
+                    </tr>
+                }
+            
+        </table>
+        }

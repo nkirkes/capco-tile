@@ -1,0 +1,53 @@
+@model CAPCO.Areas.Admin.Models.PagedViewModel<CAPCO.Infrastructure.Domain.ProductSeries>
+@using MvcContrib.UI.Grid;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Manage Product Series";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    @using (Html.BeginForm("search", "productseries", new { area = "admin" }, FormMethod.Post, null))
+    { 
+        <label>Search by Series Name:</label> @Html.TextBox("criteria") <input type="submit" value="Search" />
+    }
+</div>
+
+@if (Model.Entities.Count() > 0)
+{
+    <div class="accounts-grid">
+        @Html.Grid(Model.Entities.OrderBy(x => x.Name)).Columns(column =>
+   {
+       column.For(x => "<a href='" + Url.Action("edit", "productseries", new { area = "admin", id = x.Id }) + "'><img src='" + Url.Content("~/public/images/24-columns.png") + "' /></a>").Named("View").Encode(false);
+       column.For(x => x.Name).Named("Name");
+       column.For(x => x.Code).Named("Code");
+       
+       column.For(x => x.Products.Count).Named("Products").CellCondition(x => x.Products != null);
+   }).Attributes(id => "resultsGrid")
+    </div>
+}
+
+<div style="margin-top: 10px;">Displaying @(Model.Page.HasValue && Model.Page > 1 ? (Model.Page - 1) * 100 + 1 : 1) - @(Model.TotalCount < ((Model.Page ?? 1) * 100) ? Model.TotalCount : (Model.Page ?? 1) * 100) of @Model.TotalCount product series.</div>
+
+@Html.PagedListPager(Model.Entities,
+            page => Url.Action("Index", new RouteValueDictionary() {
+               { "Page", page }
+            }),
+            PagedListRenderOptions.OnlyShowFivePagesAtATime)
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#resultsGrid').dataTable({
+                "bPaginate": false,
+                "bInfo": false,
+                "bFilter": false,
+                "bLengthChange": false
+            });
+        });
+    </script>
+}
+
+

@@ -1,0 +1,49 @@
+@model IEnumerable<CAPCO.Infrastructure.Domain.ContentSection>
+
+@{
+    ViewBag.Title = "Content Management";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>From this screen you can edit, hide, or remove existing content sections from the website.</p>
+
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Section Name
+        </th>
+        <th>
+            Title
+        </th>
+        <th>Created On</th>
+        
+        <th>Last Modified On</th>
+        
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("View", "show", new { id=item.Id })
+        </td>
+        <td>
+			@item.SectionName
+        </td>
+        <td>
+            @item.Title
+        </td>
+        <td>
+			@item.CreatedOn.ToShortDateString()
+        </td>
+        <td>
+			@item.LastModifiedOn.ToShortDateString()
+        </td>
+    </tr>
+}
+
+</table>
+
+

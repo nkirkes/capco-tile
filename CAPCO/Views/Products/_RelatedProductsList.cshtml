@@ -1,0 +1,105 @@
+﻿@model ICollection<CAPCO.Infrastructure.Domain.Product>
+@{
+    var currentUser = MembershipHelpers.GetCurrentUser();
+    var isPricingEnabled = ViewBag.IsPricingEnabled;        
+}
+           
+@if (Model != null && Model.Count > 0)
+{
+    var cellCount = 0;
+    <table id="product-table" border="1" cellpadding="5" cellspacing="5">
+        <tr>
+            @foreach (var prod in Model as List<CAPCO.Infrastructure.Domain.Product>)
+            {
+                <td style="width: 150px;">
+                    <div style="width: 150px; min-height: 160px;" class="product-img-container">
+                        @*@Html.GetProductImage(prod, ImageSize.Small)*@
+                        <a href="@Url.Action("show", "products", new { id = prod.Id })" title="tooltip-@prod.Id" class="product-img-link">@Html.GetProductImage(prod, ImageSize.Small)</a>
+                    </div>
+                    <div class="product-details-grid" style="width: 150px;">
+                        <div id="tooltip-@prod.Id" class="tooltip" style="display:none;">
+                            <label>Item Number:</label> @prod.ItemNumber<br />
+                            <label>Description:</label> @prod.Description<br />
+                            @if (prod.Variation != null)
+                            {
+                                <label>Variance:</label> @prod.Variation.Name<br />
+                            }
+                            @if (!String.IsNullOrWhiteSpace(prod.SizeDescription))
+                            {
+                                <label>Size:</label> @prod.SizeDescription<br />
+                            }
+                            @if (prod.UnitOfMeasure != null)
+                            {
+                                <label>Unit of Measure:</label> @prod.UnitOfMeasure.Name<br />
+                            }
+                            @if (prod.UnitsPerPiece > 0)
+                            {
+                                <label>Units per Piece:</label> @prod.UnitsPerPiece<br />
+                            }
+                            @if (prod.CartonQuantity > 0)
+                            {
+                                <label>Quantity per Carton:</label> @prod.CartonQuantity<br />
+                            }
+                            @if (prod.Usage != null)
+                            { 
+                                <label>Use:</label> @prod.Usage.Name<br />
+                            }
+                            @if (isPricingEnabled && currentUser != null && (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString()) && currentUser.DiscountCode != null))
+                            {
+                                if (currentUser.PricePreference == CAPCO.Infrastructure.Domain.PricePreferences.CostOnly.ToString())
+                                {
+                                    <div><label class="product-details">Cost: </label>@String.Format("{0:c}", prod.ProviderCost(currentUser))</div>
+                                }
+                                else if (currentUser.PricePreference == CAPCO.Infrastructure.Domain.PricePreferences.Both.ToString())
+                                {
+                                    <div><label class="product-details">Retail: </label>@String.Format("{0:c}", prod.RetailPrice)</div>
+                                    <div><label class="product-details">Cost: </label>@String.Format("{0:c}", prod.ProviderCost(currentUser))</div>
+                                }
+                                else if (currentUser.PricePreference == CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly.ToString())
+                                {
+                                    <div><label class="product-details">Retail: </label>@String.Format("{0:c}", prod.RetailPrice)</div>
+                                }
+                            }
+                        </div>
+                        <div style="width: 130px; margin: 10px auto;">
+                            @Html.ActionLink("View Details", "show", "products", new { id = prod.Id }, new { @class = "button secondary" })
+                        </div>
+                        @*
+                        <label>Item #:</label> @prod.ItemNumber<br />
+                        <label>Description:</label> @prod.Description<br />
+                        @if (prod.Variation != null)
+                        {
+                            <label>Variance:</label> @prod.Variation.Name<br />
+                        }
+                        @if (prod.Size != null)
+                        {
+                            <label>Size:</label> @prod.Size.Name<br />
+                        }
+                        @if (prod.UnitOfMeasure != null)
+                        {
+                            <label>Unit of Measure:</label> @prod.UnitOfMeasure.Name<br />
+                        }
+                        @if (prod.UnitsPerPiece > 0)
+                        {
+                            <label>Units per Piece:</label> @prod.UnitsPerPiece<br />
+                        }
+                        @if (prod.CartonQuantity > 0)
+                        {
+                            <label>Quantity per Carton:</label> @prod.CartonQuantity<br />
+                        }
+                        <div style="width: 130px; margin: 10px auto;">
+                            @Html.ActionLink("View Details", "show", "products", new { id = prod.Id }, new { @class = "button secondary" })
+                        </div>*@
+                    </div>
+                </td>
+                {
+                    cellCount ++;
+                }
+                if (cellCount % 4 == 0)
+                {
+                    @:</tr><tr>
+                }
+            }
+        </tr>
+    </table>
+}

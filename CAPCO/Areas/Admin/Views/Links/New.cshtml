@@ -1,0 +1,27 @@
+@model CAPCO.Infrastructure.Domain.Link
+
+@{
+    ViewBag.Title = "Create Link";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("create", "links", new { area = "admin" }, FormMethod.Post, null)) {
+	@Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Link</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

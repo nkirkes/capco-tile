@@ -1,0 +1,54 @@
+﻿@model ICollection<CAPCO.Infrastructure.Domain.Project>
+@{
+    ViewBag.Title = "My Project Archives";
+    ViewBag.ExpirationDays = System.Configuration.ConfigurationManager.AppSettings["ProjectExpirationInDays"];
+}
+
+<div class="span-6">
+    <div class="section-left">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left">
+        <h3 class="sidebar">Project Options</h3>
+        <ul class="sidebar">
+            <li>@Html.ActionLink("Create New Project", "new", "projects", null, null)</li>
+            <li>@Html.ActionLink("Project Archives", "archives", "projects", null, null)</li>
+        </ul>
+    </div>
+</div>
+
+<div class="span-18 last">
+    <div class="padded-content">
+        <h2>@ViewBag.Title</h2>
+
+        @if (Model != null && Model.Count > 0)
+        {
+            <table>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Products</th>
+                    <th>Total Retail</th>
+                    <th>Created On</th>
+                    <th>Created By</th>
+                    <th>Last Modified On</th>
+                </tr>
+                @foreach (var proj in Model)
+                { 
+                    <tr>
+                        <td>@Html.ActionLink(@proj.ProjectName, "show", "projects", new { id = proj.Id }, null)</td>
+                        <td>@proj.Products.Count</td>
+                        <td>@String.Format("{0:c}", proj.Products.Sum(x => x.Product.ProviderRetail(proj)))</td>
+                        <td>@proj.CreatedOn.ToShortDateString()</td>
+                        <td>@proj.CreatedBy.UserName</td>
+                        <td>@proj.LastModifiedOn.ToShortDateString()</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        { 
+            <text><p>You don't have any archived projects. A project is automatically archived when there has been no activity for @ViewBag.ExpirationDays days.</p></text>
+        }
+    </div>
+</div>
+

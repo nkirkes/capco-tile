@@ -1,0 +1,26 @@
+@model CAPCO.Infrastructure.Domain.ProductGroup
+
+@{
+    ViewBag.Title = "Edit Product Group";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("update", "productgroups", new { id = Model.Id }, FormMethod.Post, null)) {
+    @Html.ValidationSummary(true)
+	@Html.AntiForgeryToken()
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    <fieldset>
+        <legend>Product Group</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index") | @Html.ActionLink("Delete This Product Group", "delete", "productgroups", new { area = "admin", id = Model.Id }, new { onclick = "javascript: return confirm(\"Are you sure? This cannot be undone.\");" }) 
+</div>

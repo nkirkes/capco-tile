@@ -1,0 +1,46 @@
+@model IEnumerable<CAPCO.Infrastructure.Domain.ProductSize>
+
+@{
+    ViewBag.Title = "Manage Sizes";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("New Product Size", "New")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Name
+        </th>
+        <th>
+            Code
+        </th>
+        <th>
+            Products
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("View", "Show", new { id=item.Id })
+        </td>
+        <td>
+			@item.Name
+        </td>
+        <td>
+			@item.Code
+        </td>
+        <td>
+			@(item.Products == null ? "None" : item.Products.Count.ToString())
+        </td>
+    </tr>
+}
+
+</table>
+
+

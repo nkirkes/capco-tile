@@ -1,0 +1,26 @@
+@model CAPCO.Infrastructure.Domain.ProductPriceCode
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>ProductPriceCode</legend>
+
+    <div class="display-label">Price Group</div>
+    <div class="display-field">@Model.PriceGroup</div>
+
+    <div class="display-label">Price Code</div>
+    <div class="display-field">@Model.PriceCode</div>
+
+    <div class="display-label">Price</div>
+    <div class="display-field">@String.Format("{0:c}", Model.Price)</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

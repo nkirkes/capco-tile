@@ -1,0 +1,39 @@
+﻿@{
+    var currentUser = MembershipHelpers.GetCurrentUser();
+    var inviteKey = Request.QueryString["t"] ?? "";
+}
+
+<div id="logon">
+    @if (!Request.IsAuthenticated)
+    {
+        <h2>Log In</h2>
+
+        using (Html.BeginForm("login", "account"))
+        {
+            @Html.Hidden("Model.InvitationKey", inviteKey)
+            <div>
+                @Html.Label("Username", new { @class = "fieldpair" })
+                @Html.TextBox("Model.UserName")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Model.Password", new { @class = "fieldpair" })
+                @Html.Password("Model.Password")
+            </div>
+
+            <div class="editor-label">
+                @Html.CheckBox("Model.RememberMe")
+                @Html.Label("Keep me logged in")
+            </div>
+
+            <p class="small-buttons" style="margin-bottom: 5px;">
+                <input type="submit" value="Log In" />
+            </p>
+            <ul>
+                <li>@Html.ActionLink("Forgot password?", "resetpassword", "account")</li>
+            </ul>
+        }
+
+
+    }
+</div>

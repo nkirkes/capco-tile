@@ -1,0 +1,30 @@
+﻿@{
+    
+    var section = ViewBag.Section as CAPCO.Infrastructure.Domain.ContentSection;
+    ViewBag.Title = section.Title;
+}
+
+
+<div class="span-5">
+    <div class="section-left">
+        <h3 class="sidebar">More Information</h3>
+        <ul class="sidebar">
+            <li>@Html.ActionLink("About CAPCO", "about", "home", new { area = "", section = "home" }, null)</li>
+            <li>@Html.ActionLink("About Tile", "about", "home", new { area = "", section = "tile" }, null)</li>
+            <li>@Html.ActionLink("About Stone", "about", "home", new { area = "", section = "stone" }, null)</li>
+            <li>@Html.ActionLink("About Stone Slab", "about", "home", new { area = "", section = "slab" }, null)</li>
+            <li>@Html.ActionLink("About Hand Painting", "about", "home", new { area = "", section ="handpaint" }, null)</li>
+            <li>@Html.ActionLink("Employment with CAPCO", "about", "home", new { area = "", section = "employment" }, null)</li>
+            <li><a href="http://www.youtube.com/user/CAPCOTileandStone" target="_blank">What's New?</a></li>
+            <li><a href="http://www.pinterest.com/capcotilestone/boards/" target="_blank">Inspire Me</a></li>
+            <li><a href="~/Public/Assets/ProjectTutorial.pdf" target="_blank">Project Tutorial</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="span-19 last">
+    <div style="padding: 10px;">
+        <h2>@ViewBag.Title</h2>
+        @Html.GetSectionHtml(section)
+    </div>
+</div>

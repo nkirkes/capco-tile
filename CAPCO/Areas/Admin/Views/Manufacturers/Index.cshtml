@@ -1,0 +1,39 @@
+@model IEnumerable<CAPCO.Infrastructure.Domain.Manufacturer>
+
+@{
+    ViewBag.Title = "Manage Manufacturers";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("New Manufacturer", "New")
+</p>
+
+@if (Model.Count() > 0)
+{
+    <div class="mfgs-grid">
+        @Html.Grid(Model.OrderBy(x => x.Section)).Columns(column =>
+   {
+       column.For(x => "<a href='" + Url.Action("show", "manufacturers", new { area = "admin", id = x.Id }) + "'><img src='" + Url.Content("~/public/images/24-columns.png") + "' /></a>").Named("View").Encode(false);
+       column.For(x => x.Name).Named("Price Group");
+       column.For(x => x.Section).Named("Price Code");
+       column.For(x => x.Products.Count).Named("Assoc. Products").CellCondition(x => x.Products != null);
+
+   }).Attributes(id => "mfgs")
+    </div>
+}
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#mfgs').dataTable({
+                "bPaginate": false,
+                "bInfo": false,
+                "bFilter": false,
+                "bLengthChange": false
+            });
+        });
+    </script>
+}

@@ -1,0 +1,27 @@
+@model CAPCO.Infrastructure.Domain.PriceCode
+
+@{
+    ViewBag.Title = "New Price Code";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("create", "pricecodes", FormMethod.Post)) {
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
+    <fieldset>
+        <legend>PriceCode</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

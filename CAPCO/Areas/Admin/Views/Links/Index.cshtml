@@ -1,0 +1,51 @@
+@model IEnumerable<CAPCO.Infrastructure.Domain.Link>
+
+@{
+    ViewBag.Title = "Manage Links";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("New Link", "New")
+</p>
+
+<div id="links">
+@using (Html.BeginForm("Reorder", "Links", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="itemIds" name="itemIds" value />
+    <input type="hidden" name="key" value="{{ election.key }}">
+    <input type="hidden" name="uuid" value="{{ uuid }}">
+    
+    <ol id="sortable" class="linkItems">
+        @foreach (var item in Model.OrderBy(x => x.Order))
+        {
+            <li class="ui-state-default linkItem" id="linkItem_@item.Id"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><a href="@item.Url" target="_blank">@item.Label</a> &middot; @Html.ActionLink("Edit", "Edit", new { id=item.Id })</li>
+        }
+    </ol>
+    <button type="submit">Save Link Order</button>
+}
+</div>
+
+@section Scripts
+{
+  <script>
+      $(function () {
+          $("#sortable").sortable({ axis: "y", containment: "#links", scroll: false });
+          $("#sortable").disableSelection();
+
+          $('form').submit(function () {
+
+              $('#itemIds').val($("#sortable").sortable("serialize"));
+              //alert($('#itemIds').val());
+              return true;
+          });
+      });
+      
+  </script>
+}
+
+
+    
+

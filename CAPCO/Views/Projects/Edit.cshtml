@@ -1,0 +1,203 @@
+﻿@model CAPCO.Infrastructure.Domain.Project
+@{
+    ViewBag.Title = "Edit Project";
+    
+}
+
+<div class="span-6">
+    <div class="section-left sidebar">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left sidebar">
+        <h3 class="sidebar">Project Options</h3>
+        <ul class="sidebar">
+            <li>@Html.ActionLink("Create New Project", "new", "projects", null, null)</li>
+            @if (Model.CreatedBy == MembershipHelpers.GetCurrentUser())
+            {
+            <li>@Html.ActionLink("Copy Project", "copy", "projects", new { id = Model.Id }, null)</li>
+            <li>@Html.ActionLink("Invite People", "invite", "projects", new { id = Model.Id }, null)</li>
+            <li>@Html.ActionLink("Delete Project", "delete", "projects", new { id = Model.Id }, new { onClick = "return confirm('Deleting this project cannot be undone! Click Ok if you want to permanantly delete this project.');" })</li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="span-18 last">
+    <div class="padded-content">
+        <h1>Edit Project</h1>
+        <p>Use the form below to edit the basic details of your project. Click <em>Update Project</em> to save your changes.</p>
+
+        @using (Html.BeginForm("Update", "Projects", new { productId = Request["productId"] }, FormMethod.Post, null))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HttpMethodOverride(HttpVerbs.Put)
+            
+            <label>Project Name:</label> @Html.TextBoxFor(x => x.ProjectName)<br />
+            @Html.LabelFor(x => x.Description)<br />@Html.TextAreaFor(x => x.Description, new { @class = "smalltextarea" })
+
+            if (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString()))
+            {
+                <p><label class="fieldpair">Price Display Preference:</label> @Html.DropDownListFor(x => x.PriceDisplayPreference, default(CAPCO.Infrastructure.Domain.PricePreferences).ToSelectList(true), "Choose...")</p>
+                <p><label class="fieldpair">Pickup Location:</label> 
+                   @Html.DropDownList("SelectedLocation", ((IEnumerable<CAPCO.Infrastructure.Domain.PickupLocation>)ViewBag.PossibleLocations).OrderBy(x => x.Name).Select(option => new SelectListItem
+              {
+                  Text = (option == null ? "None" : option.Name),
+                  Value = option.Id.ToString(),
+                  Selected = (Model.Location != null) && (option.Id == Model.Location.Id)
+              }), "Choose...")    
+                </p>
+            }
+            
+            <p class="small-buttons">
+                <input type="submit" class="button" value="Update Project" /> @Html.ActionLink("Cancel", "show", "projects", new { id = Model.Id }, null)
+            </p>
+        }
+        <hr />
+        @if (Model.Products != null && Model.Products.Any())
+        {
+            <h2 class="section-title">Project Items</h2>
+            <p>Below you can modify items in this project. <strong>Note</strong> that removing an item is permanent and cannot be undone or cancelled. To add the item back, you will need to re-add it from the catalog.</p>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Description</th>
+                    <th>Item #</th>
+                    <th></th>
+                </tr>
+                @foreach (var prod in Model.Products)
+                {
+                    if (prod.Product != null)
+                    {
+                        <tr>
+                            <td valign="top" style="vertical-align: top;" class="thumbnail-img-container">
+                                @*<a href="@Url.GetProductImageUrl(prod.Product, ImageSize.Large)" rel="ChillBox" title="@prod.Name">*@
+                                @Html.GetProductImage(prod.Product, ImageSize.Thumb)
+                                @*</a>*@
+                            </td>
+                            <td valign="top" style="vertical-align: top;">
+                                <span style="font-weight: bold;">@prod.Product.Description</span><br />
+                            
+                                <div class="span-8" style="padding: 5px; background-color: #e4e4e4;">
+                                    @if (!String.IsNullOrWhiteSpace(prod.Comment))
+                                    {
+                                        <strong>Item Comment:</strong>
+                                        <br />
+                                        <em>@prod.Comment</em>
+                                        <br />
+                                        <a href="javascript:return false;" class="itemCommentFormLink">Edit Item Comment</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:return false;" class="itemCommentFormLink">Add Item Comment</a>
+                                    }
+                                    
+                                </div>
+                                <div class="span-8 itemCommentForm" style="display: none; clear: both;">
+                                    @using (Html.BeginForm("UpdateItemComment", "projects", new { id = prod.Id, projectId = Model.Id }, FormMethod.Post, null))
+                                    {
+                                        <div>@Html.TextArea("itemComment", prod.Comment, new { @class = "span-8 itemComment", style = "height:50px;" })</div>
+
+                                        <p class="small-buttons">
+                                            <input type="submit" value="Update Comment" />
+                                        </p>
+                                    }
+                                </div>
+                            </td>
+                            <td style="vertical-align: top;">@prod.Product.ItemNumber</td>
+                            <td style="vertical-align: top;">
+                                @Html.ActionLink("Remove", "removeproduct", "projects", new { id = Model.Id, productId = prod.Id }, new { @class = "button", onclick = "javascript:return confirm('Are you sure you want to remove this item? This cannot be undone.');" })
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td valign="top" style="vertical-align: top;" colspan="3">
+                               @prod.Comment
+                            </td>
+                            <td style="vertical-align: top;">
+                                @Html.ActionLink("Remove", "removeproduct", "projects", new { id = Model.Id, productId = prod.Id }, new { @class = "button", onclick = "javascript:return confirm('Are you sure you want to remove this item? This cannot be undone.');" })
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
+
+        @if (Model.Users != null && Model.Users.Any(x => x != Model.CreatedBy))
+        {
+            <h2 class="section-title">Project Members</h2>
+            <p>
+                Below you can manage members in this project. <strong>Note</strong> that removing a member is permanent and cannot be undone. To add the user back, you will need to re-invite them.
+            </p>
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+                @foreach (var user in Model.Users.Where(x => x != Model.CreatedBy))
+                {
+                    <tr>
+                        <td>@user.UserName</td>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@Html.ActionLink("Remove Member", "removemember", "projects", new { id = Model.Id, memberId = user.Id }, new { @class = "button", onclick = "javascript:return confirm('Are you sure you want to remove this member? This cannot be undone.');" })</td>
+                    </tr>
+                }
+            </table>
+        }
+        
+        @if (Model.Invitations.Any(x => !x.IsAccepted))
+        {
+            <h2 class="section-title">Pending Invitations</h2>
+            <p>
+                Below you can manage outstanding invitations for this project. <strong>Note</strong> that removing an invitation is permanent and cannot be undone. To add the user back, you will need to re-invite them.
+            </p>
+            <table>
+                <tr>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+                @foreach (var invite in Model.Invitations.Where(x => !x.IsAccepted))
+                {
+                    <tr>
+                        <td>@invite.Email</td>
+                        <td>@Html.ActionLink("Remove Invite", "removeinvite", "projects", new { id = Model.Id, inviteId = invite.Id }, new { @class = "button", onclick = "javascript:return confirm('Are you sure you want to remove this member? This cannot be undone.');" })</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    @Html.Script("Plugins/charCount.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".itemCommentFormLink").click(function () {
+                var form = $(this).parent().next(".itemCommentForm:first");
+                if (!$(form).is(":visible")) {
+                    $(this).html("Cancel");
+                }
+                else {
+                    $(this).html("Update Item Comment");
+                }
+
+                $(form).toggle();
+                return false;
+            });
+
+//            $("#itemComment").charCount({
+//                allowed: 200,
+//                warning: 20,
+//                counterText: 'Characters left: '
+//            });
+        });
+
+
+
+    </script>
+}

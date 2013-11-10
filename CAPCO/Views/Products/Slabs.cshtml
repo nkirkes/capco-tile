@@ -1,0 +1,18 @@
+﻿@{
+
+    var currentUser = MembershipHelpers.GetCurrentUser();
+    var content = ViewBag.SlabContent as CAPCO.Infrastructure.Domain.ContentSection;
+    ViewBag.Title = content.Title;
+    Layout = "~/Views/Shared/_WideLayout.cshtml";
+}
+
+<div style="width: 1000px" class="last">
+    <div class="padded-content">
+        <h1>@ViewBag.Title</h1>
+
+        @Html.GetSectionHtml(content)
+
+        <iframe src="http://www.coolore.com/i/capco-tile-and-stone" name="Slab Inventory" width="980px" height="800px" Frameborder="0">            "You Browser is not Supported.  Please use Back Button."
+        </iframe>  
+    </div>
+</div>

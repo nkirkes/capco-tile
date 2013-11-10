@@ -1,0 +1,34 @@
+@model IEnumerable<CAPCO.Infrastructure.Domain.StoreLocation>
+
+@{
+    ViewBag.Title = "Manage Store Locations";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("New Store Location", "New")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Name
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("View", "Show", new { id=item.Id })
+        </td>
+        <td>
+			@item.Name
+        </td>
+    </tr>
+}
+
+</table>
+
+

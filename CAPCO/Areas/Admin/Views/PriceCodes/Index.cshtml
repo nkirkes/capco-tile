@@ -1,0 +1,39 @@
+@model IEnumerable<CAPCO.Infrastructure.Domain.PriceCode>
+
+@{
+    ViewBag.Title = "Manage Price Codes";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>You can manage individual price codes using the options below.</p>
+
+<p>
+    @Html.ActionLink("New Price Code", "New", new { area = "admin" }, null)
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Code
+        </th>
+        <th># of Customers</th>
+        <th># of Products</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("View", "show", new { id=item.Id })
+        </td>
+        <td>
+			@(item.Accounts != null ? item.Accounts.Count : 0)
+        </td>
+        <td>@(item.ProductPriceCodes != null ? item.ProductPriceCodes.Count : 0)</td>
+    </tr>
+}
+
+</table>
+
+

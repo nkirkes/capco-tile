@@ -1,0 +1,48 @@
+﻿@model CAPCO.Infrastructure.Domain.Project
+@{
+    ViewBag.Title = "Invite People";
+}
+
+<div class="span-6">
+    <div class="section-left sidebar">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left sidebar">
+        <h3 class="sidebar">Project Options</h3>
+        <ul class="sidebar">
+            <li>@Html.ActionLink("Create New Project", "new", "projects", null, null)</li>
+            @if (Model.CreatedBy == MembershipHelpers.GetCurrentUser())
+            {
+            <li>@Html.ActionLink("Edit Project", "edit", "projects", new { id = Model.Id }, null)</li>
+            <li>@Html.ActionLink("Copy Project", "copy", "projects", new { id = Model.Id }, null)</li>
+            <li>@Html.ActionLink("Delete Project", "delete", "projects", new { id = Model.Id }, new { onClick = "return confirm('Deleting this project cannot be undone! Click Ok if you want to permanantly delete this project.');" })</li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="span-18 last">
+    <div class="padded-content">
+        <h1>Invite People</h1>
+        <p>Using the form below, enter the email address of people you would like to invite to this project, separated by commas. Each person will recieve an email with information about registering and logging in to view your project.</p>
+        @using (Html.BeginForm("invite", "projects", new { id = Model.Id }, FormMethod.Post, null))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HttpMethodOverride(HttpVerbs.Put)
+
+            <label style="display: block; float: none; margin: 0; padding: 0;">Email Addresses:</label>
+            @Html.TextArea("emails", new { @class = "smalltextarea" })
+
+            if (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString()))
+            {
+                <p>
+                    The project has a price display preference of <em style="font-weight: bold;">@Model.PriceDisplayPreference.ToFriendlyPricingPreference()</em>. The prices your project members can see are dictated by this setting, which can be changed by @Html.ActionLink("editing your project", "edit", "projects", new { id = Model.Id }, null).    
+                </p>
+            }
+            
+            <p class="buttons">
+                <input type="submit" value="Invite" /> @Html.ActionLink("Cancel", "show", "projects", new { id = Model.Id })
+            </p>
+        }
+    </div>
+</div>

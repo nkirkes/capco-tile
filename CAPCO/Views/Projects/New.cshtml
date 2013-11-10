@@ -1,0 +1,79 @@
+﻿@model CAPCO.Infrastructure.Domain.Project
+@{
+    ViewBag.Title = "New Project";
+}
+
+<div class="span-6">
+    <div class="section-left sidebar">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left sidebar">
+        <h3 class="sidebar">Project Instructions</h3>
+        <p>
+            Projects work like a shopping cart, allowing you to collect related products and review them at your convenience. You can also share projects with other people. To get started, fill out the form to the right. Once you've created a project, you can then @Html.ActionLink("add products from the catalog", "index", "products").
+        </p>
+    </div>
+</div>
+
+<div class="span-18 last">
+    <div class="padded-content">
+        <h1>New Project</h1>
+
+        <p>Use the form below to create your new project.</p>
+        @using (Html.BeginForm("Create", "Projects", new { productId = Request["productId"] }, FormMethod.Post, null))
+        {
+        if (Model.Products != null && Model.Products.Any())
+        {
+            <h2 class="section-title">Project Products</h2>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Description</th>
+                    <th>Item #</th>
+                </tr>
+                @foreach (var prod in Model.Products)
+                {
+                    <tr>
+                        <td class="thumbnail-img-container">
+                            
+                                @Html.GetProductImage(prod.Product, ImageSize.Thumb)
+                            
+                         </td>
+                        <td>
+                            <span style="font-weight: bold;">@prod.Product.Description</span><br />
+                            <label>Item Comment:</label><br />
+                            @Html.TextArea("ItemComment", new { @class = "span-8", style = "height:50px;", maxlength = 200 })
+                        </td>
+                        <td>@prod.Product.ItemNumber</td>
+                    </tr>
+                }
+            </table>
+        }
+
+        
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.Products)
+
+            <label>Project Name:</label> @Html.TextBoxFor(x => x.ProjectName)<br />
+            @Html.LabelFor(x => x.Description)<br />@Html.TextAreaFor(x => x.Description, new { @class = "smalltextarea" })<br />
+            
+            if (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString()))
+            {
+                <p><label class="fieldpair">Price Display Preference:</label> @Html.DropDownListFor(x => x.PriceDisplayPreference, default(CAPCO.Infrastructure.Domain.PricePreferences).ToSelectList(true), "Choose...")</p>
+                <p>
+                    <label class="fieldpair">Pickup Location:</label> 
+                    @Html.DropDownList("SelectedLocation", ((IEnumerable<CAPCO.Infrastructure.Domain.PickupLocation>)ViewBag.PossibleLocations).Select(option => new SelectListItem
+                       {
+                           Text = (option == null ? "None" : option.Name),
+                           Value = option.Id.ToString(),
+                           Selected = (Model.Location != null) && (option.Id == Model.Location.Id)
+                       }), "Choose...")
+                </p>
+            }
+            
+            <p class="small-buttons">
+                <input type="submit" class="button" value="Create Project" />
+            </p>
+        }
+    </div>
+</div>

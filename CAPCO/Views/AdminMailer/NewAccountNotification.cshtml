@@ -1,0 +1,19 @@
+@{
+    CAPCO.Infrastructure.Domain.ApplicationUser user = ViewBag.NewProfile;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>A new profile has been created and activated via the website.</p>
+
+<label>Name:</label> @user.FullName<br />
+<label>Company:</label> @user.CompanyName<br />
+<label>Email:</label> @user.Email<br />
+<label>Phone:</label> @user.Phone<br />
+<label>Account Number:</label> @user.AccountNumber<br />
+
+
+<p>
+    Thanks!</p>
+
+~ The CAPCO Team

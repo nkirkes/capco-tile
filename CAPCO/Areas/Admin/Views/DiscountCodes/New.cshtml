@@ -1,0 +1,27 @@
+@model CAPCO.Infrastructure.Domain.DiscountCode
+
+@{
+    ViewBag.Title = "New Discount Code";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("create", "discountcodes", FormMethod.Post)) {
+	@Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Discount Code</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

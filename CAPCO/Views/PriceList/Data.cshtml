@@ -1,0 +1,34 @@
+﻿@model CAPCO.Models.PriceListViewModel
+@{
+    ViewBag.Title = "CAPCO Tile - Price List";
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>CAPCO Tile & Stone - @ViewBag.Title</title>
+    
+    <style>
+        body, td { font-family: Arial; font-size: 8pt; }
+    </style>
+</head>
+<body>
+
+<div>
+    
+    <h2>Data Friendly Price List</h2>
+
+    @Html.ActionLink("Export to CSV", "export", new { @type = Model.SearchType, criteria = Model.SelectedSections }, new { @class = "small-button" })
+
+    <div style="padding: 10px;">
+
+
+        @Html.Partial("_DataPriceList", Model)
+    </div>
+</div>
+
+</body>
+</html>

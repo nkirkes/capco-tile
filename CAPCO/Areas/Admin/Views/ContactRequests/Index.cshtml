@@ -1,0 +1,55 @@
+@model IEnumerable<CAPCO.Infrastructure.Domain.ContactRequest>
+
+@{
+    ViewBag.Title = "Manage Contact Requests";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Name
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Subject
+        </th>
+        <th>
+            Created On
+        </th>
+        <th>
+            Is Archived
+        </th>
+    </tr>
+
+@foreach (var item in Model.OrderBy(x => x.IsArchived).ThenBy(x => x.CreatedOn)) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("View", "Show", new { id=item.Id })
+        </td>
+        <td>
+			@item.Name
+        </td>
+        <td>
+			@item.Email
+        </td>
+        <td>
+			@item.Subject
+        </td>
+        <td>
+			@String.Format("{0:d}", item.CreatedOn)
+        </td>
+        <td>
+			@item.IsArchived
+        </td>
+    </tr>
+}
+
+</table>
+
+

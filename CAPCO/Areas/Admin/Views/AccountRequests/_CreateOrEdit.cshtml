@@ -1,0 +1,118 @@
+@model CAPCO.Infrastructure.Domain.AccountRequest
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.CompanyName)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.CompanyName, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.CompanyName)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.FirstName)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.FirstName, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.FirstName)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.LastName)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.LastName, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.LastName)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.StreetAddressLine1)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.StreetAddressLine1, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.StreetAddressLine1)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.StreetAddressLine2)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.StreetAddressLine2, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.StreetAddressLine2)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.City)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.City, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.City)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.State)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.State, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.State)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Zip)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Zip, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.Zip)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Phone)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Phone, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.Phone)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Fax)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Fax, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.Fax)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Email)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Email, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.Email)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.AccountNumber)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.AccountNumber, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.AccountNumber)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.HasBeenVerified)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.HasBeenVerified)
+    @Html.ValidationMessageFor(model => model.HasBeenVerified)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Notes)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => model.Notes)
+    @Html.ValidationMessageFor(model => model.Notes)
+</div>
+

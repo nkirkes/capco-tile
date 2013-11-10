@@ -1,0 +1,10 @@
+﻿@{
+    
+    var section = ViewBag.Section as CAPCO.Infrastructure.Domain.ContentSection;
+    ViewBag.Title = section.Title;
+}
+
+<div style="padding: 10px;">
+    <h2>@ViewBag.Title</h2>
+    @Html.GetSectionHtml(section)
+</div>

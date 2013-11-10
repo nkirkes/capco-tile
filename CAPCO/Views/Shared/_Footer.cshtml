@@ -1,0 +1,22 @@
+﻿<footer id="footer">
+    <div class="container">
+        <div class="span-8"><h2>Column 1</h2>These areas can be used for additional links.</div>
+        <div class="span-8"><h2>Column 2</h2>Location and contact info</div>
+        <div class="span-8 last">
+            <h2>Column 3</h2>
+            <ul>
+            @foreach (var page in @Html.ContentPages())
+            { 
+                <li>@Html.ActionLink(page.MenuTitle, "index", "home", new { area = "", id = page.Slug }, null)</li>
+            }
+            </ul>    
+        </div>
+    </div>
+</footer>
+<div class="container">
+    <div class="span-24" style="font-size: 0.8em;color: #333;">
+        &copy;2011 CAPCO Tile & Stone<br />
+        A Hi-Fi Software Project<br />
+        Version: @ViewBag.BuildVersion
+    </div>
+</div>

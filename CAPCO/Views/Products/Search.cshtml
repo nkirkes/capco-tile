@@ -1,0 +1,85 @@
+﻿@model CAPCO.Models.ProductSearchCriteria
+
+@{
+    ViewBag.Title = "Product Search";
+}
+
+<div class="span-6">
+    <div class="section-left">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left">
+        <h3 class="sidebar">Product Search</h3>
+        <p>Use the form to the right to search for products, or you can @Html.ActionLink("browse the catalog", "index", "products").</p>    
+    </div>
+</div>
+
+<div class="span-18 last">
+    <div class="padded-content">
+        <h1>@ViewBag.Title</h1>
+
+        @using (Html.BeginForm("search", "products", FormMethod.Post))
+        {
+        <div class="span-18 last">
+    
+                <div><label>Product Group:</label>
+                @Html.DropDownList("SelectedProductGroup", new SelectList(Model.AvailableGroups, "Id", "Name", Model.SelectedProductGroup))</div>
+        
+                <div><label>Product Category:</label>
+                @Html.DropDownList("SelectedCategory", new SelectList(Model.AvailableCategories, "Id", "Name", Model.SelectedCategory))</div>
+
+                <div><label>Product Type:</label>
+                @Html.DropDownList("SelectedType", new SelectList(Model.AvailableTypes, "Id", "Name", Model.SelectedType))</div>
+
+                <div><label>Product Color:</label>
+                @Html.DropDownList("SelectedColor", new SelectList(Model.AvailableColors, "Id", "Name", Model.SelectedColor))</div>
+
+                <div><label>Product Size:</label>
+                @Html.DropDownList("SelectedSize", new SelectList(Model.AvailableSizes, "Id", "Name", Model.SelectedSize))</div>
+
+                <div><label>Product Finish:</label>
+                @Html.DropDownList("SelectedFinish", new SelectList(Model.AvailableFinishes, "Id", "Name", Model.SelectedFinish))</div>
+        </div>
+
+        <div class="span-18 last">
+            <h2>Or...</h2>
+            <label>Item #:</label>
+            @Html.TextBoxFor(x => x.ItemNumber)
+        </div>
+
+        <div class="span-18 last">
+            <h2>Or...</h2>
+            <label>Series:</label>
+            @Html.TextBoxFor(x => x.Series)
+        </div>
+        <p class="buttons">
+            <input type="submit" value="Search" />
+        </p>
+
+        }
+
+        <div class="span-18" id="product-search-results">
+            <h2>Search Results</h2>
+            <table>
+                <tr>
+                    <th>Item Number</th>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Unit of Measure</th>
+                    <th>Status</th>
+                </tr>
+                @foreach (var prod in Model.Products)
+                { 
+                    <tr>
+                        <td>@Html.ActionLink(prod.ItemNumber, "show", "products", new { id = prod.Id }, null)</td>
+                        <td>@prod.Name</td>
+                        <td>@prod.Description</td>
+                        <td>@(prod.UnitOfMeasure != null ? prod.UnitOfMeasure.Name : "")</td>
+                        <td>@(prod.Variation != null ? prod.Variation.Name : "")</td>
+                        <td>@(prod.Status != null ? prod.Status.Name : "")</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

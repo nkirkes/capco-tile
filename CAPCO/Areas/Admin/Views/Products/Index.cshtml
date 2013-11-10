@@ -1,0 +1,61 @@
+@model CAPCO.Areas.Admin.Models.PagedProductsViewModel
+@using MvcContrib.UI.Grid;
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Manage Products";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("New Product", "new", "products", new { area = "admin" }, null)
+</p>
+
+<div>
+    @using (Html.BeginForm("search", "products", new { area = "admin" }, FormMethod.Post, null))
+    { 
+        <label>Search by Item Number:</label> @Html.TextBox("criteria") <input type="submit" value="Search" />
+    }
+</div>
+
+@if (Model.PagedProducts.Count() > 0) {
+    <div class="accounts-grid">
+        @Html.Grid(Model.PagedProducts.OrderBy(x => x.ItemNumber)).Columns(column => {
+            column.For(x => "<a href='" + Url.Action("show", "products", new { area = "admin", id = x.Id }) + "'><img src='" + Url.Content("~/public/images/24-columns.png") + "' /></a>").Named("View").Encode(false);
+            column.For(x => x.ItemNumber).Named("Item Number");
+            column.For(x => x.Series).Named("Series");
+            column.For(x => x.Section).Named("Mfg / Section").CellCondition(x => x.Manufacturer != null);
+            column.For(x => String.Format("{0:c}", x.RetailPrice)).Named("Retail");
+            column.For(x => x.Group.Name).Named("Group").CellCondition(x => x.Group != null);
+            column.For(x => x.PriceCodeGroup).Named("Price Code Group");
+            //column.For(x => x.ParentProduct.ItemNumber).Named("Parent Product").CellCondition(x => x.ParentProduct != null);
+            //column.For(x => x.RelatedProducts.Count).Named("Related Products").CellCondition(x => x.RelatedProducts != null);
+            //column.For(x => x.CreatedOn.ToShortDateString()).Named("Created On");
+            //column.For(x => x.LastModifiedOn.ToShortDateString()).Named("Last Updated On");
+          }).Attributes(id => "productsGrid")
+    </div>
+}
+
+<div style="margin-top: 10px;">Displaying @(Model.Page.HasValue && Model.Page > 1 ? (Model.Page - 1) * 100 + 1 : 1) - @((Model.Page ?? 1) * 100) of @Model.ProductsCount products.</div>
+
+@Html.PagedListPager(Model.PagedProducts,
+            page => Url.Action("Index", new RouteValueDictionary() {
+               { "Page", page }
+            }),
+            PagedListRenderOptions.OnlyShowFivePagesAtATime)
+
+@section Scripts {
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#productsGrid').dataTable({
+                "bPaginate": false,
+                "bInfo": false,
+                "bFilter": false,
+                "bLengthChange": false
+            });
+        });
+    </script>
+}
+
+

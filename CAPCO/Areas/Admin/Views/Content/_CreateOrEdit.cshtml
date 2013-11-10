@@ -1,0 +1,28 @@
+@model CAPCO.Infrastructure.Domain.ContentSection
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Title)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Title)
+    @Html.ValidationMessageFor(model => model.Title)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.SectionName)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => model.SectionName, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.SectionName)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Text)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => model.Text, new { @class = "tinymce" })
+    @Html.ValidationMessageFor(model => model.Text)
+</div>
+
+
+

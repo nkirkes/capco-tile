@@ -1,0 +1,32 @@
+@model CAPCO.Infrastructure.Domain.ApplicationUser
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit User</h2>
+
+<div style="margin-bottom: 20px;">
+    <h4>Administrative Tools</h4>
+    @Html.ActionLink("Reset Password", "resetpassword", "users", new { area = "admin", id = Model.Id }, null) |
+    @Html.ActionLink("Unlock User", "unlockuser", "users", new { area = "admin", id = Model.Id }, null)
+</div>
+
+@using (Html.BeginForm("update", "users", new { id = Model.Id }, FormMethod.Post, null)) {
+    @Html.ValidationSummary(true)
+	@Html.AntiForgeryToken()
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    <fieldset>
+        <legend>User Details</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Save" /> 
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index") | @Html.ActionLink("Delete This User", "delete", "users", new { area = "admin", id = Model.Id }, new { onclick = "javascript: return confirm(\"Are you sure? This cannot be undone.\");" }) 
+</div>

@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Title = "Welcome!";
+    var blogFeed = ViewBag.BlogRssFeed;
+    var blogUrl = ViewBag.BlogUrl;
+    var whoWeAre = ViewBag.WhoWeAreSection as CAPCO.Infrastructure.Domain.ContentSection;
+    var whatWeDo = ViewBag.WhatWeDoSection as CAPCO.Infrastructure.Domain.ContentSection;
+    var welcome = ViewBag.WelcomeSection as CAPCO.Infrastructure.Domain.ContentSection;
+}
+
+<div class="span-16">
+        <div style="padding: 10px;">
+            <h2>Welcome to CAPCO Tile & Stone!</h2>
+            @Html.GetSectionHtml(welcome)
+        </div>
+
+        <div class="span-16 last">
+            <div style="padding-left: 10px;">
+                <div class="slider-wrapper theme-default">
+                    <div class="ribbon"></div>
+                    <div id="slider">
+                        @Html.Image("frontpage-4.jpg", "title=FloorGres&nbsp;GeoTech&nbsp;GeoGrey&nbsp;Structured")
+                        @Html.Image("frontpage-5.jpg", "title=FloorGres&nbsp;Architech&nbsp;Forest")
+                        @Html.Image("frontpage-1.jpg")
+                        @Html.Image("frontpage-6.jpg", "title=Refin&nbsp;Graffiti")
+                        @Html.Image("frontpage-7.jpg", "title=Refin&nbsp;Pietre&nbsp;di&nbsp;Borgogna")
+                        @Html.Image("frontpage-8.jpg", "title=Refin&nbsp;Eco-Leader")
+                        @Html.Image("frontpage-3.jpg")
+                        @Html.Image("frontpage-9.jpg", "title=Imola&nbsp;Kalahari")
+                        @Html.Image("frontpage-10.jpg", "title=FloorGres&nbsp;GeoTech&nbsp;GeoBlack&nbsp;Structured")
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="span-8 last">
+            <div class="body-content">
+            <h3>Who we are</h3>
+            <div style="text-align:justify;">
+                @Html.GetSectionHtml(whoWeAre)
+            </div>
+            </div>
+        </div>
+        <div class="span-8">
+            <div class="body-content">
+            <h3>What we do</h3>
+            @Html.GetSectionHtml(whatWeDo)
+            </div>
+        </div>
+</div>
+
+
+<div class="span-8 last">
+    <div class="section">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section" style="text-align: center; background-color: transparent;">
+        <a href="http://www.youtube.com/user/CAPCOTileandStone" target="_blank" class="button">What's New?</a>
+        <a href="http://www.pinterest.com/capcotilestone/boards/" target="_blank" class="button">Inspire Me</a>
+    </div>
+    <div class="section" style="text-align: center; background-color: transparent;">
+        @Html.ActionLink("View Slab Inventory", "slabs", "products", null, new { @class = "button" })
+    </div>
+    <div class="section">
+        <h3 style="margin-bottom: 0px;">Recent Posts</h3>
+        <div style="margin-bottom: 5px;"><a href="@blogUrl" target="_blank">Visit Blog</a></div>
+        <div id="blog">
+            
+        </div>
+        <div><a href="@blogUrl" target="_blank">Visit Blog</a></div>
+    </div>
+    <div class="section" style="text-align: center; background-color: transparent;">
+        <a href="https://www.facebook.com/capcotile" target="_TOP" title="CAPCO Tile &amp; Stone">
+            <img src="https://badge.facebook.com/badge/10150154952720217.6939.1399343481.png" style="border: 0px;" />
+        </a>
+    </div>
+</div>
+
+@section Scripts
+{
+    <!-- blog feed -->
+    @Html.CSS("jquery.zrssfeed.css")
+    @Html.Script("Plugins/jquery.zrssfeed.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#blog').rssfeed('@blogFeed', {
+                limit: 3
+            });
+        });
+    </script>
+
+    <!-- slider -->
+    <link rel="Stylesheet" href="@Url.Content("~/Public/Stylesheets/nivo-slider.css")" />
+    <link rel="Stylesheet" href="@Url.Content("~/Public/Javascript/Plugins/nivo-slider/themes/default/default.css")" />
+    @Html.Script("Plugins/jquery.nivo.slider.js")
+    <script type="text/javascript">
+        $(window).load(function () {
+            $('#slider').nivoSlider({
+                effect: 'fade', // Specify sets like: 'fold,fade,sliceDown'
+                slices: 15, // For slice animations
+                boxCols: 8, // For box animations
+                boxRows: 4, // For box animations
+                animSpeed: 500, // Slide transition speed
+                pauseTime: 3000, // How long each slide will show
+                startSlide: 0, // Set starting Slide (0 index)
+                directionNav: true, // Next & Prev navigation
+                directionNavHide: true, // Only show on hover
+                controlNav: false, // 1,2,3... navigation
+                controlNavThumbs: false, // Use thumbnails for Control Nav
+                controlNavThumbsFromRel: false, // Use image rel for thumbs
+                controlNavThumbsSearch: '.jpg', // Replace this with...
+                controlNavThumbsReplace: '_thumb.jpg', // ...this in thumb Image src
+                keyboardNav: true, // Use left & right arrows
+                pauseOnHover: true, // Stop animation while hovering
+                manualAdvance: false, // Force manual transitions
+                captionOpacity: 0.8, // Universal caption opacity
+                prevText: 'Prev', // Prev directionNav text
+                nextText: 'Next', // Next directionNav text
+                beforeChange: function () { }, // Triggers before a slide transition
+                afterChange: function () { }, // Triggers after a slide transition
+                slideshowEnd: function () { }, // Triggers after all slides have been shown
+                lastSlide: function () { }, // Triggers when last slide is shown
+                afterLoad: function () { } // Triggers when slider has loaded
+            });
+        });
+    </script>
+
+}

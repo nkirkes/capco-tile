@@ -1,0 +1,19 @@
+@{
+    CAPCO.Infrastructure.Domain.ContactRequest request = ViewBag.ContactRequest;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>A contact request was generated on the CAPCO web site. You can review the request details below, and manage the request through that admin portal.</p>
+
+<label>Name:</label> @request.Name<br />
+<label>Email:</label> @request.Email<br />
+<label>Subject:</label> @request.Subject<br />
+<label>Message:</label> <br />@request.Message<br />
+
+<label>Created On:</label> <br />@request.CreatedOn.ToShortDateString()<br />
+
+<p>
+    Thanks!</p>
+
+~ The CAPCO Team

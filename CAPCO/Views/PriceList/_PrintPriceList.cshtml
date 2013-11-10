@@ -1,0 +1,120 @@
+﻿@model CAPCO.Models.PriceListViewModel
+@{
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
+    var products = Model.PriceListProducts.Where(p => p.ProductSeries != null).GroupBy(x => x.Manufacturer)
+        .ToDictionary(
+            g => g.Key,
+            g => g.GroupBy(b => b.ProductSeries)
+               .ToDictionary(e => e.Key, e => e));
+}
+
+    @if (Model.PriceListProducts != null && Model.PriceListProducts.Any())
+    {
+
+        foreach (var group in products.OrderBy(x => x.Key.Section))
+        {
+            <table width="670">
+                <tr height="80">
+                    <td width="10">&nbsp;</td>
+                    <td colspan="2" align="left" width="100%" height="80">
+                        @Html.Image("price-sheet-logo.jpg")
+                    </td>
+                </tr>
+                <tr height="110">
+                    <td width="10">&nbsp;</td>
+                    <td valign="top" colspan="2">
+                        <div class="headline">
+                            <font>Price List for @(!String.IsNullOrWhiteSpace(currentUser.CompanyName) ? currentUser.CompanyName : currentUser.FullName)</font>
+                        </div>
+                        @DateTime.Today.ToString("MMMM dd yyyy")<br>
+                        <div align="center">
+                            <h2>@group.Key.Section</h2>
+                        </div>
+                        <div align="center">
+                            <p>All Prices FOB CAPCO @currentUser.DefaultLocation.Name - Prices subject to change without notice<br />
+                                Inspect before installation - Use constitutes acceptance</p> 
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10">
+                        &nbsp;
+                    </td>
+                    <td valign="top" colspan="2">
+            
+                        @foreach (var series in group.Value.OrderBy(x => x.Key.Name))
+                        {
+                            <h2>@series.Key.Name</h2>
+                            <table width="100%">
+            
+
+                                <tr>
+                                    <th style="text-align:left;">Item #</th>
+                                    <th style="text-align:left;">Description</th>
+                                    <th style="text-align:left;">Var</th>
+                                    <th style="text-align:left;">Size</th>
+                                    <th style="text-align:left;">UOM</th>
+                                    <th style="text-align:left;">UPP</th>
+                                    <th style="text-align:left;">CTN</th>
+                                    <th style="text-align:left;">Use</th>
+                                    @switch (Model.PriceDisplayPreference)
+                                    {
+                                        case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                                            <th style="text-align:left;">Retail</th>
+                                            break;
+                                        case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                                            <th style="text-align:left;">Cost</th>
+                                            break;
+                                        case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                                            <th style="text-align:left;">Retail</th>
+                                            <th style="text-align:left;">Cost</th>
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="10"><hr /></td>
+                                </tr>
+                                @foreach (var prod in series.Value.OrderBy(x => x.ItemNumber))
+                                { 
+                                    <tr>
+                                        <td>@prod.ItemNumber</td>
+                                        <td>@prod.Description</td>
+                                        <td>@(prod.Variation != null ? "V" + prod.Variation.Code : "")</td>
+                                        <td>@prod.SizeDescription</td>
+                                        <td>@(prod.UnitOfMeasure != null ? prod.UnitOfMeasure.Code : "")</td>
+                                        <td>@prod.UnitsPerPiece</td>
+                                        <td>@prod.CartonQuantity</td>
+                                        <td>@prod.Usage.Code</td>
+                                        @{
+                                            var ppc = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.PriceCode);
+                                            var ppr = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.RetailCode);
+                                        }
+                                        @switch (Model.PriceDisplayPreference)
+                                        {
+                                            case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                                                <td>@String.Format("{0:c}", ppr != null ? ppr.Price : prod.RetailPrice)</td>
+                                               break;
+                                            case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                                                <td>@String.Format("{0:c}", ppc != null ? ppc.Price : prod.RetailPrice)</td>
+                                               break;
+                                            case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                                                <td>@String.Format("{0:c}", ppr != null ? ppr.Price : prod.RetailPrice)</td>
+                                                <td>@String.Format("{0:c}", ppc != null ? ppc.Price : prod.RetailPrice)</td>
+                                               break;
+                                            default:
+                                               break;
+                                        }
+                        
+                                    </tr>
+                                }
+                            </table>
+                            }
+                    </td>
+                </tr>
+            </table>
+            <div style="page-break-after:always">&nbsp;</div>
+        }
+        
+    }

@@ -1,0 +1,123 @@
+﻿@model CAPCO.Infrastructure.Domain.AccountRequest
+
+@{
+    ViewBag.Title = "Account Request";
+    var isProfileOwner = MembershipHelpers.GetCurrentUser().Id == Model.User.Id;
+    var isServiceProvider = Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString());
+    bool isPricingEnabled = ViewBag.IsPricingEnabled;
+}
+
+<div class="span-6">
+    <div class="section-left sidebar">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left sidebar">
+        <h3 class="sidebar">Profile Menu</h3>
+        <ul class="sidebar">
+            @if (isProfileOwner)
+            {
+                <li>@Html.ActionLink("Edit My Profile", "edit", "profile", new { id = Model.Id }, null)</li>
+                if (isServiceProvider && isPricingEnabled)
+                {
+                    <li>@Html.ActionLink("Price Lists", "index", "pricelist")</li>
+                    
+                }
+                if (!Model.User.IsAccountActivated)
+                { 
+                    <li class="selected">@Html.ActionLink("Request Account", "requestaccount", "profile", null, null)</li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+
+<div class="span-18 last">
+    <div style="padding: 10px;">
+        <h2>@ViewBag.Title</h2>
+        <div>
+            <fieldset>
+                @using (Html.BeginForm("requestaccount", "profile", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+    
+                    <p>
+                        @Html.LabelFor(x => x.CompanyName)
+                        @Html.TextBoxFor(x => x.CompanyName)
+                        @Html.ValidationMessageFor(x => x.CompanyName)
+                    </p>
+                    
+                    <p>
+                        @Html.LabelFor(x => x.FirstName)
+                        @Html.TextBoxFor(x => x.FirstName)
+                        @Html.ValidationMessageFor(x => x.FirstName)
+                    </p>
+                    
+                    <p>
+                        @Html.LabelFor(x => x.LastName)
+                        @Html.TextBoxFor(x => x.LastName)
+                        @Html.ValidationMessageFor(x => x.LastName)
+                    </p>
+    
+                    <p>
+                        @Html.LabelFor(x => x.StreetAddressLine1)
+                        @Html.TextBoxFor(x => x.StreetAddressLine1)
+                        @Html.ValidationMessageFor(x => x.StreetAddressLine1)
+                    </p>
+                    
+                    <p>
+                        @Html.LabelFor(x => x.StreetAddressLine2)
+                        @Html.TextBoxFor(x => x.StreetAddressLine2)
+                        @Html.ValidationMessageFor(x => x.StreetAddressLine2)
+                    </p>
+                    
+                    <p>
+                        @Html.LabelFor(x => x.City)
+                        @Html.TextBoxFor(x => x.City)
+                        @Html.ValidationMessageFor(x => x.City)
+                    </p>
+                    
+                    <p>
+                        @Html.LabelFor(x => x.State)
+                        @Html.DropDownListFor(x => x.State, default(CAPCO.Infrastructure.Domain.States).ToSelectList(true), "Choose...")
+                        @Html.ValidationMessageFor(x => x.State)
+                    </p>
+                    
+                    <p>
+                        @Html.LabelFor(x => x.Zip)
+                        @Html.TextBoxFor(x => x.Zip)
+                        @Html.ValidationMessageFor(x => x.Zip)
+                    </p>
+                    
+                    <p>
+                        @Html.LabelFor(x => x.Phone)
+                        @Html.TextBoxFor(x => x.Phone)
+                        @Html.ValidationMessageFor(x => x.Phone)
+                    </p>
+                    
+                    <p>
+                        @Html.LabelFor(x => x.Fax)
+                        @Html.TextBoxFor(x => x.Fax)
+                        @Html.ValidationMessageFor(x => x.Fax)
+                    </p>
+                    
+                    <p>
+                        @Html.LabelFor(x => x.Email)
+                        @Html.TextBoxFor(x => x.Email)
+                        @Html.ValidationMessageFor(x => x.Email)
+                    </p>
+    
+                    <p>
+                        @Html.LabelFor(x => x.AccountNumber)
+                        @Html.TextBoxFor(x => x.AccountNumber)
+                        @Html.ValidationMessageFor(x => x.AccountNumber)
+                    </p>
+
+                    <p class="buttons">
+                        <input type="submit" value="Send Request" />
+                    </p>
+                }
+            </fieldset>
+        </div>
+    </div>
+</div>

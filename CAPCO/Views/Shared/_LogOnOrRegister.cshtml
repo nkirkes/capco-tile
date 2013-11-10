@@ -1,0 +1,63 @@
+﻿@{
+    var currentUser = MembershipHelpers.GetCurrentUser();
+}
+
+<div id="logon">
+    @if (!Request.IsAuthenticated)
+    {
+        <h2>Log In</h2>
+
+        using (Html.BeginForm("login", "account"))
+        {
+            <div>
+                @Html.Label("Username", new { @class = "fieldpair", style = "min-width: 50px;" })
+                @Html.TextBox("Model.UserName", null, new { style = "width: 120px;" })
+            </div>
+
+            <div class="span-6 last">
+                @Html.Label("Model.Password", new { @class = "fieldpair", style = "min-width: 50px;" })
+                @Html.Password("Model.Password", null, new { style = "width: 120px;" })
+            </div>
+
+            <div class="span-6 last" style="margin-bottom: 5px;">
+                @Html.CheckBox("Model.RememberMe") <strong>Keep me logged in!</strong>
+            </div>
+
+            <div class="clear small-buttons" style="width: 200px;margin: 0 auto 5px auto;">
+                <input type="submit" value="Log In" class="button" />
+                @Html.ActionLink("Register", "register", "account", null, null)
+            </div>
+            <ul>
+                <li>@Html.ActionLink("Forgot password?", "resetpassword", "account")</li>
+                <li> | @Html.ActionLink("Why Register?", "register", "account", null, null)</li>
+            </ul>
+        }
+
+
+    }
+    else
+    {
+        <span style="font-weight: bold; font-size: 1.3em;">Welcome back, @currentUser.FirstName!</span>
+
+        <ul>
+            @if (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.Administrators.ToString()))
+            {
+                <li>@Html.ActionLink("Administration", "index", "dashboard", new { area = "admin" }, null)</li>
+            }
+            else
+            {
+                <li>@Html.ActionLink("My Projects", "index", "projects")</li>
+                
+            }
+            <li>|</li>
+            <li>@Html.ActionLink("My Profile", "index", "profile")</li>
+            <li>|</li>
+            <li>@Html.ActionLink("Log out", "logoff", "account")</li>
+        </ul>
+        <ul>
+            <li><a href="~/Public/Assets/ProjectTutorial.pdf" target="_blank">Project Tutorial</a></li>
+        </ul>
+
+    
+    }
+</div>

@@ -1,0 +1,245 @@
+﻿@model CAPCO.Infrastructure.Domain.Project
+@{
+    ViewBag.Title = Model.ProjectName;
+    var currentUser = MembershipHelpers.GetCurrentUser();
+    var isProjectOwner = currentUser == Model.CreatedBy;
+    var pricePreference = !String.IsNullOrWhiteSpace(Model.PriceDisplayPreference) ? (CAPCO.Infrastructure.Domain.PricePreferences)Enum.Parse(typeof(CAPCO.Infrastructure.Domain.PricePreferences), Model.PriceDisplayPreference) : CAPCO.Infrastructure.Domain.PricePreferences.None;
+    var isPricingEnabled = ViewBag.IsPricingEnabled;
+            //Func<string> GetPricePreference = () =>
+            //{
+            //    if (isProjectOwner)
+            //    {
+            //        return currentUser.PricePreference;
+            //    }
+            //    else
+            //    {
+            //        return Model.PriceDisplayPreference;
+            //    }
+            //};
+}
+
+@*@section SideBar
+{
+    <h3 class="sidebar">Options</h3>
+    @Html.ActionLink("Invite Someone", "invite", "projects", null, null)
+}*@
+<div class="span-6">
+    <div class="section-left">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left">
+        <h3 class="sidebar">Project Details</h3>
+        <label>Name:</label> @ViewBag.Title<br />
+        <label>Branch:</label> @Model.Location.Name
+        <strong>Description:</strong><br />@Model.Description
+    </div>
+    <div class="section-left">
+        <h3 class="sidebar">Project Options</h3>
+        <ul class="sidebar">
+            <li>@Html.ActionLink("Create New Project", "new", "projects", null, null)</li>
+            @if (isProjectOwner)
+            {
+                <li>@Html.ActionLink("Edit Project", "edit", "projects", new { id = Model.Id }, null)</li>
+                <li>@Html.ActionLink("Copy Project", "copy", "projects", new { id = Model.Id }, null)</li>
+                <li>@Html.ActionLink("Invite People", "invite", "projects", new { id = Model.Id }, null)</li>
+                <li>@Html.ActionLink("Delete Project", "delete", "projects", new { id = Model.Id }, new { onClick = "return confirm('Deleting this project cannot be undone! Click Ok if you want to permanantly delete this project.');" })</li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="span-18 last">
+    <div class="padded-content">
+        
+        <h3 class="section-title">Items</h3>
+        
+        @if (Model.Products != null && Model.Products.Any())
+        {
+            <p>You can add additional items to this project by @Html.ActionLink("searching for a product", "index", "products").</p>
+            <table cellspacing="3" cellpadding="3">
+                <tr>
+                    <th style="width: 75px;">Image</th>
+                    <th class="span-8">Description</th>
+                    <th>Item #</th>
+                    @if (isPricingEnabled && currentUser.DiscountCode != null)
+                    {
+                        switch (pricePreference)
+                        {
+                            case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                            <th>Retail</th>
+                                break;
+                            case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                            <th>Cost</th>
+                                break;
+                            case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                            <th>Retail</th>
+                            <th>Cost</th>
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    
+                    
+                </tr>
+                @foreach (var prod in Model.Products)
+                {
+                    if (prod.Product != null)
+                    {
+                        <tr>
+                            <td style="vertical-align: top;">
+                                <div class="thumbnail-img-container">
+                                    @* <a href="@Url.GetProductImageUrl(prod, ImageSize.Large)" rel="ChillBox" title="@prod.Name">*@
+                                    @Html.GetProductImage(prod.Product, ImageSize.Thumb)
+                                    @*</a>*@
+                                </div>
+                            </td>
+                            <td style="vertical-align: top;" class="span-8">
+                                <span style="font-weight: bold;">@prod.Product.Description</span><br />
+                                @if (!String.IsNullOrWhiteSpace(prod.Comment))
+                                {
+                                    <div class="span-8" style="padding: 5px; background-color: #e4e4e4;">
+                                        <strong>Item Comment:</strong><br />
+                                        <em>@prod.Comment</em></div>
+                                }
+                            </td>
+                            <td style="vertical-align: top;">@Html.ActionLink(prod.Product.ItemNumber, "show", "products", new { id = prod.Product.Id }, null)</td>
+                            @if (isPricingEnabled && currentUser.DiscountCode != null)
+                            {
+                                switch (pricePreference)
+                                {
+                                    case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                                        <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderRetail(Model))</td>
+                                        break;
+                                    case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                                        <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderCost(Model))</td>
+                                        break;
+                                    case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                                        <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderRetail(Model))</td>
+                                        <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderCost(Model))</td>
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="vertical-align: top;" colspan="5">
+                                @prod.Comment
+                            </td>
+                            
+                        
+                        </tr>
+                    }
+                }
+                
+            </table>
+        }
+        else
+        { 
+            <p>There aren't any products associated with this project yet. You can add products to this project using @Html.ActionLink("the product search", "index", "products").</p>
+        }
+    </div>
+
+    <div class="span-10">
+        <div class="padded-content">
+        <h3>New Comment</h3>
+            @using (Html.BeginForm("NewComment", "Projects", new { id = Model.Id }, FormMethod.Post, null))
+            {
+                @Html.AntiForgeryToken()
+                @Html.TextArea("Text", new { @class = "span-9", style = "height: 100px;" })
+                <br />
+                <p class="small-buttons">
+                    <input type="submit" value="Leave Comment" />
+                </p>
+            }
+
+        <h3 class="section-title">Comments</h3>
+        
+            @if (Model.Comments != null && Model.Comments.Any())
+            {
+
+                foreach (var comment in Model.Comments.OrderByDescending(x => x.CreatedOn))
+                {
+                <div class="section">
+                    <h3>@comment.CreatedBy.UserName on @comment.CreatedOn.ToShortDateString()</h3>
+                    <p style="margin: 5px 0 0 0;">@comment.Text</p>
+                    @if (comment.CreatedBy == MembershipHelpers.GetCurrentUser() || Model.CreatedBy == MembershipHelpers.GetCurrentUser() || Roles.IsUserInRole("Administrators"))
+                    {
+                        @Html.ActionLink("Delete Comment",
+                        "deletecomment",
+                        "projects",
+                        new { id = comment.Id },
+                        new { onClick = "return confirm('Deleting this comment cannot be undone! Click Ok if you want to permanantly delete this comment.');" })
+                    }
+                </div>
+                }
+            }
+            else
+            { 
+                <text><p>There aren't any comments on this project.</p></text>
+            }
+        </div>
+    </div>
+
+    <div class="span-8 last">
+        <div class="padded-content">
+        @if (isProjectOwner && Model.Users.Count > 1)
+        {
+                <h2 class="section-title">Active Project Members</h2>
+            
+                <table>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                    
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>@user.FullName</td>       
+                        </tr>
+                    }
+                </table>
+            
+        }
+        
+            @if (isProjectOwner && Model.Invitations.Count(x => x.IsAccepted == false) > 0)
+            {
+                <h2 class="section-title">Pending Invitations</h2>
+            
+                    <table>
+                        <tr>
+                            <th>Email</th>
+                            <th>Sent On</th>
+                        </tr>
+                    
+                        @foreach (var invite in Model.Invitations.Where(x => x.IsAccepted == false))
+                        {
+                            <tr>
+                                <td>@invite.Email</td>       
+                                <td>@invite.CreatedOn.ToShortDateString()</td>
+                            </tr>
+                        }
+                    </table>
+            
+            }
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts
+{
+    @*@Html.Script("Plugins/chillbox-packed.js")*@
+    
+    <script type="text/javascript">
+        $(".more-info").tooltip({ effect: 'fade' });
+    </script>
+
+}

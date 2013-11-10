@@ -1,0 +1,26 @@
+@model CAPCO.Infrastructure.Domain.ProductUnitOfMeasure
+
+@{
+    ViewBag.Title = "Unit of Measure";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<fieldset>
+    <legend>Details</legend>
+
+    <div class="display-label">Name</div>
+    <div class="display-field">@Model.Name</div>
+
+    <div class="display-label">Code</div>
+    <div class="display-field">@Model.Code</div>
+
+    <div class="display-label">Products</div>
+    <div class="display-field">@(Model.Products == null ? "None" : Model.Products.Count.ToString())</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

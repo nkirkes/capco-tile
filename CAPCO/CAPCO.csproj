@@ -1,0 +1,1060 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{839D93EA-1788-4871-BA5B-5362DBCFF223}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CAPCO</RootNamespace>
+    <AssemblyName>CAPCO</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.1.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.Mvc4.3.1.0\lib\net40\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="com.mosso.cloudfiles, Version=1.5.2.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\com.mosso.cloudfiles.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAnnotationsExtensions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=358a5681c50fd84c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DataAnnotationsExtensions.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAnnotationsExtensions.ClientValidation, Version=1.1.0.0, Culture=neutral, PublicKeyToken=358a5681c50fd84c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DataAnnotationsExtensions.MVC3.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.ClientValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah.Mvc">
+      <HintPath>..\packages\Elmah.MVC.2.1.1\lib\net40\Elmah.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="FileHelpers">
+      <HintPath>..\packages\FileHelpers.2.0.0.0\lib\FileHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="FileHelpers.ExcelStorage">
+      <HintPath>..\packages\FileHelpers.2.0.0.0\lib\FileHelpers.ExcelStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.AspNet">
+      <HintPath>..\packages\Glimpse.AspNet.1.3.1\lib\net40\Glimpse.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Core">
+      <HintPath>..\packages\Glimpse.1.4.2\lib\net40\Glimpse.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.MiniProfiler">
+      <HintPath>..\packages\Glimpse.MiniProfiler.1.2.3\lib\net40\Glimpse.MiniProfiler.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Mvc4">
+      <HintPath>..\packages\Glimpse.Mvc4.1.3.3\lib\net40\Glimpse.Mvc4.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.Excel">
+      <HintPath>..\packages\FileHelpers.2.0.0.0\lib\Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.Office">
+      <HintPath>..\packages\FileHelpers.2.0.0.0\lib\Interop.Office.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniProfiler">
+      <HintPath>..\packages\MiniProfiler.2.1.0\lib\net40\MiniProfiler.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniProfiler.EntityFramework">
+      <HintPath>..\packages\MiniProfiler.EF.2.1.0\lib\net40\MiniProfiler.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Mvc.Mailer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Mvc.Mailer.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcContrib, Version=3.0.88.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\MvcContrib.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcContrib.FluentHtml">
+      <HintPath>..\lib\MvcContrib.FluentHtml.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Recaptcha.Web">
+      <HintPath>..\packages\RecaptchaNet.1.3\lib\net40\Recaptcha.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="RestfulRouting, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RestfulRouting.1.5.0\lib\RestfulRouting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivator, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebActivator.1.2.0.0\lib\NETFramework40\WebActivator.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RegisterClientValidationExtensions.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\AccountRequestsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ContactRequestsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ContentController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DiscountCodesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ElmahController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ImportController.cs" />
+    <Compile Include="Areas\Admin\Controllers\LinksController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ManufacturersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PickupLocationsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PriceCodesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductCategoriesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductColorsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductFinishesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductGroupsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductPriceCodesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductSeriesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductSizesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductStatusController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductTypesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductUnitOfMeasuresController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductUsagesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductVariationsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StoreLocationsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\_BaseAdminController.cs" />
+    <Compile Include="Areas\Admin\Models\ImportedProduct.cs" />
+    <Compile Include="Areas\Admin\Models\PagedProductsViewModel.cs" />
+    <Compile Include="GlimpseSecurityPolicy.cs" />
+    <Compile Include="Infrastructure\Data\LinkRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductUsageRepository.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Infrastructure\Core\ErrorLogger.cs" />
+    <Compile Include="Infrastructure\Core\FileUploadJsonResult.cs" />
+    <Compile Include="Infrastructure\Core\HandleErrorAttribute.cs" />
+    <Compile Include="Infrastructure\Core\LayoutAttribute.cs" />
+    <Compile Include="Infrastructure\Data\AccountRequestRepository.cs" />
+    <Compile Include="Infrastructure\Data\ContactRequestRepository.cs" />
+    <Compile Include="Infrastructure\Data\StoreLocationRepository.cs" />
+    <Compile Include="Infrastructure\Data\DiscountCodeRepository.cs" />
+    <Compile Include="Controllers\PriceListController.cs" />
+    <Compile Include="Infrastructure\Data\PickupLocationRepository.cs" />
+    <Compile Include="Helpers\DomainHelpers.cs" />
+    <Compile Include="Infrastructure\Data\ProductStatusRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductUnitOfMeasureRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductVariationRepository.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\RequestAccountController.cs" />
+    <Compile Include="Controllers\RootController.cs" />
+    <Compile Include="Infrastructure\Data\ApplicationUserRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductSizeRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductColorRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductTypeRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductCategoryRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductFinishRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductGroupRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProductRepository.cs" />
+    <Compile Include="Infrastructure\Data\CAPCOContext.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\EnumExtensions.cs" />
+    <Compile Include="Helpers\FlashHelpers.cs" />
+    <Compile Include="Helpers\HtmlHelpers.cs" />
+    <Compile Include="Helpers\MembershipHelpers.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="Infrastructure\Data\RepositoryBase.cs" />
+    <Compile Include="Infrastructure\Domain\AccountRequest.cs" />
+    <Compile Include="Infrastructure\Domain\ApplicationUser.cs" />
+    <Compile Include="Infrastructure\Domain\ContactRequest.cs" />
+    <Compile Include="Infrastructure\Domain\ContentSection.cs" />
+    <Compile Include="Infrastructure\Domain\DiscountCode.cs" />
+    <Compile Include="Infrastructure\Domain\Enums.cs" />
+    <Compile Include="Infrastructure\Domain\Entity.cs" />
+    <Compile Include="Infrastructure\Domain\Link.cs" />
+    <Compile Include="Infrastructure\Domain\Manufacturer.cs" />
+    <Compile Include="Infrastructure\Domain\Notification.cs" />
+    <Compile Include="Infrastructure\Domain\PickupLocation.cs" />
+    <Compile Include="Infrastructure\Domain\PriceCode.cs" />
+    <Compile Include="Infrastructure\Domain\Product.cs" />
+    <Compile Include="Infrastructure\Domain\ProductCrossReference.cs" />
+    <Compile Include="Infrastructure\Domain\Project.cs" />
+    <Compile Include="Infrastructure\Domain\ProductImage.cs" />
+    <Compile Include="Infrastructure\Domain\ProductPriceCode.cs" />
+    <Compile Include="Infrastructure\Domain\ProductProperty.cs" />
+    <Compile Include="Infrastructure\Domain\Specification.cs" />
+    <Compile Include="Infrastructure\Domain\StoreLocation.cs" />
+    <Compile Include="Infrastructure\Mailers\ApplicationUserMailer.cs" />
+    <Compile Include="Infrastructure\Security\CapcoAuthorizationAttribute.cs" />
+    <Compile Include="Infrastructure\Services\CloudFilesService.cs" />
+    <Compile Include="Infrastructure\Services\ContentService.cs" />
+    <Compile Include="Infrastructure\Services\ApplicationUserService.cs" />
+    <Compile Include="Infrastructure\Specifications\ProductSpecification.cs" />
+    <Compile Include="Infrastructure\Mailers\AdminMailer.cs" />
+    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Infrastructure\Data\NotificationRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProjectRepository.cs" />
+    <Compile Include="Infrastructure\Data\PriceCodeRepository.cs" />
+    <Compile Include="Infrastructure\Data\ContentSectionRepository.cs" />
+    <Compile Include="Infrastructure\Data\ManufacturerRepository.cs" />
+    <Compile Include="Infrastructure\Data\OtherSizeRepository.cs" />
+    <Compile Include="Models\PriceListViewModel.cs" />
+    <Compile Include="Models\ProductFilters.cs" />
+    <Compile Include="Infrastructure\Data\ProductPriceCodeRepository.cs" />
+    <Compile Include="Models\ProductSearchCriteria.cs" />
+    <Compile Include="Infrastructure\Data\ProductSeriesRepository.cs" />
+    <Compile Include="Models\ProductsViewModel.cs" />
+    <Compile Include="Infrastructure\Data\ProjectCommentRepository.cs" />
+    <Compile Include="Infrastructure\Data\ProjectInvitationRepository.cs" />
+    <Compile Include="Infrastructure\Data\RelatedAccentRepository.cs" />
+    <Compile Include="Infrastructure\Data\RelatedTrimRepository.cs" />
+    <Compile Include="Models\RequestAccountViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
+    <Content Include="Content\themes\base\jquery.ui.all.css" />
+    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Content\themes\base\jquery.ui.base.css" />
+    <Content Include="Content\themes\base\jquery.ui.button.css" />
+    <Content Include="Content\themes\base\jquery.ui.core.css" />
+    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.menu.css" />
+    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
+    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
+    <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.spinner.css" />
+    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
+    <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\jquery.ui.tooltip.css" />
+    <Content Include="Content\themes\base\minified\images\animated-overlay.gif" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.menu.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.spinner.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
+    <Content Include="Public\Images\24-columns.png" />
+    <Content Include="Public\Images\admin-logo.png" />
+    <Content Include="Public\Images\bkg-admin.png" />
+    <Content Include="Public\Images\bkg-content.jpg" />
+    <Content Include="Public\Images\bkg-dummy.jpg" />
+    <Content Include="Public\Images\bkg-global.jpg" />
+    <Content Include="Public\Images\bkg-global.png" />
+    <Content Include="Public\Images\bkg-white-80.png" />
+    <Content Include="Public\Images\bkg-white-90.png" />
+    <Content Include="Public\Images\black_arrow_big.png" />
+    <Content Include="Public\Images\delete-icon-1.png" />
+    <Content Include="Public\Images\delete-icon.png" />
+    <Content Include="Public\Images\facebook.png" />
+    <Content Include="Public\Images\feed.png" />
+    <Content Include="Public\Images\frontpage-1.jpg" />
+    <Content Include="Public\Images\frontpage-10.jpg" />
+    <Content Include="Public\Images\frontpage-3.jpg" />
+    <Content Include="Public\Images\frontpage-4.jpg" />
+    <Content Include="Public\Images\frontpage-5.jpg" />
+    <Content Include="Public\Images\frontpage-6.jpg" />
+    <Content Include="Public\Images\frontpage-7.jpg" />
+    <Content Include="Public\Images\frontpage-8.jpg" />
+    <Content Include="Public\Images\frontpage-9.jpg" />
+    <Content Include="Public\Images\global-header.png" />
+    <Content Include="Public\Images\home-install1.jpg" />
+    <Content Include="Public\Images\home-install2.jpg" />
+    <Content Include="Public\Images\home-install3.jpg" />
+    <Content Include="Public\Images\icon-admin-40px.png" />
+    <Content Include="Public\Images\icon-admin.png" />
+    <Content Include="Public\Images\IMG_20110814_111902.jpg" />
+    <Content Include="Public\Images\logo-capco-115x31.png" />
+    <Content Include="Public\Images\logo-capco-131x35.png" />
+    <Content Include="Public\Images\logo-capco-166x60.png" />
+    <Content Include="Public\Images\logo-capco-180x64.png" />
+    <Content Include="Public\Images\logo-capco-white.png" />
+    <Content Include="Public\Images\noProductThumb.gif" />
+    <Content Include="Public\Images\noProductThumb_small.gif" />
+    <Content Include="Public\Images\old_logo.gif" />
+    <Content Include="Public\Images\old_logo.png" />
+    <Content Include="Public\Images\pinterest.png" />
+    <Content Include="Public\Images\price-sheet-logo.jpg" />
+    <Content Include="Public\Images\print.png" />
+    <Content Include="Public\Images\slider1.jpg" />
+    <Content Include="Public\Images\slider2.jpg" />
+    <Content Include="Public\Images\slider3.jpg" />
+    <Content Include="Public\Images\table.png" />
+    <Content Include="Public\Images\title_main.gif" />
+    <Content Include="Public\Images\twitter.png" />
+    <Content Include="Public\Images\Uploads\Products\dummy-2-detail.jpg" />
+    <Content Include="Public\Images\Uploads\Products\dummy-2-small-tmb.jpg" />
+    <Content Include="Public\Images\Uploads\Products\dummy-2-tmb.jpg" />
+    <Content Include="Public\Images\Uploads\Products\dummy-2-orig.jpg" />
+    <Content Include="Public\Images\Uploads\Products\dummy-detail.jpg" />
+    <Content Include="Public\Images\Uploads\Products\dummy-small-tmb.jpg" />
+    <Content Include="Public\Images\Uploads\Products\dummy-tmb.jpg" />
+    <Content Include="Public\Images\Uploads\Products\dummy-orig.jpg" />
+    <Content Include="Public\Images\youtube.png" />
+    <Content Include="Public\Images\zoomloader.gif" />
+    <Content Include="Public\Javascript\capco.ui.js" />
+    <Content Include="Public\Javascript\jquery-1.6.js" />
+    <Content Include="Public\Javascript\jquery-ui-1.8.12.min.js" />
+    <Content Include="Public\Javascript\Plugins\charCount.js" />
+    <Content Include="Public\Javascript\Plugins\chillbox-packed.js" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\css\datatable.css" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\back_disabled.jpg" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\back_enabled.jpg" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\forward_disabled.jpg" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\forward_enabled.jpg" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\sorting.png" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\sort_asc.jpg" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\sort_asc.png" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\sort_both.jpg" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\sort_both.png" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\sort_desc.jpg" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\images\sort_desc.png" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\js\jquery.dataTables.js" />
+    <Content Include="Public\Javascript\Plugins\dataTables-1.5\js\jquery.dataTables.min.js" />
+    <Content Include="Public\Javascript\Plugins\equalheight.js" />
+    <Content Include="Public\Javascript\Plugins\jquery.dataTables.js" />
+    <Content Include="Public\Javascript\Plugins\jquery.jqzoom-core.js" />
+    <Content Include="Public\Javascript\Plugins\jquery.nivo.slider.js" />
+    <Content Include="Public\Javascript\Plugins\jquery.nivo.slider.pack.js" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\default\arrows.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\default\bullets.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\default\default.css" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\default\loading.gif" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\orman\arrows.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\orman\bullets.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\orman\loading.gif" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\orman\orman.css" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\orman\readme.txt" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\orman\ribbon.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\orman\slider.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\pascal\bullets.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\pascal\controlnav.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\pascal\featured.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\pascal\loading.gif" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\pascal\pascal.css" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\pascal\readme.txt" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\pascal\ribbon.png" />
+    <Content Include="Public\Javascript\Plugins\nivo-slider\themes\pascal\slider.png" />
+    <Content Include="Public\Javascript\Plugins\qtip\jquery.qtip.css" />
+    <Content Include="Public\Javascript\Plugins\qtip\jquery.qtip.js" />
+    <Content Include="Public\Javascript\Plugins\qtip\jquery.qtip.min.css" />
+    <Content Include="Public\Javascript\Plugins\qtip\jquery.qtip.min.js" />
+    <Content Include="Public\Stylesheets\ie.css" />
+    <Content Include="Public\Stylesheets\jquery.jqzoom.css" />
+    <Content Include="Public\Stylesheets\jquery.zrssfeed.css" />
+    <Content Include="Public\Javascript\Plugins\jquery.zrssfeed.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\jquery.tinymce.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\langs\en.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\license.txt" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advhr\css\advhr.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advhr\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advhr\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advhr\js\rule.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advhr\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advhr\rule.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advimage\css\advimage.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advimage\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advimage\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advimage\image.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advimage\img\sample.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advimage\js\image.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advimage\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advlink\css\advlink.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advlink\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advlink\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advlink\js\advlink.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advlink\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advlink\link.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advlist\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\advlist\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\autolink\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\autolink\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\autoresize\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\autoresize\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\autosave\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\autosave\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\autosave\langs\en.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\bbcode\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\bbcode\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\contextmenu\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\contextmenu\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\directionality\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\directionality\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\emotions.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-cool.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-cry.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-embarassed.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-foot-in-mouth.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-frown.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-innocent.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-kiss.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-laughing.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-money-mouth.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-sealed.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-smile.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-surprised.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-tongue-out.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-undecided.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-wink.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\img\smiley-yell.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\js\emotions.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\emotions\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\example\dialog.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\example\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\example\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\example\img\example.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\example\js\dialog.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\example\langs\en.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\example\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\fullpage\css\fullpage.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\fullpage\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\fullpage\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\fullpage\fullpage.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\fullpage\js\fullpage.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\fullpage\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\fullscreen\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\fullscreen\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\fullscreen\fullscreen.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\iespell\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\iespell\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\alert.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\button.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\buttons.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\confirm.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\corners.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\horizontal.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\img\vertical.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\skins\clearlooks2\window.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\inlinepopups\template.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\insertdatetime\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\insertdatetime\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\layer\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\layer\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\lists\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\lists\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\media\css\media.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\media\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\media\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\media\js\embed.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\media\js\media.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\media\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\media\media.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\media\moxieplayer.swf" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\nonbreaking\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\nonbreaking\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\noneditable\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\noneditable\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\pagebreak\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\pagebreak\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\paste\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\paste\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\paste\js\pastetext.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\paste\js\pasteword.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\paste\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\paste\pastetext.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\paste\pasteword.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\preview\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\preview\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\preview\example.html" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\preview\jscripts\embed.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\preview\preview.html" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\print\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\print\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\save\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\save\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\searchreplace\css\searchreplace.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\searchreplace\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\searchreplace\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\searchreplace\js\searchreplace.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\searchreplace\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\searchreplace\searchreplace.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\spellchecker\css\content.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\spellchecker\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\spellchecker\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\spellchecker\img\wline.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\style\css\props.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\style\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\style\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\style\js\props.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\style\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\style\props.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\tabfocus\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\tabfocus\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\cell.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\css\cell.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\css\row.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\css\table.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\js\cell.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\js\merge_cells.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\js\row.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\js\table.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\merge_cells.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\row.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\table\table.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\template\blank.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\template\css\template.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\template\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\template\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\template\js\template.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\template\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\template\template.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\visualchars\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\visualchars\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\wordcount\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\wordcount\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\abbr.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\acronym.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\attributes.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\cite.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\css\attributes.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\css\popup.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\del.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\editor_plugin.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\editor_plugin_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\ins.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\js\abbr.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\js\acronym.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\js\attributes.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\js\cite.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\js\del.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\js\element_common.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\js\ins.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\plugins\xhtmlxtras\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\about.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\anchor.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\charmap.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\color_picker.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\editor_template.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\editor_template_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\image.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\colorpicker.jpg" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\flash.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\icons.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\iframe.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\pagebreak.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\quicktime.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\realmedia.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\shockwave.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\trans.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\video.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\img\windowsmedia.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\js\about.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\js\anchor.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\js\charmap.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\js\color_picker.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\js\image.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\js\link.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\js\source_editor.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\langs\en.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\langs\en_dlg.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\link.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\shortcuts.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\default\content.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\default\dialog.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\default\img\buttons.png" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\default\img\items.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\default\img\menu_arrow.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\default\img\menu_check.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\default\img\progress.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\default\img\tabs.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\default\ui.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\highcontrast\content.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\highcontrast\dialog.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\highcontrast\ui.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\o2k7\content.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\o2k7\dialog.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\o2k7\img\button_bg.png" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\o2k7\img\button_bg_black.png" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\o2k7\img\button_bg_silver.png" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\o2k7\ui.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\o2k7\ui_black.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\skins\o2k7\ui_silver.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\advanced\source_editor.htm" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\simple\editor_template.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\simple\editor_template_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\simple\img\icons.gif" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\simple\langs\en.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\simple\skins\default\content.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\simple\skins\default\ui.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\simple\skins\o2k7\content.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\simple\skins\o2k7\img\button_bg.png" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\themes\simple\skins\o2k7\ui.css" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\tiny_mce.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\tiny_mce_popup.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\tiny_mce_src.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\utils\editable_selects.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\utils\form_utils.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\utils\mctabs.js" />
+    <Content Include="Public\Javascript\Plugins\tiny_mce\utils\validate.js" />
+    <Content Include="Public\Stylesheets\blueprint\ie.css" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\buttons\icons\cross.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\buttons\icons\key.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\buttons\icons\tick.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\buttons\readme.txt" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\buttons\screen.css" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\fancy-type\readme.txt" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\fancy-type\screen.css" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\icons\doc.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\icons\email.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\icons\external.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\icons\feed.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\icons\im.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\icons\pdf.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\icons\visited.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\icons\xls.png" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\readme.txt" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\link-icons\screen.css" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\rtl\readme.txt" />
+    <Content Include="Public\Stylesheets\blueprint\plugins\rtl\screen.css" />
+    <Content Include="Public\Stylesheets\blueprint\print.css" />
+    <Content Include="Public\Stylesheets\blueprint\screen.css" />
+    <Content Include="Public\Stylesheets\blueprint\_examples\forms_example.html" />
+    <Content Include="Public\Stylesheets\blueprint\_examples\grid.html" />
+    <Content Include="Public\Stylesheets\blueprint\_examples\layout_example.html" />
+    <Content Include="Public\Stylesheets\blueprint\_examples\test.jpg" />
+    <Content Include="Public\Stylesheets\blueprint\_examples\typography.html" />
+    <Content Include="Public\Stylesheets\blueprint\_examples\valid.png" />
+    <Content Include="Public\Stylesheets\admin.css" />
+    <Content Include="Public\Stylesheets\nivo-slider.css" />
+    <Content Include="Public\Stylesheets\web.old.css" />
+    <Content Include="Public\Stylesheets\web.css" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Public\Stylesheets\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.accordion.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.all.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.base.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.button.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.core.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.resizable.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.selectable.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.slider.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.tabs.css" />
+    <Content Include="Public\Stylesheets\themes\base\jquery.ui.theme.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Public\Javascript\jquery-1.5.1.min.js" />
+    <Content Include="Public\Javascript\jquery.validate-vsdoc.js" />
+    <Content Include="Public\Javascript\jquery.validate.js" />
+    <Content Include="Public\Javascript\jquery.validate.min.js" />
+    <Content Include="Public\Javascript\modernizr-1.7.js" />
+    <Content Include="Public\Javascript\modernizr-1.7.min.js" />
+    <Content Include="README.jQuery.vsdoc.txt" />
+    <Content Include="RecaptchaNet.ReadMe.txt" />
+    <None Include="Properties\PublishProfiles\FileProfile.pubxml" />
+    <Content Include="Public\Assets\ProjectTutorial.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="Scripts\jquery-2.0.3.js" />
+    <Content Include="Scripts\jquery-2.0.3.min.js" />
+    <Content Include="Scripts\jquery-2.0.3.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Public\Javascript\jquery.unobtrusive-ajax.js" />
+    <Content Include="Public\Javascript\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Public\Javascript\jquery.validate.unobtrusive.js" />
+    <Content Include="Public\Javascript\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Public\Javascript\MicrosoftAjax.js" />
+    <Content Include="Public\Javascript\MicrosoftAjax.debug.js" />
+    <Content Include="Public\Javascript\MicrosoftMvcAjax.js" />
+    <Content Include="Public\Javascript\MicrosoftMvcAjax.debug.js" />
+    <Content Include="Public\Javascript\MicrosoftMvcValidation.js" />
+    <Content Include="Public\Javascript\MicrosoftMvcValidation.debug.js" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
+    <Content Include="Views\Account\LogIn.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_LogOnPartial.cshtml" />
+    <Content Include="Views\Shared\_Global.cshtml" />
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\themes\base\images\" />
+    <Folder Include="Public\Imports\" />
+    <Folder Include="Public\Javascript\Plugins\tiny_mce\plugins\legacyoutput\" />
+    <Folder Include="Public\ProductImages\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Blueprint.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Admin\Views\Content\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Content\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Content\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Content\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\Content\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PickupLocations\New.cshtml" />
+    <Content Include="Areas\Admin\Views\PickupLocations\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\PickupLocations\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PickupLocations\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceCodes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceCodes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceCodes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceCodes\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\PriceCodes\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductCategories\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductCategories\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductCategories\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductCategories\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductColors\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductColors\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductColors\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductColors\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductColors\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductFinishes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductFinishes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductFinishes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductFinishes\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductFinishes\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductGroups\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductGroups\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductGroups\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductGroups\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductGroups\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductSizes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductSizes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductSizes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductSizes\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductSizes\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductStatus\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductStatus\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductStatus\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductStatus\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductStatus\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Products\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Products\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Products\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Products\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\Products\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductTypes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductTypes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductTypes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductTypes\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductTypes\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductUnitOfMeasures\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductUnitOfMeasures\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductUnitOfMeasures\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductUnitOfMeasures\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductUnitOfMeasures\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductVariations\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductVariations\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductVariations\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductVariations\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductVariations\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Web.config" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\DiscountCodes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\DiscountCodes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\DiscountCodes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\DiscountCodes\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\StoreLocations\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\StoreLocations\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\StoreLocations\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\StoreLocations\New.cshtml" />
+    <Content Include="Areas\Admin\Views\StoreLocations\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ContactRequests\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ContactRequests\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ContactRequests\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ContactRequests\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\AccountRequests\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\AccountRequests\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\AccountRequests\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AccountRequests\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Manufacturers\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Manufacturers\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Manufacturers\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\Manufacturers\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Manufacturers\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductUsages\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductUsages\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductUsages\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductUsages\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Import\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductPriceCodes\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductPriceCodes\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductPriceCodes\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductPriceCodes\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductPriceCodes\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\Links\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Links\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Links\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Links\_CreateOrEdit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductSeries\New.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductSeries\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductSeries\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ProductSeries\_CreateOrEdit.cshtml" />
+    <None Include="CodeTemplates\Scaffolders\MvcScaffolding.Controller\ControllerWithRepository.cs.t4" />
+    <None Include="CodeTemplates\Scaffolders\MvcScaffolding.RazorView\Create.cs.t4" />
+    <None Include="CodeTemplates\Scaffolders\MvcScaffolding.RazorView\Edit.cs.t4" />
+    <None Include="CodeTemplates\Scaffolders\MvcScaffolding.RazorView\Index.cs.t4" />
+    <None Include="CodeTemplates\Scaffolders\T4Scaffolding.EFRepository\Repository.cs.t4" />
+    <Content Include="Views\ApplicationUserMailer\Activation.cshtml" />
+    <Content Include="Views\ApplicationUserMailer\PasswordReset.cshtml" />
+    <Content Include="Views\ApplicationUserMailer\_MailerLayout.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Shared\_TwoColLayout.cshtml" />
+    <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Locations.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Products\Show.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\Products\Search.cshtml" />
+    <Content Include="Views\Profile\Show.cshtml" />
+    <Content Include="Views\Profile\Edit.cshtml" />
+    <Content Include="Views\Projects\Index.cshtml" />
+    <Content Include="Views\RequestAccount\Show.cshtml" />
+    <Content Include="Views\Shared\_OneColLayout.cshtml" />
+    <Content Include="Views\Projects\New.cshtml" />
+    <Content Include="Views\Projects\Show.cshtml" />
+    <Content Include="Views\Shared\_LogOnOrRegister.cshtml" />
+    <Content Include="Views\Projects\Edit.cshtml" />
+    <Content Include="Views\Projects\Invite.cshtml" />
+    <Content Include="Views\ApplicationUserMailer\ProjectInvitation.cshtml" />
+    <Content Include="Views\Projects\Archives.cshtml" />
+    <Content Include="Views\Shared\_LogOnOnly.cshtml" />
+    <Content Include="Views\ApplicationUserMailer\NewProjectComment.cshtml" />
+    <Content Include="Views\Products\Slabs.cshtml" />
+    <Content Include="Views\Shared\_WideLayout.cshtml" />
+    <Content Include="Views\PriceList\Index.cshtml" />
+    <Content Include="Views\Profile\RequestAccount.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Products\_RelatedProductsList.cshtml" />
+    <Content Include="Views\Home\Links.cshtml" />
+    <Content Include="Views\Home\Privacy.cshtml" />
+    <Content Include="Views\PriceList\BySection.cshtml" />
+    <Content Include="Views\PriceList\_PriceList.cshtml" />
+    <Content Include="Views\PriceList\ByUpdates.cshtml" />
+    <Content Include="Views\PriceList\Print.cshtml" />
+    <Content Include="Views\PriceList\_PrintPriceList.cshtml" />
+    <Content Include="Views\PriceList\Data.cshtml" />
+    <Content Include="Views\PriceList\_DataPriceList.cshtml" />
+    <Content Include="Views\Home\_AboutMain.cshtml" />
+    <Content Include="Views\Home\_AboutTile.cshtml" />
+    <Content Include="Views\Home\_AboutStone.cshtml" />
+    <Content Include="Views\Home\_AboutSlab.cshtml" />
+    <Content Include="Views\Home\_AboutHandPainting.cshtml" />
+    <Content Include="Views\Home\_AboutEmployment.cshtml" />
+    <Content Include="Views\AdminMailer\_Layout.cshtml" />
+    <Content Include="Views\AdminMailer\AccountRequest.cshtml" />
+    <Content Include="Views\AdminMailer\ContactRequest.cshtml" />
+    <Content Include="Views\AdminMailer\NewAccountNotification.cshtml" />
+    <None Include="Properties\PublishProfiles\Profile1.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>60874</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/CAPCO</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

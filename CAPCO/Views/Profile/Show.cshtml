@@ -1,0 +1,78 @@
+﻿@model CAPCO.Infrastructure.Domain.ApplicationUser
+
+@{
+    ViewBag.Title = Model.FullName;
+    var currUser = MembershipHelpers.GetCurrentUser();
+    var isProfileOwner = MembershipHelpers.GetCurrentUser().Id == Model.Id;
+    var isServiceProvider = Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString());
+    var isAdmin = Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.Administrators.ToString());
+    bool isPricingEnabled = ViewBag.IsPricingEnabled;
+}
+
+<div class="span-6">
+    <div class="section-left sidebar">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left sidebar">
+        <h3 class="sidebar">Profile Menu</h3>
+        <ul class="sidebar">
+            @if (isProfileOwner)
+            {
+                <li>@Html.ActionLink("Edit My Profile", "edit", "profile", new { id = Model.Id }, null)</li>
+                <li>@Html.ActionLink("Change My Password", "changepassword", "account")</li>
+                if (!isAdmin)
+                {
+                    if (isPricingEnabled && (isServiceProvider && currUser.DiscountCode != null))
+                    {
+                    <li>@Html.ActionLink("Price Lists", "index", "pricelist")</li>
+                    
+                    }
+                    if (!Model.HasRequestedAccount && !Model.IsAccountActivated)
+                    { 
+                    <li>@Html.ActionLink("Request Account", "requestaccount", "profile", null, null)</li>
+                    }
+                }
+            }
+            @*else
+            {
+                <li>@Html.ActionLink("Message " + Model.FirstName, "new", "messages", new { id = Model.Id }, null)</li>
+            }*@
+        </ul>
+    </div>
+</div>
+
+
+<div class="span-18 last">
+    <div style="padding: 10px;">
+        <h2>@ViewBag.Title</h2>
+        <div>
+            <fieldset>
+                <legend>Details</legend>
+                <label>Username: </label> @Model.UserName<br />
+                <label>Email: </label> @Model.Email<br />
+                <label>Company Name: </label> @Model.CompanyName<br />
+                <label>Phone: </label> @Model.Phone<br />
+                <label>Fax: </label> @Model.Fax<br />
+                <label>Street Address: </label> @Model.StreetAddressLine1<br />
+                <label>Street Address: </label> @Model.StreetAddressLine2<br />
+                <label>City: </label> @Model.City<br />
+                <label>State: </label> @Model.State<br />
+                <label>Zip: </label> @Model.Zip<br />
+            </fieldset>
+            
+            @if (isProfileOwner)
+            {
+                <fieldset>
+                    <legend>Preferences</legend>
+                    @if (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString()))
+                    {
+                        <p><label>Pricing Display Preference: </label> @Model.PricePreference.ToFriendlyPricingPreference()</p>
+                        <p><label>Default Pickup Location: </label> @(Model.DefaultLocation != null ? Model.DefaultLocation.Name : "None")</p>
+                    }
+                    <p><label>Do you want to receive system emails, such as new project comments? </label>@(Model.CanReceiveSystemEmails ? "Yes" : "No")</p>
+                    <p><label>Do you want to be kept informed of company news and specials via email? </label>@(Model.CanReceiveMarketingEmails ? "Yes" : "No")</p>
+                </fieldset>
+            }
+        </div>
+    </div>
+</div>

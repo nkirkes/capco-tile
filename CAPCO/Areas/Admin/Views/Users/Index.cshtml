@@ -1,0 +1,65 @@
+@model CAPCO.Areas.Admin.Models.PagedViewModel<CAPCO.Infrastructure.Domain.ApplicationUser>
+@using MvcContrib.UI.Grid;
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Manage Users";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("New User", "New")
+</p>
+
+<div>
+    @using (Html.BeginForm("search", "users", new { area = "admin" }, FormMethod.Post, null))
+    { 
+        <label>Search by User Name:</label> @Html.TextBox("criteria") <input type="submit" value="Search" />
+    }
+</div>
+
+@if (Model.Entities.Count() > 0)
+{
+    <div class="accounts-grid">
+        @Html.Grid(Model.Entities.OrderBy(x => x.UserName)).Columns(column =>
+   {
+       column.For(x => "<a href='" + Url.Action("show", "users", new { area = "admin", id = x.Id }) + "'><img src='" + Url.Content("~/public/images/24-columns.png") + "' /></a>").Named("View").Encode(false);
+       column.For(x => x.UserName).Named("User Name");
+       column.For(x => x.FullName).Named("Full Name");
+       column.For(x => x.CompanyName).Named("Company");
+       column.For(x => x.AccountNumber).Named("Account Number");
+       column.For(x => MvcHtmlString.Create("<a href='mailto:'" + x.Email + "'>" + x.Email + "</a>")).Named("Email");
+       column.For(x => x.Phone).Named("Phone");
+       column.For(x => x.Status).Named("Status");
+       //column.For(x => Membership.GetUser(x.UserName).IsLockedOut).Named("Locked Out?");
+   }).Attributes(id => "resultsGrid")
+    </div>
+}
+
+<div style="margin-top: 10px;">Displaying @(Model.Page.HasValue && Model.Page > 1 ? (Model.Page - 1) * 100 + 1 : 1) - @(Model.TotalCount < ((Model.Page ?? 1) * 100) ? Model.TotalCount : (Model.Page ?? 1) * 100) of @Model.TotalCount users.</div>
+
+@Html.PagedListPager(Model.Entities,
+            page => Url.Action("Index", new RouteValueDictionary() {
+               { "Page", page }
+            }),
+            PagedListRenderOptions.OnlyShowFivePagesAtATime)
+
+@{
+    var pageFormOptions = new GoToFormRenderOptions("page");
+    pageFormOptions.InputFieldType = "text";
+}
+
+<div style="margin-top: 15px; width: 500px;">@Html.PagedListGoToPageForm(Model.Entities, Url.Action("Index"), options: pageFormOptions)</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#resultsGrid').dataTable({
+                "bPaginate": false,
+                "bInfo": false,
+                "bFilter": false,
+                "bLengthChange": false
+            });
+        });
+    </script>
+}

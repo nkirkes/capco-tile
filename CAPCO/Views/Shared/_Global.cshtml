@@ -1,0 +1,134 @@
+﻿@using CAPCO.Infrastructure.Domain
+@using Recaptcha.Web.Mvc;
+
+@{
+    var footer = ViewBag.FooterSection as CAPCO.Infrastructure.Domain.ContentSection;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>CAPCO Tile & Stone - @ViewBag.Title</title>
+    @Html.CSS("blueprint/screen.css")
+    @*@Html.CSS("blueprint/print.css", "print")*@
+    <!--[if lt IE 8]>
+		@Html.CSS("blueprint/ie.css")
+	<![endif]-->
+    
+	@Html.CSS("web.css")
+    <!--[if IE]>
+		@Html.CSS("ie.css")
+	<![endif]-->
+    @RenderSection("head", false)
+</head>
+<body>
+    <div id="header">
+        <div class="container">
+            <div class="span-24">
+                <div id="logo">
+                    <a href="@Url.Action("index", "home", new { area = "" })">@Html.Image("logo-capco-166x60.png")</a>
+                </div>
+                <div id="top-navigation">
+                    <ul>
+                        <li>@Html.ActionLink("Home", "index", "home", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Products", "index", "products", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Slabs", "slabs", "products", new { area = ""}, null)</li>
+                        <li>@Html.ActionLink("About Us", "about", "home", new { area = "", section = "home" }, null)</li>
+                        <li>@Html.ActionLink("Locations", "locations", "home", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Contact", "contact", "home", new { area = "" }, null)</li>
+                        <li><a href="@ViewBag.BlogUrl" target="_blank">Blog</a></li>
+                        @*<li>@Html.ActionLink("Links", "links", "home", new { area = "" }, null)</li>*@
+                        @*@Html.Partial("_LogOnPartial")*@
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="container" id="body">
+        @*<div class="span-24">
+            <div class="body-content">*@
+                @Html.Flash()
+                @RenderBody()
+            @*</div>
+        </div>*@        
+    </div>
+    
+    <div class="container" id="footer">
+        <div class="span-8">
+            <div class="footer-content">
+                @Html.GetSectionHtml(footer)
+            </div>
+        </div>
+        <div class="span-8">
+            <div class="footer-content">
+                <strong>CAPCO Tile & Stone</strong><br />
+                5800 E. Jewell Avenue<br />
+                Denver, CO 80224<br />
+                Phone 303-759-1919<br />
+                Fax 303-756-3416<br />
+                Toll Free 800-727-2272<br />
+                @Html.ActionLink("Contact Us", "contact", "home", new { area = "" }, null)
+                <br/><br/><br/><br/><br/>
+                <a title="Click for the Business Review of Capco Tile & Stone, LLC, a Tile - Ceramic - Manufacturers & Distributors in Denver CO" href="http://www.bbb.org/denver/business-reviews/tile-ceramic-manufacturers-and-distributors/capco-tile-and-stone-in-denver-co-21816#sealclick"><img alt="Click for the BBB Business Review of this Tile - Ceramic - Manufacturers & Distributors in Denver CO" style="border: 0;" src="http://seal-denver.bbb.org/seals/blue-seal-250-52-capcotilestonellc-21816.png" /></a>
+            </div>
+        </div>
+        <div class="span-8 last">
+            <div class="footer-content">
+                <div style="width: 120px; float: left;">
+                    <ul>
+                        <li>@Html.ActionLink("Home", "index", "home", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Products", "index", "products", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("About Us", "about", "home", new { area = "", section = "home" }, null)</li>
+                        <li>@Html.ActionLink("Locations", "locations", "home", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Contact", "contact", "home", new { area = "" }, null)</li>
+                        <li><a href="@ViewBag.BlogUrl" target="_blank">Blog</a></li>
+                        <li>@Html.ActionLink("Links", "links", "home", new { area = "" }, null)</li>
+                        @Html.Partial("_LogOnPartial")
+                    </ul>
+                </div>
+                <div style="text-align: right;">
+                    <a href="http://twitter.com" target="_blank">@Html.Image("twitter.png")</a><br />
+                    <a href="https://www.facebook.com/capcotile" target="_blank">@Html.Image("facebook.png")</a><br />
+                    <a href="@ViewBag.BlogUrl" target="_blank">@Html.Image("feed.png")</a><br />
+                    <a href="http://www.pinterest.com/capcotilestone/boards/" target="_blank">@Html.Image("pinterest.png")</a><br />
+                    <a href="http://www.youtube.com/user/CAPCOTileandStone" target="_blank">@Html.Image("youtube.png")</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="copyright">
+        <div class="span-24">
+            &copy;2011 CAPCO Tile & Stone<br />
+            Version: @ViewBag.BuildVersion
+        </div>
+    </div>
+    
+    @Html.Script("jquery-1.6.js")
+    @Html.Script("modernizr-1.7.min.js")
+    @StackExchange.Profiling.MiniProfiler.RenderIncludes()
+    @Html.Script("jquery.validate.min.js")
+    @Html.Script("jquery.validate.unobtrusive.min.js")
+
+    @Html.Script("Plugins/chillbox-packed.js")
+    <script src="http://cdn.jquerytools.org/1.2.5/jquery.tools.min.js"></script>
+    @RenderSection("Scripts", false)
+
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-25069043-1']);
+        _gaq.push(['_setDomainName', 'capcotile.com']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+</script>
+
+</body>
+</html>

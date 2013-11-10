@@ -1,0 +1,44 @@
+@model CAPCO.Infrastructure.Domain.ContactRequest
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Name)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => model.Name, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.Name)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Email)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => model.Email, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.Email)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Subject)
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => model.Subject, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.Subject)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Message)
+</div>
+<div class="editor-field">
+    @Html.TextAreaFor(model => model.Message, new { disabled = "disabled" })
+    @Html.ValidationMessageFor(model => model.Message)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.IsArchived)
+</div>
+<div class="editor-field">
+    @Html.CheckBoxFor(model => model.IsArchived)
+    @Html.ValidationMessageFor(model => model.IsArchived)
+</div>
+

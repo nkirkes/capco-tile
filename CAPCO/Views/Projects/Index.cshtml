@@ -1,0 +1,95 @@
+﻿@model ICollection<CAPCO.Infrastructure.Domain.Project>
+@{
+    ViewBag.Title = "My Projects";
+    var currentUser = MembershipHelpers.GetCurrentUser();
+    var userPricePreference = (CAPCO.Infrastructure.Domain.PricePreferences)Enum.Parse(typeof(CAPCO.Infrastructure.Domain.PricePreferences), currentUser.PricePreference);
+    var isServiceProvider = Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString());
+    var isPricingEnabled = ViewBag.IsPricingEnabled;
+}
+
+<div class="span-6">
+    <div class="section-left">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left">
+        <h3 class="sidebar">Project Options</h3>
+        <ul class="sidebar">
+            <li>@Html.ActionLink("Create New Project", "new", "projects", null, null)</li>
+            <li>@Html.ActionLink("Project Archives", "archives", "projects", null, null)</li>
+        </ul>
+    </div>
+</div>
+
+<div class="span-18 last">
+    <div class="padded-content">
+        <h1>@ViewBag.Title</h1>
+
+        @if (Model != null && Model.Count > 0)
+        {
+            <table>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Branch</th>
+                    <th>Items</th>
+                    @if (isPricingEnabled && (isServiceProvider && currentUser.DiscountCode != null))
+                    {
+                        switch (userPricePreference)
+                        { 
+                            case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                                <th>Total Retail</th>
+                                break;
+                            case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                                <th>Total Cost</th>
+                                break;
+                            case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                                <th>Total Retail</th>
+                                <th>Total Cost</th>
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    <th># of Comments</th>
+                    <th>Created On</th>
+                    <th>Created By</th>
+                    <th>Last Modified On</th>
+                </tr>
+                @foreach (var proj in Model.OrderByDescending(x => x.LastModifiedOn))
+                { 
+                    <tr>
+                        <td>@Html.ActionLink(@proj.ProjectName, "show", "projects", new { id = proj.Id }, null)</td>
+                        <td>@proj.Location.Name</td>
+                        <td>@proj.Products.Count</td>
+                        @if (isPricingEnabled && (isServiceProvider && currentUser.DiscountCode != null))
+                        {
+                            switch (userPricePreference)
+                            {
+                                case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                                    <td>@String.Format("{0:c}", proj.Products.Sum(x => x.Product.ProviderRetail(proj)))</td>
+                                   break;
+                                case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                                    <td>@String.Format("{0:c}", proj.Products.Sum(x => x.Product.ProviderCost(proj)))</td>
+                                   break;
+                                case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                                    <td>@String.Format("{0:c}", proj.Products.Sum(x => x.Product.ProviderRetail(proj)))</td>
+                                    <td>@String.Format("{0:c}", proj.Products.Sum(x => x.Product.ProviderCost(proj)))</td>
+                                   break;
+                                default:
+                                   break;
+                            }
+                        }
+                        <td>@proj.Comments.Count</td>
+                        <td>@proj.CreatedOn.ToShortDateString()</td>
+                        <td>@proj.CreatedBy.UserName</td>
+                        <td>@proj.LastModifiedOn.ToShortDateString()</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        { 
+            <text><p>You don't have any projects. You can create one by clicking the button to the left, or by @Html.ActionLink("searching for a product", "index", "products").</p></text>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,27 @@
+@model CAPCO.Infrastructure.Domain.ProductColor
+
+@{
+    ViewBag.Title = "Edit Product Color";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("update", "productcolors", new { id = Model.Id }, FormMethod.Post, null))
+{
+    @Html.ValidationSummary(true)
+	@Html.AntiForgeryToken()
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    <fieldset>
+        <legend>ProductColor</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index") | @Html.ActionLink("Delete This Product Color", "delete", "productcolors", new { area = "admin", id = Model.Id }, new { onclick = "javascript: return confirm(\"Are you sure? This cannot be undone.\");" }) 
+</div>

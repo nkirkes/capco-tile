@@ -1,0 +1,16 @@
+﻿@if(Request.IsAuthenticated) {
+    if (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.Administrators.ToString()))
+    { 
+        <li>@Html.ActionLink("Administration", "index", "dashboard", new { area = "admin" }, null)</li>
+    }
+    else
+    {
+        <li>@Html.ActionLink("My Profile", "index", "profile", new { area = "" }, null)</li>
+    }
+    <li>@Html.ActionLink("Log Off", "LogOff", "Account", new { area = "" }, null)</li>
+}
+else
+{
+    <li>@Html.ActionLink("Log In", "LogIn", "Account", new { area = "" }, null)</li>
+    <li>@Html.ActionLink("Register", "Register", "Account", new { area = "" }, null)</li>
+}

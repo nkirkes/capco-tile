@@ -1,0 +1,27 @@
+﻿<header id="header">
+    <div class="container">
+        <div class="span-24" style="text-align: right;height: 30px;margin-bottom: 5px;">
+            <div id="nav-top">
+                <ul>
+                    <li>@Html.ActionLink("Home", "index", "home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Products", "index", "products", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Slabs", "slabs", "products", new { area = ""}, null)</li>
+                    <li>@Html.ActionLink("About Us", "about", "home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Locations", "locations", "home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Contact", "contact", "home", new { area = "" }, null)</li>
+                    <li><a href="http://capco.posterous.com" target="_blank">Blog</a></li>
+                    @Html.Partial("_LogOnPartial")
+                </ul>
+            </div>
+        </div>
+        <div class="span-12">
+            @Html.Image("old_logo.png")
+        </div>
+        <div class="span-12 last" style="text-align: right;">
+            This area can/will be used for quick search and quick links for docs/registration/etc.
+        </div>
+        <div class="span-24 last">
+            @Html.Flash()
+        </div>
+    </div>
+</header>

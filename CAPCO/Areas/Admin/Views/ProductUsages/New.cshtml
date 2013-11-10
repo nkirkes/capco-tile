@@ -1,0 +1,27 @@
+@model CAPCO.Infrastructure.Domain.ProductUsage
+
+@{
+    ViewBag.Title = "Create Product Usage";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("create", "productusages", FormMethod.Post)) {
+	@Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Product Usage</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

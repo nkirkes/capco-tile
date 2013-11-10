@@ -1,0 +1,65 @@
+@model CAPCO.Infrastructure.Domain.AccountRequest
+
+@{
+    ViewBag.Title = "Account Request";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<fieldset>
+    <legend>Account Request</legend>
+
+    <div><label>User</label>
+    @(Model.User == null ? "None" : Model.User.LastName)</div>
+
+    <div><label>Company Name</label>
+    @Model.CompanyName</div>
+
+    <div><label>First Name</label>
+    @Model.FirstName</div>
+
+    <div><label>Last Name</label>
+    @Model.LastName</div>
+
+    <div><label>Street Address Line 1</label>
+    @Model.StreetAddressLine1</div>
+
+    <div><label>Street Address Line 2</label>
+    @Model.StreetAddressLine2</div>
+
+    <div><label>City</label>
+    @Model.City</div>
+
+    <div><label>State</label>
+    @Model.State</div>
+
+    <div><label>Zip</label>
+    @Model.Zip</div>
+
+    <div><label>Phone</label>
+    @Model.Phone</div>
+
+    <div><label>Fax</label>
+    @Model.Fax</div>
+
+    <div><label>Email</label>
+    @Model.Email</div>
+
+    <div><label>Account Number</label>
+    @Model.AccountNumber</div>
+
+    <div><label>Has Been Verified</label>
+    @Model.HasBeenVerified</div>
+
+    <div><label>Created On</label>
+    @String.Format("{0:g}", Model.CreatedOn)</div>
+
+    <div><label>Notes</label>
+    @Model.Notes</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

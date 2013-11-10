@@ -1,0 +1,19 @@
+@{
+    CAPCO.Infrastructure.Domain.AccountRequest request = ViewBag.AccountRequest;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>An account request was generated on the CAPCO web site. You can review the request details below, and manage the request through that admin portal.</p>
+
+<label>Name:</label> @request.User.FullName<br />
+<label>Company:</label> @request.CompanyName<br />
+<label>Email:</label> @request.Email<br />
+<label>Phone:</label> @request.Phone<br />
+<label>Account Number:</label> @request.AccountNumber<br />
+
+ 
+<p>
+    Thanks!</p>
+
+~ The CAPCO Team

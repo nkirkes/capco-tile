@@ -1,0 +1,39 @@
+@model CAPCO.Infrastructure.Domain.Product
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+<div>
+@using (Html.BeginForm("Update", "products", new { id = Model.Id }, FormMethod.Post, null))
+{
+    @Html.AntiForgeryToken()
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Product</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+</div>
+@*<div style="width:50%;">
+    
+<div>
+    <h3>Price Codes</h3>
+    <div>
+        <label>Add a price code</label><br />
+        <label>Code:</label> @Html.TextBox("NewPriceCode")
+        <label>Price:</label> @Html.TextBox("NewPriceCodePrice")
+    </div>
+</div>
+</div>*@
+
+<div>
+    @Html.ActionLink("Back to List", "Index") | @Html.ActionLink("Delete This Product", "delete", "products", new { area = "admin", id = Model.Id }, new { onclick = "javascript: return confirm(\"Are you sure?\");" }) 
+</div>

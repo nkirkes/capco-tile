@@ -1,0 +1,15 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_Global.cshtml";
+}
+<section id="main" style="min-height: 500px;">
+    <div class="container">
+        <div class="span-24 last">
+            @RenderBody()
+        </div>
+    </div>
+</section>
+    
+@section Scripts
+{
+    @RenderSection("Scripts", false)
+}

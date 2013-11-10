@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Import Product Data";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>Using the forms below, you can perform a bulk import of product data, product cross-references, and product -> price code associations.</p>
+
+<fieldset>
+    <legend>Import Products</legend>
+    @using (Html.BeginForm("products", "import", new { area = "admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <label>Select File to Import(*.txt):</label><br /><input type="file" name="productsFile" id="productsFile" /><br />
+        <p><input type="submit" value="Import Products" /></p>
+    }
+</fieldset>
+
+<fieldset>
+    <legend>Import Product Cross-references</legend>
+    @using (Html.BeginForm("relatedproducts", "import", new { area = "admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <label>Select File to Import(*.txt):</label><br /><input type="file" name="crossRefFile" id="crossRefFile" /><br />
+        <p><input type="submit" value="Import Cross-references" /></p>
+    }
+</fieldset>
+
+<fieldset>
+    <legend>Import Product Price Codes</legend>
+    @using (Html.BeginForm("productpricecodes", "import", new { area = "admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <label>Select File to Import(*.txt):</label><br /><input type="file" name="priceCodeFile" id="priceCodeFile" /><br />
+        <p><input type="submit" value="Import Price Codes" /></p>
+    }
+</fieldset>
+
+<fieldset>
+    <legend>Import Product Series</legend>
+    @using (Html.BeginForm("productseries", "import", new { area = "admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <label>Select File to Import(*.txt):</label><br /><input type="file" name="seriesFile" id="seriesFile" /><br />
+        <p><input type="submit" value="Import Product Series" /></p>
+    }
+</fieldset>
+
+@*<fieldset>
+    <legend>Import Customers</legend>
+    @using (Html.BeginForm("customers", "import", new { area = "admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <label>Select File to Import(*.txt):</label><br /><input type="file" name="customersFile" id="customersFile" /><br />
+        <p><input type="submit" value="Import Customers" /></p>
+    }
+</fieldset>*@

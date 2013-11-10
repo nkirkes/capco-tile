@@ -1,0 +1,299 @@
+@model CAPCO.Infrastructure.Domain.Product
+
+@{
+    ViewBag.Title = Model != null ? Model.ItemNumber : "Product Details";
+    var currentUser = MembershipHelpers.GetCurrentUser();
+    var isPricingEnabled = ViewBag.IsPricingEnabled;
+}
+
+<div class="span-6">
+    <div class="section-left">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    @if (currentUser != null)
+    {
+        <div class="section-left">
+        
+            <h3 class="sidebar">Projects</h3>
+            <ul class="sidebar">
+                <li>@Html.ActionLink("Create New Project", "new", "projects", new { productId = Model.Id }, null)</li>    
+            </ul>
+            
+            
+            @if (currentUser.Projects().Any())
+            {
+                
+                using (Html.BeginForm("AddToProject", "products", new { id = Model.Id }, FormMethod.Post, null))
+                {
+                    @Html.AntiForgeryToken()
+                    <label>Add to an existing project: </label><br />
+                    @Html.DropDownList("projectId", ((IEnumerable<CAPCO.Infrastructure.Domain.Project>)currentUser.Projects()).Select(option => new SelectListItem
+                    {
+                        Text = (option == null ? "None" : option.ProjectName),
+                        Value = option.Id.ToString()
+                    }), "Choose...", new { style = "width:100%;", id = "ProjectsList" })
+                    
+                    <label style="min-width:0;">Item Comment:</label><br />
+                    @Html.TextArea("ItemComment", new { @class="span-5", style="height:50px;" })
+                    
+                    <p class="small-buttons">
+                        <input type="submit" value="Add to Project" class="small-button" id="AddToProject" onclick="javascript: return HasProject();" />
+                    </p>
+                    
+                }
+            }
+            
+            
+        
+        </div>
+    }
+</div>
+
+<div class="span-18 last">
+    <div class="span-8">
+        <div class="padded-content">
+                <a href="" class="back">Return to Search Results</a>
+                <h2>@ViewBag.Title</h2>
+                
+                <div class="clearfix">
+                <!-- @Html.GetProductImage(Model, ImageSize.Detail) -->
+                    @if (Url.ImageExists(Model, ImageSize.Detail))
+                    {
+                    @*<a href="@Url.GetProductImageUrl(Model, ImageSize.Large)" class="jqzoom" rel='gal1' > *@
+                        @Html.GetProductImage(Model, ImageSize.Detail)
+                    @*</a>*@
+                    }
+                    else
+                    { 
+                        @Html.GetProductImage(Model, ImageSize.Small)
+                    }
+                    </div>
+                    @if (!String.IsNullOrWhiteSpace(Model.YouTubeUrl))
+                    { 
+                        <div class="clearfix" style="clear: both;margin-top:20px;">
+                            <iframe width="300" height="225" src="@Model.YouTubeUrl" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    }
+            </div>
+        </div>
+
+        <div class="span-10 last" style="padding-bottom: 10px;">
+            <div class="padded-content" id="product-details">
+                <h2 class="section-title">Details</h2>
+                @*<div>
+                    <label class="product-details">Item Number:</label> @Model.ItemNumber
+                </div>*@
+
+                @if (!String.IsNullOrWhiteSpace(Model.Description))
+                {
+                    <div><label class="product-details">Description: </label>@Model.Description</div>
+                }
+
+                @*@if (!String.IsNullOrWhiteSpace(Model.Series))
+                {
+                <div><label class="product-details">Series: </label>@Model.Series</div>
+                }*@
+                
+                @if (Model.Manufacturer != null)
+                {
+                    <div><label class="product-details">Manufacturer:</label> @(!String.IsNullOrWhiteSpace(Model.Manufacturer.Name) ? Model.Manufacturer.Name : Model.Manufacturer.Section)</div>
+                }
+                
+                @if (!String.IsNullOrWhiteSpace(Model.ManufacturerItem))
+                {
+                    <div><label class="product-details">Manufacturer Item Number:</label> @Model.ManufacturerItem</div>
+                }
+                @if (!String.IsNullOrWhiteSpace(Model.ManufacturerColor))
+                {
+                    <div><label class="product-details">Manufacturer Color:</label> @Model.ManufacturerColor</div>
+                }
+
+                @if (Model.Group != null)
+                {
+                    <div><label class="product-details">Group: </label>@Model.Group.Name</div>
+                }
+                @if (Model.Category != null)
+                {
+                    <div><label class="product-details">Category: </label>@Model.Category.Name</div>
+                }
+                @if (Model.Type != null)
+                {
+                    <div><label class="product-details">Type: </label>@(Model.Type == null ? "None" : Model.Type.Name)</div>
+                }
+                @if (Model.Color != null)
+                {
+                    <div><label class="product-details">Color: </label>@(Model.Color == null ? "None" : Model.Color.Name)</div>
+                }
+                @if (!String.IsNullOrWhiteSpace(Model.SizeDescription))
+                {
+                    <div><label class="product-details">Size: </label>@Model.SizeDescription</div>
+                }
+                @if (Model.Finish != null)
+                {
+                    <div><label class="product-details">Finish: </label>@(Model.Finish == null ? "None" : Model.Finish.Name)</div>
+                }
+                @if (Model.UnitOfMeasure != null)
+                {
+                    <div><label class="product-details">Unit of Measure: </label>@(Model.UnitOfMeasure == null ? "None" : Model.UnitOfMeasure.Name)</div>
+                }
+                @if (Model.Variation != null)
+                {
+                    <div><label class="product-details">Variation: </label>@(Model.Variation == null ? "None" : Model.Variation.Name)</div>
+                }
+                @if (Model.Status != null)
+                {
+                    <div><label class="product-details">Status: </label>@(Model.Status == null ? "None" : Model.Status.Name)</div>
+                }
+                
+                @if (Model.Usage != null)
+                {
+                    <div><label class="product-details">Usage: </label>@Model.Usage.Name</div>
+                }
+                
+                
+                @if (Model.CartonQuantity.HasValue)
+                {
+                    <div><label class="product-details">Carton Quantity: </label>@Model.CartonQuantity.Value</div>
+                }
+                
+                @if (Model.UnitsPerPiece.HasValue)
+                {
+                    <div><label class="product-details">Units per Piece: </label>@Model.UnitsPerPiece.Value</div>
+                }
+
+
+                @if (isPricingEnabled && (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString()) && currentUser.DiscountCode != null))
+                {
+                    if (currentUser.PricePreference == CAPCO.Infrastructure.Domain.PricePreferences.CostOnly.ToString())
+                    {
+                        <div><label class="product-details">Cost: </label>@String.Format("{0:c}", Model.ProviderCost(currentUser))</div>
+                    }
+                    else if (currentUser.PricePreference == CAPCO.Infrastructure.Domain.PricePreferences.Both.ToString())
+                    {
+                        <div><label class="product-details">Retail: </label>@String.Format("{0:c}", Model.ProviderRetail(currentUser))</div>
+                        <div><label class="product-details">Cost: </label>@String.Format("{0:c}", Model.ProviderCost(currentUser))</div>
+                    }
+                    else if (currentUser.PricePreference == CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly.ToString())
+                    {
+                        <div><label class="product-details">Retail: </label>@String.Format("{0:c}", Model.ProviderRetail(currentUser))</div>
+                    }
+                }
+                
+            </div>
+
+            <div class="padded-content" id="product-details">
+                <h2 class="section-title">Technical Data</h2>
+                <p style="font-size: 11px; font-style:italic;">*This technical information is given as accurately as possible and was provided by the manufacturer of this item.</p>
+                @if (!String.IsNullOrWhiteSpace(Model.WaterAbsorption))
+                {
+                    <div><label class="product-details">Water Absorption:</label> @Model.WaterAbsorption</div>
+                }
+                
+                @if (!String.IsNullOrWhiteSpace(Model.BreakingStrength))
+                {
+                    <div><label class="product-details">Breaking Strength:</label> @Model.BreakingStrength</div>
+                }
+                
+                <div><label class="product-details">Chemical Resistance:</label> @(Model.IsChemicalResistant ? "Yes" : "No")</div>
+                <div><label class="product-details">Frost Resistance:</label> @(Model.IsChemicalResistant ? "Yes" : "No")</div>
+                @if (!String.IsNullOrWhiteSpace(Model.ScratchHardiness))
+                {
+                    <div><label class="product-details">Scratch Hardiness:</label> @Model.ScratchHardiness</div>
+                }
+                @if (Model.CoefficientOfFrictionDry.HasValue)
+                {
+                    <div><label class="product-details">Coefficient Of Friction - Dry:</label> @Model.CoefficientOfFrictionDry</div>
+                }
+                
+                @if (Model.CoefficientOfFrictionWet.HasValue)
+                {
+                    <div><label class="product-details">Coefficient Of Friction - Wet:</label> @Model.CoefficientOfFrictionWet</div>
+                }
+            </div>
+        </div>
+
+        @if (Model.RelatedSizes.Any())
+        {
+        <div class="span-18 last" style="border-top: 1px solid #DDD;">
+            <div class="padded-content">
+                <h2 class="section-title">
+                    Other Sizes
+                </h2>
+                @Html.Partial("_RelatedProductsList", Model.RelatedSizes)
+            </div>
+        </div>
+        }
+        
+        @if (Model.RelatedAccents.Any())
+        {
+        <div class="span-18 last" style="border-top: 1px solid #DDD;">
+            <div class="padded-content">
+                <h2 class="section-title">
+                    Decorative Accents
+                </h2>
+                @Html.Partial("_RelatedProductsList", Model.RelatedAccents)
+            </div>
+        </div>
+        }
+        
+        @if (Model.RelatedTrims.Any())
+        {
+        <div class="span-18 last" style="border-top: 1px solid #DDD;">
+            <div class="padded-content">
+                <h2 class="section-title">
+                    Trims
+                </h2>
+                @Html.Partial("_RelatedProductsList", Model.RelatedTrims)
+            </div>
+        </div>
+        }
+    
+        @if (Model.RelatedFinishes.Any())
+        {
+            <div class="span-18 last" style="border-top: 1px solid #DDD;">
+                <div class="padded-content">
+                    <h2 class="section-title">
+                        Other Finishes
+                    </h2>
+                    @Html.Partial("_RelatedProductsList", Model.RelatedSizes)
+                </div>
+            </div>
+        }
+</div>
+
+@section Scripts
+{
+    <script src="@Url.Content("~/Public/Javascript/Plugins/qtip/jquery.qtip.min.js")"></script>
+    <link href="@Url.Content("~/Public/Javascript/Plugins/qtip/jquery.qtip.min.css")" type="text/css" rel="stylesheet" />
+    <script type="text/javascript">
+
+        $(".product-img-link").qtip({
+            position: {
+                my: 'bottom center',  // Position my top left...
+                at: 'top center'
+            },
+            content: {
+                text: function (api) {
+                    var tid = '#' + $(this).attr('title');
+                    return $(tid).html();
+                }
+            }
+        });
+
+        $('a.back').click(function () {
+            parent.history.back();
+            return false;
+        });
+
+        function HasProject() {
+            var ddl = $('#ProjectsList');
+            if (ddl.val() > 0) {
+                return true;
+            }
+            else {
+                alert("Please select a project.");
+                return false;
+            }
+        }
+    </script>
+}

@@ -1,0 +1,27 @@
+@model CAPCO.Infrastructure.Domain.ProductCategory
+
+@{
+    ViewBag.Title = "New Product Category";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("create", "productcategories", FormMethod.Post)) {
+	@Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Product Category</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

@@ -1,0 +1,59 @@
+﻿@model IList<CAPCO.Infrastructure.Domain.Link>
+@{
+    var links = ViewBag.Section as CAPCO.Infrastructure.Domain.ContentSection;
+    ViewBag.Title = links.Title;
+    var blogFeed = ViewBag.BlogRssFeed;
+    var blogUrl = ViewBag.BlogUrl;
+}
+
+
+<div class="span-16">
+    <div style="padding: 10px;">
+        <h2>@ViewBag.Title</h2>
+        @Html.GetSectionHtml(links)
+
+        @foreach (var link in Model.OrderBy(x => x.Order))
+        {
+            <hr />
+            <div>
+                <label><a href="@link.Url" target="_blank">@link.Label</a></label><br />
+                @if (!String.IsNullOrWhiteSpace(link.Description))
+                {
+                <p>@link.Description</p>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+<div class="span-8 last">
+    <div class="section">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section" style="text-align: center; background-color: transparent;">
+        @Html.ActionLink("View Slab Inventory", "slabs", "products", null, new { @class = "button" })
+    </div>
+    <div class="section">
+        <h3 style="margin-bottom: 0px;">Recent Posts</h3>
+        <div style="margin-bottom: 5px;"><a href="@blogUrl" target="_blank">Visit Blog</a></div>
+        <div id="blog">
+            
+        </div>
+        <div><a href="@blogUrl" target="_blank">Visit Blog</a></div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <!-- blog feed -->
+    @Html.CSS("jquery.zrssfeed.css")
+    @Html.Script("Plugins/jquery.zrssfeed.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#blog').rssfeed('@blogFeed', {
+                limit: 3
+            });
+        });
+    </script>
+}

@@ -1,0 +1,171 @@
+@model CAPCO.Infrastructure.Domain.ApplicationUser
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.UserName)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.UserName)
+    @Html.ValidationMessageFor(model => model.UserName)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.FirstName)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.FirstName)
+    @Html.ValidationMessageFor(model => model.FirstName)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.LastName)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.LastName)
+    @Html.ValidationMessageFor(model => model.LastName)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.CompanyName)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.CompanyName)
+    @Html.ValidationMessageFor(model => model.CompanyName)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.AccountNumber)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.AccountNumber)
+    @Html.ValidationMessageFor(model => model.AccountNumber)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.StreetAddressLine1)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.StreetAddressLine1)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.StreetAddressLine2)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.StreetAddressLine2)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.City)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.City)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.State)
+</div>
+<div class="editor-field">
+    @Html.DropDownList("SelectedState", default(CAPCO.Infrastructure.Domain.States).ToSelectList(true).OrderBy(x => x.Text).Select(option => new SelectListItem
+    {
+        Text = (option == null ? "Choose..." : option.Text),
+        Value = option.Value,
+        Selected = (Model != null && Model.State != null) && (option.Value == Model.State)
+    }), "Choose...")
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Zip)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Zip)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Email)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Email)
+    @Html.ValidationMessageFor(model => model.Email)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Phone)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Phone)
+    @Html.ValidationMessageFor(model => model.Phone)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Fax)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Fax)
+    @Html.ValidationMessageFor(model => model.Fax)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.ActivationKey)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.ActivationKey)
+    @Html.ValidationMessageFor(model => model.ActivationKey)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.IsActivated)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.IsActivated)
+    @Html.ValidationMessageFor(model => model.IsActivated)
+</div>
+
+<div>
+    @Html.LabelFor(model => model.Status)
+</div>
+<div>
+    @Html.DropDownList("SelectedStatus", default(CAPCO.Infrastructure.Domain.AccountStatus).ToSelectList().OrderBy(x => x.Text).Select(option => new SelectListItem
+    {
+        Text = (option == null ? "Choose..." : option.Text),
+        Value = option.Value,
+        Selected = (Model != null && Model.Status != null) && (option.Value == Model.Status)
+    }), "Choose...")
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.DefaultLocation)
+</div>
+<div class="editor-field">
+    @Html.DropDownList("SelectedLocation", ((IEnumerable<CAPCO.Infrastructure.Domain.PickupLocation>)ViewBag.PossibleLocations).OrderBy(x => x.Name).Select(option => new SelectListItem
+    {
+        Text = (option == null ? "None" : option.Name),
+        Value = option.Id.ToString(),
+        Selected = (Model != null && Model.DefaultLocation != null) && (option.Id == Model.DefaultLocation.Id)
+    }), "Choose...")
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.DiscountCode)
+</div>
+<div class="editor-field">
+    @Html.DropDownList("SelectedDiscountCode", ((IEnumerable<CAPCO.Infrastructure.Domain.DiscountCode>)ViewBag.PossibleDiscountCodes).OrderBy(x => x.Name).Select(option => new SelectListItem
+    {
+        Text = (option == null ? "None" : option.Name),
+        Value = option.Id.ToString(),
+        Selected = (Model != null && Model.DiscountCode != null) && (option.Id == Model.DiscountCode.Id)
+    }), "Choose...")
+</div>
+
+<div class="editor-label">
+    <label>Role</label>
+</div>
+<div class="editor-field">
+    @Html.DropDownList("SelectedRole", default(CAPCO.Infrastructure.Domain.UserRoles).ToSelectList().OrderBy(x => x.Text).Select(option => new SelectListItem
+    {
+        Text = (option == null ? "None" : option.Text),
+        Value = option.Value.ToString(),
+        Selected = (Model != null) && (Roles.IsUserInRole(Model.UserName, option.Value))
+    }), "Choose...")
+</div>

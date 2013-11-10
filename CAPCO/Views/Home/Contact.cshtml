@@ -1,0 +1,45 @@
+﻿@model CAPCO.Infrastructure.Domain.ContactRequest
+@{
+    var section = ViewBag.Section as CAPCO.Infrastructure.Domain.ContentSection;
+    ViewBag.Title = section.Title;
+}
+
+<div style="padding: 10px;">
+    <h2>@ViewBag.Title</h2>
+    @Html.GetSectionHtml(section)
+
+
+    @using (Html.BeginForm("contactrequest", "home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+    
+        <p>
+            @Html.LabelFor(x => x.Name)
+            @Html.TextBoxFor(x => x.Name)
+            @Html.ValidationMessageFor(x => x.Name)
+        </p>
+    
+        <p>
+            @Html.LabelFor(x => x.Email)
+            @Html.TextBoxFor(x => x.Email)
+            @Html.ValidationMessageFor(x => x.Email)
+        </p>
+    
+        <p>
+            @Html.LabelFor(x => x.Subject)
+            @Html.TextBoxFor(x => x.Subject)
+            @Html.ValidationMessageFor(x => x.Subject)
+        </p>
+    
+        <p>
+            @Html.LabelFor(x => x.Message)
+            @Html.TextAreaFor(x => x.Message)
+            @Html.ValidationMessageFor(x => x.Message)
+        </p>
+
+        <p class="buttons">
+            <input type="submit" value="Send" />
+        </p>
+    }
+
+</div>

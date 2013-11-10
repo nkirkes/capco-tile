@@ -1,0 +1,110 @@
+@model CAPCO.Infrastructure.Domain.ApplicationUser
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Application User</legend>
+
+    <div><label>User Name: </label>
+    @Model.UserName</div>
+
+    <div><label>Default Location: </label>
+    @(Model.DefaultLocation != null ? Model.DefaultLocation.Name : "")</div>
+
+    <div><label>Discount Code: </label>
+    @(Model.DiscountCode != null ? Model.DiscountCode.Name : "Not Set")</div>
+
+    <div><label>Role: </label>
+    @(Roles.GetRolesForUser(Model.UserName).FirstOrDefault())</div>
+
+    <div><label>First Name: </label>
+    @Model.FirstName</div>
+
+    <div><label>Last Name: </label>
+    @Model.LastName</div>
+
+    <div><label>Company Name: </label>
+    @Model.CompanyName</div>
+
+    <div><label>Account Number: </label>
+    @Model.AccountNumber</div>
+
+    <div><label>Price Code: </label>
+    @Html.DisplayTextFor(_ => Model.PriceCode).ToString()</div>
+
+    <div>
+        <label>Retail Code: </label>
+        @Html.DisplayTextFor(_ => Model.RetailCode).ToString()
+    </div>
+
+
+    <div><label>Street Address Line 1: </label>
+    @Model.StreetAddressLine1</div>
+
+    <div><label>Street Address Line 2: </label>
+    @Model.StreetAddressLine2</div>
+
+    <div><label>City: </label>
+    @Model.City</div>
+
+    <div><label>State: </label>
+    @Model.State</div>
+
+    <div><label>Zip: </label>
+    @Model.Zip</div>
+
+    <div><label>Email: </label>
+    @Model.Email</div>
+
+    <div><label>Phone: </label>
+    @Model.Phone</div>
+
+    <div><label>Fax: </label>
+    @Model.Fax</div>
+    
+    <div><label>Is Locked Out?: </label>
+    @Html.DisplayTextFor(_ => Membership.GetUser(Model.UserName).IsLockedOut).ToString()</div>
+
+    <div><label>Status: </label>
+    @Html.DisplayTextFor(_ => Model.Status).ToString()</div>
+    
+    <div>
+        <label>Price Preference: </label>
+        @Html.DisplayTextFor(_ => Model.PricePreference).ToString()
+    </div>
+
+
+    <div><label>ActivationKey: </label>
+    @Model.ActivationKey</div>
+
+    <div><label>IsActivated: </label>
+    @Model.IsActivated</div>
+
+    <div><label>Notifications: </label>
+    @(Model.Notifications == null ? "None" : Model.Notifications.Count.ToString())</div>
+    
+    <div>
+        <label>Can recieve marketing emails?: </label>
+        @Html.DisplayTextFor(_ => Model.CanReceiveMarketingEmails).ToString()
+    </div>
+    
+    <div>
+        <label>Can receive system emails?: </label>
+        @Html.DisplayTextFor(_ => Model.CanReceiveSystemEmails).ToString()
+    </div>
+
+
+    <div><label>ProductBundles: </label>
+        @(Model.Projects() == null ? "None" : Model.Projects().Count.ToString())</div>
+
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

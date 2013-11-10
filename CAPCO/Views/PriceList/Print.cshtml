@@ -1,0 +1,27 @@
+﻿@model CAPCO.Models.PriceListViewModel
+@{
+    ViewBag.Title = "CAPCO Tile - Price List";
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>CAPCO Tile & Stone - @ViewBag.Title</title>
+    @Html.CSS("blueprint/print.css")
+    <style>
+        body, td { font-family: Arial; font-size: 8pt; }
+    </style>
+</head>
+<body>
+
+<div class="span-18 last">
+    <div style="padding: 10px;">
+        @Html.Partial("_PrintPriceList", Model)
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+@model CAPCO.Infrastructure.Domain.Product
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Product</legend>
+    
+    <div class="display-field">
+        <label>Name: </label>
+        @Model.Name
+    </div>
+
+    <div class="display-field"><label>ItemNumber: </label>
+    @Model.ItemNumber</div>
+
+    <div class="display-field"><label>Description: </label>
+    @Model.Description</div>
+
+    <div class="display-field"><label>Series: </label>
+    @Model.Series</div>
+    
+    <div class="display-field">
+        <label>Manufacturer: </label>
+        @(Model.Manufacturer != null ? Model.Manufacturer.Name : "Not set")
+    </div>
+
+    <div class="display-field"><label>Manufacturer Item: </label>
+    @Model.ManufacturerItem</div>
+
+    <div class="display-field"><label>Manufacturer Color: </label>
+    @Model.ManufacturerColor</div>
+
+    <div class="display-field"><label>Retail Price: </label>
+    @String.Format("{0:c}", Model.RetailPrice)</div>
+    
+    <div class="display-field"><label>Product Group: </label>
+    @(Model.Group == null ? "None" : Model.Group.Name)</div>
+
+    <div class="display-field"><label>Product Category: </label>
+    @(Model.Category == null ? "None" : Model.Category.Name)</div>
+
+    <div class="display-field"><label>Product Type: </label>
+    @(Model.Type == null ? "None" : Model.Type.Name)</div>
+
+    <div class="display-field"><label>Product Color: </label>
+    @(Model.Color == null ? "None" : Model.Color.Name)</div>
+
+    <div class="display-field"><label>Product Size: </label>
+    @(Model.Size == null ? "None" : Model.Size.Name)</div>
+
+    <div class="display-field"><label>Product Finish: </label>
+    @(Model.Finish == null ? "None" : Model.Finish.Name)</div>
+
+    <div class="display-field"><label>Product Unit of Measure: </label>
+    @(Model.UnitOfMeasure == null ? "None" : Model.UnitOfMeasure.Name)</div>
+
+    <div class="display-field"><label>Product Variation: </label>
+    @(Model.Variation == null ? "None" : Model.Variation.Name)</div>
+
+    <div class="display-field"><label>Product Status: </label>
+        @(Model.Status == null ? "None" : Model.Status.Name)</div>
+    
+    <div class="display-field">
+        <label>Product Usage: </label>
+        @(Model.Usage == null ? "None" : Model.Usage.Name)
+    </div>
+    
+    <div class="display-field">
+        <label>Made In: </label>
+        @Model.MadeIn
+    </div>
+    
+    <div class="display-field">
+        <label>Carton Quantity: </label>
+        @Model.CartonQuantity
+    </div>
+    
+    <div class="display-field">
+        <label>Coefficient of Friction - Dry: </label>
+        @Model.CoefficientOfFrictionDry
+    </div>
+    
+    <div class="display-field">
+        <label>Coefficient of Friction - Wet: </label>
+        @Model.CoefficientOfFrictionWet
+    </div>
+    
+    <div class="display-field">
+        <label>Breaking Strength: </label>
+        @Model.BreakingStrength
+    </div>
+    
+    <div class="display-field">
+        <label>Water Absorption: </label>
+        @Model.WaterAbsorption
+    </div>
+    
+    <div class="display-field">
+        <label>Scratch Hardiness: </label>
+        @Model.ScratchHardiness
+    </div>
+    
+    <div class="display-field">
+        <label>Units per Piece: </label>
+        @Model.UnitsPerPiece
+    </div>
+    
+    <div class="display-field">
+        <label>Is Frost Resistant?: </label>
+        @Model.IsFrostResistant
+    </div>
+    
+    <div class="display-field">
+        <label>Is Chemical Resistant?: </label>
+        @Model.IsChemicalResistant
+    </div>
+
+    <div class="display-field">
+        <label>YouTube URL:: </label>
+        @Model.YouTubeUrl
+    </div>
+
+    <div class="display-field"><label>Price Group: </label>
+    @Model.PriceCodeGroup</div>
+    
+    
+
+    <div>
+        <h2>Associated Price Codes & Prices</h2>
+        @foreach (var ppc in Model.PriceCodes())
+        { 
+            <label>@ppc.PriceCode:: </label> @String.Format("{0:c}", ppc.Price)<br />
+        }
+    </div>
+</fieldset>
+
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

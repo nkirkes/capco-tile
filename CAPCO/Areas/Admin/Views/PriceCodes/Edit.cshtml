@@ -1,0 +1,27 @@
+@model CAPCO.Infrastructure.Domain.PriceCode
+
+@{
+    ViewBag.Title = "Edit Price Code";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("update", "pricecodes", new { id = Model.Id }, FormMethod.Post, null))
+{
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    <fieldset>
+        <legend>PriceCode</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index") | @Html.ActionLink("Delete This Page", "delete", "pricecodes", new { area = "admin", id = Model.Id }, new { onclick = "javascript: return confirm(\"Are you sure? This cannot be undone.\");" }) 
+</div>

@@ -1,0 +1,92 @@
+﻿body
+{
+    font-family: Arial, "Helvetica";
+    font-size: 12px;
+    color: #000;
+    background-color: #fff;
+    background-image: url(../Images/bkg-global.png);
+    background-repeat: repeat-x;
+}
+
+
+#header { margin-bottom: 5px; }
+
+#nav-top ul { height: 25px; list-style-type: none; margin: 0; padding: 0; margin-top: 5px; }
+#nav-top ul li { list-style-type: none; margin: 0; padding: 0; display: inline; border-left: 1px solid #333; padding: 10px 10px 7px 10px; }
+#nav-top ul li a { color: #fff; text-decoration: none; }
+
+ul.product-thumbs { list-style-type: none; margin: 0; padding: 0; }
+ul.product-thumbs li { list-style-type: none; margin: 0 5px; float: left; }
+ul.product-thumbs li img {}
+
+ul.sidebar { list-style-type: none; margin: 0; padding: 0; }
+ul.sidebar li { list-style-type: none; margin: 0; padding: 5px; border-top: 1px solid #ccc; }
+ul.sidebar li:first-child { border: 0; }
+#main
+{
+    width: 1000px;
+    margin:0 auto;
+    padding-top: 10px;
+}
+
+#footer 
+{
+    background-color: #333;
+    color: #fff;
+    min-height: 150px;
+    padding: 10px;
+}
+
+#footer h2 { color: #fff; font-size: 1.2em; margin: 0 0 5px; }
+
+#grid-products { }
+#grid-products-item
+{   
+    margin-bottom: 10px;
+}
+
+h2.sidebar
+{
+    position: relative;
+    height: auto !important;
+    height: 1%;
+    background: #0D8DD6;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    text-shadow: rgba(122, 136, 37, .7) 1px 1px 0;
+    margin: 0 0 5px 0;
+    padding: 5px 10px;
+}
+
+h2.section-title
+{
+    position: relative;
+    height: auto !important;
+    height: 1%;
+    background: #0D8DD6;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    text-shadow: rgba(122, 136, 37, .7) 1px 1px 0;
+    margin: 0 0 5px 0;
+    padding: 5px 10px;
+}
+
+h3.sidebar {
+    position: relative;
+    height: auto !important;
+    height: 1%;
+    background: #0D8DD6;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    text-shadow: rgba(122, 136, 37, .7) 1px 1px 0;
+    margin: 0 0 5px 0;
+    padding: 5px 10px;
+}
+
+.todo { background-color: #ccc; border: 1px solid #333; padding: 10px; }

@@ -1,0 +1,52 @@
+﻿
+p.buttons input, p.small-buttons input, div.small-buttons input {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 20px;
+    padding-top: 10px;
+    padding-right: 35px;
+    padding-bottom: 10px;
+    padding-left: 35px;
+    text-decoration: none;
+    border: solid #990000 1px;
+    cursor: pointer;
+    background: #D30000;
+}
+
+p.buttons a, p.buttons a, p.small-buttons a, div.small-buttons a {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 20px;
+    padding-top: 10px;
+    padding-right: 35px;
+    padding-bottom: 10px;
+    padding-left: 35px;
+    text-decoration: none;
+    border: solid #990000 1px;
+    cursor: pointer;
+    background: #D30000;
+}
+
+p.buttons input:hover, p.buttons a:hover, a.button:hover, p.small-buttons input:hover, p.small-buttons a:hover, div.small-buttons input:hover, div.small-buttons a:hover {
+    background: #46575C;
+    border: solid #273134 1px;
+    text-shadow: 1px -1px 0 #273134;
+}
+
+a.button, p.small-buttons input, p.small-buttons a, div.small-buttons input{
+    color: #FFF !important;
+    font-size: 15px;
+    padding-top: 5px;
+    padding-right: 20px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+}
+
+div.small-buttons a {
+    color: #FFF !important;
+    font-size: 15px;
+    padding-top: 5px;
+    padding-right: 20px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+}

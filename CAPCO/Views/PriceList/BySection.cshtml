@@ -1,0 +1,158 @@
+﻿@model CAPCO.Models.PriceListViewModel
+@{
+    ViewBag.Title = "Price Lists";
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
+    bool isPricingEnabled = ViewBag.IsPricingEnabled;
+}
+
+<div class="span-6">
+    <div class="section-left sidebar">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    <div class="section-left sidebar">
+        <h3 class="sidebar">Price List Options</h3>
+        <ul class="sidebar">
+            <li>@Html.ActionLink("View All Prices", "all", "pricelist", null, new { id = "AllPrices" })</li>
+            <li>@Html.ActionLink("View by Section", "bysection", "pricelist", null, null)</li>
+            <li>@Html.ActionLink("View Recent Updates", "byupdates", "pricelist", null, null)</li>
+        </ul>
+    </div>
+</div>
+
+<div class="span-18 last">
+    <div style="padding: 10px;">
+        <h2>@ViewBag.Title</h2>
+
+        @if (!isPricingEnabled)
+        {
+            <p class="error">Our pricing features are temporarily unavailable while we make some updates. We apologize for any inconvenience.</p>
+        }
+        else if (currentUser.DefaultLocation == null)
+        { 
+            <p class="error">Before we can generate a price list, please @Html.ActionLink("update your profile", "edit", "profile", new { id = currentUser.Id }, null) with your default branch location. You can also update your pricing display preferences, which are currently set to <strong>@currentUser.PricePreference.ToFriendlyPricingPreference()</strong>.</p>
+        }
+        else
+        {
+            <p class="notice">Your current price display preferences are set to show <strong>@currentUser.PricePreference.ToFriendlyPricingPreference()</strong> in your profile.
+            Your default branch is set to <strong>@currentUser.DefaultLocation.Name</strong>. You can change these preferences by @Html.ActionLink("updating your profile", "edit", "profile", new { id = currentUser.Id }, null).</p>
+
+            
+            <div>
+                <p>Choose the section(s) you would like to browse and click the Generate List button.</p>
+                @using (Html.BeginForm("bysection", "pricelist", null, FormMethod.Post, null))
+                {
+                    var i = 0;
+                    <fieldset>
+                        <legend>Select Sections</legend>
+                        <table>
+                            <tr>
+                                <td colspan="8"><input type="checkbox" name="ToggleAll" id="ToggleAll" value="0" /> <label style="display:inline;min-width:0px;">Check/Uncheck All</label></td>
+                            </tr>
+                            <tr>
+
+                        
+                            @foreach (var mfg in Model.AllManufacturers.OrderBy(x => x.Section))
+                            {
+                                if (i % 8 == 0)
+                                {
+                                    @:</tr><tr>
+                                }
+                                var isChecked = Model.SelectedManufacturers != null && Model.SelectedManufacturers.Any(x => x.Section == mfg.Section) ? "checked" : "";
+                                <td><input type="checkbox" name="SelectedSections" value="@mfg.Section" @isChecked /> <strong>@mfg.Section</strong></td>
+                                
+                                i++;
+                            }
+                            </tr>
+                        </table>
+                        <p class="small-buttons">
+                            <input type="submit" value="Generate List" />
+                        </p>
+                    </fieldset>
+                }
+            </div>
+            
+            if (Model.PriceListProducts != null && Model.PriceListProducts.Any())
+            {
+                <div style="text-align:right;">
+                    <p class="small-buttons">
+                        @Html.ActionLink("Print", "print", new { @type = "section", criteria = Model.SelectedSections }, new { target = "_blank", @class = "small-button" })
+                        @Html.ActionLink("Data Friendly", "data", new { @type = "section", criteria = Model.SelectedSections }, new { target = "_blank", @class = "small-button" })
+                    </p>
+                </div>
+                @Html.Partial("_PriceList", Model);
+            }
+        }    
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#AllPrices").click(function () {
+                return confirm("You have requested a complete price list. This may take several minutes to complete. Click OK to continue.");
+            });
+        });
+    </script>
+}
+
+@*<div class="span-18 last">
+    <div style="padding: 10px;">
+        <h2>@ViewBag.Title</h2>
+
+        <p class="notice">Your current price display preferences are set to show <strong>@currentUser.PricePreference.ToFriendlyPricingPreference()</strong> in your profile.
+        Your default branch is set to <strong>@currentUser.DefaultLocation.Name</strong>. You can change these preferences by @Html.ActionLink("updating your profile", "edit", "profile", new { id = currentUser.Id }, null).</p>
+
+        @if (currentUser.DefaultLocation == null)
+        { 
+            <p>Before we can generate a price list, please @Html.ActionLink("update your profile", "edit", "profile", new { id = currentUser.Id }, null) with your default branch location. You can also update your pricing display preferences, which are currently set to <strong>@currentUser.PricePreference.ToFriendlyPricingPreference()</strong>.</p>
+        }
+        else
+        {
+            <div>
+                @using (Html.BeginForm("bysection", "pricelist", new { @type = "section" }, FormMethod.Post, null))
+                {
+                    var i = 0;
+                    <fieldset>
+                        <legend>Select Sections</legend>
+                        <table>
+                            <tr>
+                                <td colspan="8"><input type="checkbox" name="ToggleAll" id="ToggleAll" value="0" /> <label style="display:inline;min-width:0px;">Check/Uncheck All</label></td>
+                            </tr>
+                            <tr>
+
+                            @foreach (var mfg in Model.Manufacturers)
+                            {
+                                if (i % 8 == 0)
+                                {
+                                    @:</tr><tr>
+                                }
+                                <td><input type="checkbox" name="SelectedSections" value="@mfg.Section" /> @mfg.Section</td>
+                                i++;
+                            }
+                            </tr>
+                        </table>
+                        <p class="small-buttons">
+                            <input type="submit" value="Generate List" />
+                        </p>
+                    </fieldset>
+                }
+            </div>
+        }    
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#AllPrices").click(function () {
+                return confirm("You have requested a complete price list. This may take several minutes to complete. Click OK to continue.");
+            });
+
+
+        });
+    </script>
+}*@

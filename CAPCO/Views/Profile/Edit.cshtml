@@ -1,0 +1,74 @@
+﻿@model CAPCO.Infrastructure.Domain.ApplicationUser
+@{
+    ViewBag.Title = "Edit My Profile";
+}
+
+<div class="span-6">
+    <div class="section-left sidebar">
+        @Html.Partial("_LogOnOrRegister")
+    </div>
+    @*<div class="section-left sidebar">
+        <h3 class="sidebar">Profile Menu</h3>
+        <ul class="sidebar">
+            @if (MembershipHelpers.GetCurrentUser().Id == Model.Id)
+            {
+                <li>@Html.ActionLink("Edit My Profile", "edit", "profile", new { id = Model.Id }, null)</li>
+            }
+            else
+            {
+                <li>@Html.ActionLink("Message " + Model.FirstName, "new", "messages", new { id = Model.Id }, null)</li>
+            }
+        </ul>
+    </div>*@
+</div>
+
+
+<div class="span-18 last">
+    <div style="padding: 10px;">
+        <h2>@ViewBag.Title</h2>
+        <div>
+            @using (Html.BeginForm("update", "profile", new { id = Model.Id }, FormMethod.Post, null))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HttpMethodOverride(HttpVerbs.Put)
+            
+                <fieldset>
+                    <legend>Details</legend>
+                    <div><label>Username: </label> @Model.UserName</div>
+                    <div><label class="fieldpair">First Name: </label> @Html.TextBoxFor(x => x.FirstName) @Html.ValidationMessageFor(x => x.FirstName)</div>
+                    <div><label class="fieldpair">Last Name: </label> @Html.TextBoxFor(x => x.LastName) @Html.ValidationMessageFor(x => x.LastName)</div>
+                    <div><label class="fieldpair">Email: </label> @Html.TextBoxFor(x => x.Email) @Html.ValidationMessageFor(x => x.Email)</div>
+                    <div><label class="fieldpair">Company Name: </label> @Html.TextBoxFor(x => x.CompanyName) @Html.ValidationMessageFor(x => x.CompanyName)</div>
+                    <div><label class="fieldpair">Phone: </label> @Html.TextBoxFor(x => x.Phone) @Html.ValidationMessageFor(x => x.Phone)</div>
+                    <div><label class="fieldpair">Fax: </label> @Html.TextBoxFor(x => x.Fax) @Html.ValidationMessageFor(x => x.Fax)</div>
+                    <div><label class="fieldpair">Street Address: </label> @Html.TextBoxFor(x => x.StreetAddressLine1) @Html.ValidationMessageFor(x => x.StreetAddressLine1)</div>
+                    <div><label class="fieldpair">Street Address: </label> @Html.TextBoxFor(x => x.StreetAddressLine2) @Html.ValidationMessageFor(x => x.StreetAddressLine2)</div>
+                    <div><label class="fieldpair">City: </label> @Html.TextBoxFor(x => x.City) @Html.ValidationMessageFor(x => x.City)</div>
+                    <div><label class="fieldpair">State: </label> @Html.DropDownListFor(x => x.State, default(CAPCO.Infrastructure.Domain.States).ToSelectList(), "Choose...")</div>
+                    <div>
+                        <label class="fieldpair">Zip: </label> 
+                        @Html.TextBoxFor(x => x.Zip) 
+                        @Html.ValidationMessageFor(x => x.Zip)</div>
+                </fieldset>
+                <fieldset>
+                    <legend>Preferences</legend>
+                    @if (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString()))
+                    {
+                        <div><label class="fieldpair">Pricing Display Preference: </label> @Html.DropDownListFor(x => x.PricePreference, default(CAPCO.Infrastructure.Domain.PricePreferences).ToSelectList(), "Choose...")</div>
+                        <div><label class="fieldpair">Default Pickup Location: </label> 
+                            @Html.DropDownList("SelectedLocation", ((IEnumerable<CAPCO.Infrastructure.Domain.PickupLocation>)ViewBag.PossibleLocations).Select(option => new SelectListItem
+                            {
+                                Text = (option == null ? "None" : option.Name),
+                                Value = option.Id.ToString(),
+                                Selected = (Model.DefaultLocation != null) && (option.Id == Model.DefaultLocation.Id)
+                            }), "Choose...")
+                        </div>
+                    }
+                    <div><label>Do you want to receive system emails, such as new project comments?: </label>@Html.CheckBoxFor(x => x.CanReceiveSystemEmails)</div>
+                    <div><label>Do you want to be kept informed of company news and specials via email?: </label>@Html.CheckBoxFor(x => x.CanReceiveMarketingEmails)</div>
+                </fieldset>
+                <p class="buttons"><input type="submit" value="Update" /> @Html.ActionLink("Cancel", "index", "profile")</p>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+﻿@model CAPCO.Models.PriceListViewModel
+@{
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
+    var products = Model.PriceListProducts.Where(p => p.ProductSeries != null).GroupBy(x => x.Manufacturer)
+        .ToDictionary(
+            g => g.Key,
+            g => g.GroupBy(b => b.ProductSeries)
+               .ToDictionary(e => e.Key, e => e));
+}
+
+    @if (Model.PriceListProducts != null && Model.PriceListProducts.Any())
+    {
+        foreach (var group in products.OrderBy(x => x.Key.Section))
+        {
+            <h2>@group.Key.Section</h2>
+                
+                <p>All Prices FOB CAPCO @currentUser.DefaultLocation.Name - Prices subject to change without notice<br />
+                    Inspect before installation - Use constitutes acceptance</p>
+            
+            foreach (var series in group.Value.OrderBy(x => x.Key.Name))
+            {
+                <h3>@series.Key.Name</h3>
+                <table>
+                <tr>
+                    <th>Item #</th>
+                    <th>Description</th>
+                    <th>Var</th>
+                    <th>Size</th>
+                    <th>UOM</th>
+                    <th>UPP</th>
+                    <th>CTN</th>
+                    <th>Use</th>
+                    @switch (Model.PriceDisplayPreference)
+                    {
+                        case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                            <th>Retail</th>
+                            break;
+                        case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                            <th>Cost</th>
+                            break;
+                        case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                            <th>Retail</th>
+                            <th>Cost</th>
+                            break;
+                        default:
+                            break;
+                    }
+                </tr>
+                @foreach (var prod in series.Value.OrderBy(x => x.ItemNumber))
+                { 
+                    <tr>
+                        <td>@Html.ActionLink(prod.ItemNumber, "show", "products", new { id = prod.Id }, null)</td>
+                        <td>@prod.Description</td>
+                        <td>@(prod.Variation != null ? "V" + prod.Variation.Code : "")</td>
+                        <td>@prod.SizeDescription</td>
+                        <td>@(prod.UnitOfMeasure != null ? prod.UnitOfMeasure.Code : "")</td>
+                        <td>@prod.UnitsPerPiece</td>
+                        <td>@prod.CartonQuantity</td>
+                        <td>@prod.Usage.Code</td>
+                        @{
+                            var ppc = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.PriceCode);
+                            var ppr = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.RetailCode);
+                        }
+                        @switch (Model.PriceDisplayPreference)
+                        {
+                            case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                                <td>@String.Format("{0:c}", ppr != null ? ppr.Price : prod.RetailPrice)</td>
+                               break;
+                            case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                                <td>@String.Format("{0:c}", ppc != null ? ppc.Price : prod.RetailPrice)</td> <!--prod.ProviderCost(MembershipHelpers.GetCurrentUser())-->
+                               break;
+                            case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                                <td>@String.Format("{0:c}", ppr != null ? ppr.Price : prod.RetailPrice)</td>
+                                <td>@String.Format("{0:c}", ppc != null ? ppc.Price : prod.RetailPrice)</td> <!--prod.ProviderCost(MembershipHelpers.GetCurrentUser())-->
+                               break;
+                            default:
+                               break;
+                        }
+                        
+                    </tr>
+                }
+            </table>
+            }
+
+        }
+    }

@@ -1,0 +1,27 @@
+@model CAPCO.Infrastructure.Domain.Manufacturer
+
+@{
+    ViewBag.Title = "Edit Manufacturer";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("update", "manufacturers", new { id = Model.Id }, FormMethod.Post, null))
+{
+    @Html.ValidationSummary(true)
+	@Html.AntiForgeryToken()
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    <fieldset>
+        <legend>Manufacturer</legend>
+
+		@Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index") | @Html.ActionLink("Delete This Manufacturer", "delete", "manufacturers", new { area = "admin", id = Model.Id }, new { onclick = "javascript: return confirm(\"Are you sure? This cannot be undone.\");" }) 
+</div>

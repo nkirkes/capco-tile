@@ -1,0 +1,34 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_Global.cshtml";
+    var currentUser = Membership.GetUser() != null ? Membership.GetUser().GetMember() : null;
+}
+<section id="main" style="min-height: 500px;">
+    <div class="container">
+        <div class="span-4">
+            @RenderSection("Title", false)
+        </div>
+        <div class="span-20 last">
+            @RenderSection("Crumbs", false)
+        </div>
+    </div>
+    <div class="container">        
+        <div class="span-4">
+            @if (IsSectionDefined("SideBar"))
+            { 
+                @RenderSection("SideBar")
+            }
+            else
+            { 
+                <div>SideBar Content - need to define</div>
+            }
+        </div>
+        <div class="span-20 last">
+            @RenderBody()
+        </div>
+    </div>
+</section>
+
+@section Scripts
+{
+    @RenderSection("Scripts", false)
+}
