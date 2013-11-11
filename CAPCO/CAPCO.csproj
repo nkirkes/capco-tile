@@ -247,7 +247,7 @@
     <Compile Include="Helpers\MembershipHelpers.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Infrastructure\Data\IRepository.cs" />
-    <Compile Include="Infrastructure\Data\RepositoryBase.cs" />
+    <Compile Include="Infrastructure\Data\Repository.cs" />
     <Compile Include="Infrastructure\Domain\AccountRequest.cs" />
     <Compile Include="Infrastructure\Domain\ApplicationUser.cs" />
     <Compile Include="Infrastructure\Domain\ContactRequest.cs" />

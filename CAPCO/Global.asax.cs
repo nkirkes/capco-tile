@@ -56,7 +56,7 @@ namespace CAPCO
             var builder = new ContainerBuilder();
             builder.RegisterControllers(Assembly.GetExecutingAssembly());
 
-            builder.Register(c => new CAPCOContext()).InstancePerHttpRequest();
+            builder.Register(c => new CAPCOContext()).SingleInstance();
             builder.RegisterGeneric(typeof (Repository<>)).As(typeof (IRepository<>)).InstancePerHttpRequest();
             builder.RegisterType<ApplicationUserService>().As<IApplicationUserService>().InstancePerHttpRequest();
             builder.RegisterType<ContentService>().As<IContentService>().InstancePerHttpRequest();
