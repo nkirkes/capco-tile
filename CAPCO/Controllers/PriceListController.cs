@@ -16,13 +16,13 @@ namespace CAPCO.Controllers
     [CapcoAuthorizationAttribute(Roles = "ServiceProviders,Administrators")]
     public class PriceListController : ApplicationController
     {
-        private readonly IProductRepository _ProductRepository;
-        private readonly IManufacturerRepository _MfgRepo;
-        private readonly IProductPriceCodeRepository _ProductPriceCodeRepo;
+        private readonly IRepository<Product> _ProductRepository;
+        private readonly IRepository<Manufacturer> _MfgRepo;
+        private readonly IRepository<ProductPriceCode> _ProductPriceCodeRepo;
         /// <summary>
         /// Initializes a new instance of the PriceListController class.
         /// </summary>
-        public PriceListController(IProductRepository productRepository, IManufacturerRepository mfgRepo, IProductPriceCodeRepository productPriceCodeRepo)
+        public PriceListController(IRepository<Product> productRepository, IRepository<Manufacturer> mfgRepo, IRepository<ProductPriceCode> productPriceCodeRepo)
         {
             _ProductPriceCodeRepo = productPriceCodeRepo;
             _MfgRepo = mfgRepo;

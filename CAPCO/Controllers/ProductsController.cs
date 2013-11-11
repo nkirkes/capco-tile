@@ -16,27 +16,24 @@ namespace CAPCO.Controllers
     
     public class ProductsController : ApplicationController
     {
-        private readonly IContentService _ContentService;
-        private readonly IProductGroupRepository productgroupRepository;
-        private readonly IProductCategoryRepository productcategoryRepository;
-        private readonly IProductTypeRepository producttypeRepository;
-        private readonly IProductColorRepository productcolorRepository;
-        private readonly IProductSizeRepository productsizeRepository;
-        private readonly IProductFinishRepository productfinishRepository;
-        private readonly IProductRepository productRepository;
-        private readonly IProjectRepository _ProjectRepository;
+        private readonly IRepository<ProductGroup> productgroupRepository;
+        private readonly IRepository<ProductCategory> productcategoryRepository;
+        private readonly IRepository<ProductType> producttypeRepository;
+        private readonly IRepository<ProductColor> productcolorRepository;
+        private readonly IRepository<ProductSize> productsizeRepository;
+        private readonly IRepository<ProductFinish> productfinishRepository;
+        private readonly IRepository<Product> productRepository;
+        private readonly IRepository<Project> _ProjectRepository;
         
-        public ProductsController(IProductGroupRepository productgroupRepository, 
-            IProductCategoryRepository productcategoryRepository, 
-            IProductTypeRepository producttypeRepository, 
-            IProductColorRepository productcolorRepository, 
-            IProductSizeRepository productsizeRepository, 
-            IProductFinishRepository productfinishRepository, 
-            IProductRepository productRepository,
-            IProjectRepository projectRepository,
-            IContentService contentService)
+        public ProductsController(IRepository<ProductGroup> productgroupRepository, 
+            IRepository<ProductCategory> productcategoryRepository, 
+            IRepository<ProductType> producttypeRepository, 
+            IRepository<ProductColor> productcolorRepository, 
+            IRepository<ProductSize> productsizeRepository, 
+            IRepository<ProductFinish> productfinishRepository, 
+            IRepository<Product> productRepository,
+            IRepository<Project> projectRepository)
         {
-            _ContentService = contentService;
             _ProjectRepository = projectRepository;
             this.productgroupRepository = productgroupRepository;
             this.productcategoryRepository = productcategoryRepository;

@@ -16,13 +16,13 @@ namespace CAPCO.Controllers
     [CapcoAuthorizationAttribute]
     public class ProfileController : ApplicationController
     {
-        private readonly IApplicationUserRepository _AppUserRepo;
-        private readonly IAccountRequestRepository _AccountRequestRepo;
-        private readonly IPickupLocationRepository _PickupLocationRepo;
+        private readonly IRepository<ApplicationUser> _AppUserRepo;
+        private readonly IRepository<AccountRequest> _AccountRequestRepo;
+        private readonly IRepository<PickupLocation> _PickupLocationRepo;
         /// <summary>
         /// Initializes a new instance of the ProfileController class.
         /// </summary>
-        public ProfileController(IApplicationUserRepository appUserRepo, IAccountRequestRepository accountRequestRepo, IPickupLocationRepository pickupLocationRepo)
+        public ProfileController(IRepository<ApplicationUser> appUserRepo, IRepository<AccountRequest> accountRequestRepo, IRepository<PickupLocation> pickupLocationRepo)
         {
             _PickupLocationRepo = pickupLocationRepo;
             _AccountRequestRepo = accountRequestRepo;

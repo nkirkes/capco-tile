@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {   
     public class ProductUsagesController : Controller
     {
-		private readonly IProductUsageRepository productusageRepository;
+		private readonly IRepository<ProductUsage> productusageRepository;
 
-		public ProductUsagesController(IProductUsageRepository productusageRepository)
+		public ProductUsagesController(IRepository<ProductUsage> productusageRepository)
         {
 			this.productusageRepository = productusageRepository;
         }

@@ -17,50 +17,51 @@ namespace CAPCO.Areas.Admin.Controllers
     public class ImportController : BaseAdminController
     {
         private readonly IApplicationUserService _CustomerService;
-        private readonly IProductRepository _ProductRepository;
-        private readonly IProductGroupRepository _ProductgroupRepository;
-        private readonly IProductCategoryRepository _ProductcategoryRepository;
-        private readonly IProductTypeRepository _ProducttypeRepository;
-        private readonly IProductColorRepository _ProductcolorRepository;
-        private readonly IProductSizeRepository _ProductsizeRepository;
-        private readonly IProductFinishRepository _ProductfinishRepository;
-        private readonly IProductUnitOfMeasureRepository _ProductUomRepository;
-        private readonly IManufacturerRepository _ManufacturerRepository;
-        private readonly IProductUsageRepository _ProductUsageRepository;
-        private readonly IProductVariationRepository _ProductVariationRepository;
-        private readonly IProductStatusRepository _ProductStatusRepository;
-        //private readonly IProductCrossReferenceRepository _CrossReferenceRepo;
-        private readonly IPriceCodeRepository _PriceCodeRepo;
-        private readonly IRelatedProductSizeRepository _OtherSizeRepo;
-        private readonly IRelatedAccentRepository _AccentRepo;
-        private readonly IRelatedTrimRepository _TrimRepo;
-        private readonly IProductPriceCodeRepository _ProductPriceCodeRepo;
-        private readonly IProductSeriesRepository _ProductSeriesRepo;
-        private readonly IPickupLocationRepository _LocationRepo;
-        private readonly IDiscountCodeRepository _DiscountCodeRepo;
+        private readonly IRepository<Product> _ProductRepository;
+        private readonly IRepository<ProductGroup> _ProductgroupRepository;
+        private readonly IRepository<ProductCategory> _ProductcategoryRepository;
+        private readonly IRepository<ProductType> _ProducttypeRepository;
+        private readonly IRepository<ProductColor> _ProductcolorRepository;
+        private readonly IRepository<ProductSize> _ProductsizeRepository;
+        private readonly IRepository<ProductFinish> _ProductfinishRepository;
+        private readonly IRepository<ProductUnitOfMeasure> _ProductUomRepository;
+        private readonly IRepository<Manufacturer> _ManufacturerRepository;
+        private readonly IRepository<ProductUsage> _ProductUsageRepository;
+        private readonly IRepository<ProductVariation> _ProductVariationRepository;
+        private readonly IRepository<ProductStatus> _ProductStatusRepository;
+        private readonly IRepository<PriceCode> _PriceCodeRepo;
+        private readonly IRepository<RelatedProductSize> _OtherSizeRepo;
+        private readonly IRepository<RelatedAccent> _AccentRepo;
+        private readonly IRepository<RelatedTrim> _TrimRepo;
+        private readonly IRepository<ProductPriceCode> _ProductPriceCodeRepo;
+        private readonly IRepository<ProductSeries> _ProductSeriesRepo;
+        private readonly IRepository<PickupLocation> _LocationRepo;
+        private readonly IRepository<DiscountCode> _DiscountCodeRepo;
+        private readonly IRepository<ApplicationUser> _AppUserRepo; 
 
-        public ImportController(IProductRepository productRepository, 
-            IProductGroupRepository productgroupRepository,
-            IProductCategoryRepository productcategoryRepository,
-            IProductTypeRepository producttypeRepository,
-            IProductColorRepository productcolorRepository,
-            IProductSizeRepository productsizeRepository,
-            IProductFinishRepository productfinishRepository,
-            IProductUnitOfMeasureRepository productUomRepository,
-            IManufacturerRepository manufacturerRepository,
-            IProductUsageRepository productUsageRepository,
-            IProductVariationRepository productVariationRepository,
-            IProductStatusRepository productStatusRepository,
-            //IProductCrossReferenceRepository crossReferenceRepo,
-            IPriceCodeRepository priceCodeRepo,
-            IRelatedProductSizeRepository otherSizeRepo,
-            IRelatedAccentRepository accentRepo,
-            IRelatedTrimRepository trimRepo, 
-            IProductPriceCodeRepository productPriceCodeRepo,
-            IProductSeriesRepository productSeriesRepo,
+
+        public ImportController(IRepository<Product> productRepository, 
+            IRepository<ProductGroup> productgroupRepository,
+            IRepository<ProductCategory> productcategoryRepository,
+            IRepository<ProductType> producttypeRepository,
+            IRepository<ProductColor> productcolorRepository,
+            IRepository<ProductSize> productsizeRepository,
+            IRepository<ProductFinish> productfinishRepository,
+            IRepository<ProductUnitOfMeasure> productUomRepository,
+            IRepository<Manufacturer> manufacturerRepository,
+            IRepository<ProductUsage> productUsageRepository,
+            IRepository<ProductVariation> productVariationRepository,
+            IRepository<ProductStatus> productStatusRepository,
+            IRepository<PriceCode> priceCodeRepo,
+            IRepository<RelatedProductSize> otherSizeRepo,
+            IRepository<RelatedAccent> accentRepo,
+            IRepository<RelatedTrim> trimRepo, 
+            IRepository<ProductPriceCode> productPriceCodeRepo,
+            IRepository<ProductSeries> productSeriesRepo,
             IApplicationUserService customerService,
-            IPickupLocationRepository locationRepo,
-            IDiscountCodeRepository discountCodeRepo)
+            IRepository<PickupLocation> locationRepo,
+            IRepository<DiscountCode> discountCodeRepo,
+            IRepository<ApplicationUser> appUserRepo)
         {
             _ProductSeriesRepo = productSeriesRepo;
             _ProductPriceCodeRepo = productPriceCodeRepo;
@@ -68,7 +69,6 @@ namespace CAPCO.Areas.Admin.Controllers
             _AccentRepo = accentRepo;
             _OtherSizeRepo = otherSizeRepo;
             _PriceCodeRepo = priceCodeRepo;
-            //_CrossReferenceRepo = crossReferenceRepo;
             _ProductStatusRepository = productStatusRepository;
             _ProductVariationRepository = productVariationRepository;
             _ProductUsageRepository = productUsageRepository;
@@ -84,6 +84,7 @@ namespace CAPCO.Areas.Admin.Controllers
             _CustomerService = customerService;
             _LocationRepo = locationRepo;
             _DiscountCodeRepo = discountCodeRepo;
+            _AppUserRepo = appUserRepo;
         }
         
         public ActionResult Index()

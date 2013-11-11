@@ -13,8 +13,8 @@ namespace CAPCO.Areas.Admin.Controllers
     public class ContentController : BaseAdminController
     {
 
-        private readonly IContentSectionRepository _ContentSectionRepository;
-        public ContentController(IContentSectionRepository contentSectionRepository)
+        private readonly IRepository<ContentSection> _ContentSectionRepository;
+        public ContentController(IRepository<ContentSection> contentSectionRepository)
         {
             _ContentSectionRepository = contentSectionRepository;			
         }

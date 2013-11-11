@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using CAPCO.Infrastructure.Domain;
 using CAPCO.Infrastructure.Data;
@@ -11,21 +8,21 @@ namespace CAPCO.Areas.Admin.Controllers
 
     public class AccountRequestsController : BaseAdminController
     {
-		private readonly IAccountRequestRepository accountrequestRepository;
+		private readonly IRepository<AccountRequest> _AccountrequestRepository;
 
-		public AccountRequestsController(IAccountRequestRepository accountrequestRepository)
+		public AccountRequestsController(IRepository<AccountRequest> accountrequestRepository)
         {
-			this.accountrequestRepository = accountrequestRepository;
+			this._AccountrequestRepository = accountrequestRepository;
         }
 
         public ViewResult Index()
         {
-            return View(accountrequestRepository.AllIncluding(x => x.User));
+            return View(_AccountrequestRepository.AllIncluding(x => x.User));
         }
 
         public ActionResult Show(int id)
         {
-            AccountRequest request = accountrequestRepository.Find(id);
+            AccountRequest request = _AccountrequestRepository.Find(id);
             if (request == null)
             {
                 this.FlashError("That request does not exist.");
@@ -36,7 +33,7 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
-            AccountRequest request = accountrequestRepository.Find(id);
+            AccountRequest request = _AccountrequestRepository.Find(id);
             if (request == null)
             {
                 this.FlashError("That request does not exist.");
@@ -50,7 +47,7 @@ namespace CAPCO.Areas.Admin.Controllers
         {
             try
             {
-                var toUpdate = accountrequestRepository.Find(id);
+                var toUpdate = _AccountrequestRepository.Find(id);
                 toUpdate.AccountNumber = accountrequest.AccountNumber;
                 toUpdate.City = accountrequest.City;
                 toUpdate.CompanyName = accountrequest.CompanyName;
@@ -66,8 +63,8 @@ namespace CAPCO.Areas.Admin.Controllers
                 toUpdate.StreetAddressLine2 = accountrequest.StreetAddressLine2;
                 toUpdate.Zip = accountrequest.Zip;
 
-                accountrequestRepository.InsertOrUpdate(toUpdate);
-                accountrequestRepository.Save();
+                _AccountrequestRepository.InsertOrUpdate(toUpdate);
+                _AccountrequestRepository.Save();
 
 				this.FlashInfo("The account request was successfully saved.");
 
@@ -84,8 +81,8 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult Delete(int id)
         {
-            accountrequestRepository.Delete(id);
-            accountrequestRepository.Save();
+            _AccountrequestRepository.Delete(id);
+            _AccountrequestRepository.Save();
 
 			this.FlashInfo("The account request was successfully deleted.");
 

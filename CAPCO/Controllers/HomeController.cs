@@ -14,9 +14,9 @@ namespace CAPCO.Controllers
 {
     public class HomeController : ApplicationController
     {
-        private readonly IContactRequestRepository _ContactRequestRepository;
-        private readonly ILinkRepository _LinkRepo;
-        public HomeController(IContactRequestRepository contactRequestRepository, ILinkRepository linkRepo)
+        private readonly IRepository<ContactRequest> _ContactRequestRepository;
+        private readonly IRepository<Link> _LinkRepo;
+        public HomeController(IRepository<ContactRequest> contactRequestRepository, IRepository<Link> linkRepo)
         {
             _LinkRepo = linkRepo;
             _ContactRequestRepository = contactRequestRepository;            
