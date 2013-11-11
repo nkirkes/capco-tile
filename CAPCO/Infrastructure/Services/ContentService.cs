@@ -34,11 +34,11 @@ namespace CAPCO.Infrastructure.Services
 
     public class ContentService : IContentService
     {
-        private readonly IContentSectionRepository _ContentSectionRepository;
+        private readonly IRepository<ContentSection> _ContentSectionRepository;
         /// <summary>
         /// Initializes a new instance of the ContentService class.
         /// </summary>
-        public ContentService(IContentSectionRepository contentSectionRepository)
+        public ContentService(IRepository<ContentSection> contentSectionRepository)
         {
             _ContentSectionRepository = contentSectionRepository;            
         }

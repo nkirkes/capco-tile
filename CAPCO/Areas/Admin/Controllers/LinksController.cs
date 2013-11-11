@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {   
     public class LinksController : Controller
     {
-		private readonly ILinkRepository linkRepository;
+		private readonly IRepository<Link> linkRepository;
 
-		public LinksController(ILinkRepository linkRepository)
+		public LinksController(IRepository<Link> linkRepository)
         {
 			this.linkRepository = linkRepository;
         }

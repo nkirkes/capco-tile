@@ -10,11 +10,11 @@ namespace CAPCO.Areas.Admin.Controllers
 {   
     public class ManufacturersController : Controller
     {
-		private readonly IManufacturerRepository manufacturerRepository;
-        private readonly IProductRepository _ProductRepo;
+		private readonly IRepository<Manufacturer> manufacturerRepository;
+        private readonly IRepository<Product> _ProductRepo;
   
 
-		public ManufacturersController(IManufacturerRepository manufacturerRepository, IProductRepository productRepo)
+		public ManufacturersController(IRepository<Manufacturer> manufacturerRepository, IRepository<Product> productRepo)
         {
             _ProductRepo = productRepo;
             this.manufacturerRepository = manufacturerRepository;

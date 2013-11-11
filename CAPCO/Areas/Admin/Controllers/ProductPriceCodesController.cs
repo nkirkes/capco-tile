@@ -12,9 +12,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {   
     public class ProductPriceCodesController : Controller
     {
-		private readonly IProductPriceCodeRepository productpricecodeRepository;
+		private readonly IRepository<ProductPriceCode> productpricecodeRepository;
 
-		public ProductPriceCodesController(IProductPriceCodeRepository productpricecodeRepository)
+		public ProductPriceCodesController(IRepository<ProductPriceCode> productpricecodeRepository)
         {
 			this.productpricecodeRepository = productpricecodeRepository;
         }

@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class PriceCodesController : BaseAdminController
     {
-		private readonly IPriceCodeRepository pricecodeRepository;
+		private readonly IRepository<PriceCode> pricecodeRepository;
 
-		public PriceCodesController(IPriceCodeRepository pricecodeRepository)
+		public PriceCodesController(IRepository<PriceCode> pricecodeRepository)
         {
 			this.pricecodeRepository = pricecodeRepository;
         }

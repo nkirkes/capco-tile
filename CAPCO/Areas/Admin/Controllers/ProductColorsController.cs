@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class ProductColorsController : BaseAdminController
     {
-		private readonly IProductColorRepository productcolorRepository;
+		private readonly IRepository<ProductColor> productcolorRepository;
 
-		public ProductColorsController(IProductColorRepository productcolorRepository)
+		public ProductColorsController(IRepository<ProductColor> productcolorRepository)
         {
 			this.productcolorRepository = productcolorRepository;
         }

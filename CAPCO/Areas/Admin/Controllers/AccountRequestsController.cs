@@ -11,9 +11,9 @@ namespace CAPCO.Areas.Admin.Controllers
 
     public class AccountRequestsController : BaseAdminController
     {
-		private readonly IAccountRequestRepository accountrequestRepository;
+		private readonly IRepository<AccountRequest> accountrequestRepository;
 
-		public AccountRequestsController(IAccountRequestRepository accountrequestRepository)
+		public AccountRequestsController(IRepository<AccountRequest> accountrequestRepository)
         {
 			this.accountrequestRepository = accountrequestRepository;
         }

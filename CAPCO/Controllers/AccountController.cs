@@ -22,14 +22,14 @@ namespace CAPCO.Controllers
     public class AccountController : ApplicationController
     {
         private readonly IApplicationUserService _CustomerService;
-        private readonly IApplicationUserRepository _ApplicationUserRepository;
-        private readonly IProjectInvitationRepository _ProjectInvitationRepository;
-        private readonly IProjectRepository _ProjectRepository;
+        private readonly IRepository<ApplicationUser> _ApplicationUserRepository;
+        private readonly IRepository<ProjectInvitation> _ProjectInvitationRepository;
+        private readonly IRepository<Project> _ProjectRepository;
 
-        public AccountController(IApplicationUserService customerService, 
-            IApplicationUserRepository applicationUserRepository, 
-            IProjectInvitationRepository projectInvitationRepository,
-            IProjectRepository projectRepository)
+        public AccountController(IApplicationUserService customerService,
+            IRepository<ApplicationUser> applicationUserRepository,
+            IRepository<ProjectInvitation> projectInvitationRepository,
+            IRepository<Project> projectRepository)
         {
             _ProjectRepository = projectRepository;
             _ProjectInvitationRepository = projectInvitationRepository;

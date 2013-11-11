@@ -15,35 +15,35 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class ProductsController : BaseAdminController
     {
-		private readonly IProductGroupRepository _productgroupRepository;
-		private readonly IProductCategoryRepository _productcategoryRepository;
-        private readonly IProductStatusRepository _ProductStatusRepo;
-        private readonly IProductTypeRepository _producttypeRepository;
-		private readonly IProductColorRepository _productcolorRepository;
-		private readonly IProductSizeRepository _productsizeRepository;
-		private readonly IProductFinishRepository _productfinishRepository;
-		private readonly IProductRepository _productRepository;
-        private readonly IProductVariationRepository _VariationRepo;
-        private readonly IProductUnitOfMeasureRepository _UomRepo;
-        private readonly IManufacturerRepository _ManufacturerRepo;
-        private readonly IProductUsageRepository _ProductUsageRepo;
-        private readonly IProjectRepository _ProjectRepo;
+		private readonly IRepository<ProductGroup> _productgroupRepository;
+		private readonly IRepository<ProductCategory> _productcategoryRepository;
+        private readonly IRepository<ProductStatus> _ProductStatusRepo;
+        private readonly IRepository<ProductType> _producttypeRepository;
+		private readonly IRepository<ProductColor> _productcolorRepository;
+		private readonly IRepository<ProductSize> _productsizeRepository;
+		private readonly IRepository<ProductFinish> _productfinishRepository;
+		private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductVariation> _VariationRepo;
+        private readonly IRepository<ProductUnitOfMeasure> _UomRepo;
+        private readonly IRepository<Manufacturer> _ManufacturerRepo;
+        private readonly IRepository<ProductUsage> _ProductUsageRepo;
+        private readonly IRepository<Project> _ProjectRepo;
   
   
   
-		public ProductsController(IProductGroupRepository productgroupRepository, 
-            IProductCategoryRepository productcategoryRepository, 
-            IProductTypeRepository producttypeRepository, 
-            IProductColorRepository productcolorRepository, 
-            IProductSizeRepository productsizeRepository, 
-            IProductFinishRepository productfinishRepository, 
-            IProductRepository productRepository,
-            IProductStatusRepository productStatusRepo,
-            IProductUnitOfMeasureRepository uomRepo,
-            IProductVariationRepository variationRepo,
-            IManufacturerRepository manufacturerRepo,
-            IProductUsageRepository productUsageRepo,
-            IProjectRepository projectRepo)
+		public ProductsController(IRepository<ProductGroup> productgroupRepository, 
+            IRepository<ProductCategory> productcategoryRepository, 
+            IRepository<ProductType> producttypeRepository, 
+            IRepository<ProductColor> productcolorRepository, 
+            IRepository<ProductSize> productsizeRepository, 
+            IRepository<ProductFinish> productfinishRepository, 
+            IRepository<Product> productRepository,
+            IRepository<ProductStatus> productStatusRepo,
+            IRepository<ProductUnitOfMeasure> uomRepo,
+            IRepository<ProductVariation> variationRepo,
+            IRepository<Manufacturer> manufacturerRepo,
+            IRepository<ProductUsage> productUsageRepo,
+            IRepository<Project> projectRepo)
         {
             _ProjectRepo = projectRepo;
             _ProductUsageRepo = productUsageRepo;

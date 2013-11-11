@@ -11,6 +11,11 @@ namespace System.Web.Mvc
 {
     public static class MembershipHelpers
     {
+        private static readonly IRepository<Project> _ProjectRepo = DependencyResolver.Current.GetService<IRepository<Project>>();
+        private static readonly IRepository<ProductPriceCode> _ProductPriceCodeRepo = DependencyResolver.Current.GetService<IRepository<ProductPriceCode>>();
+        private static readonly IRepository<ApplicationUser> _AppUserRepo = DependencyResolver.Current.GetService<IRepository<ApplicationUser>>(); 
+
+
         public static ApplicationUser GetMember(this MembershipUser membershipUser)
         {
             if (membershipUser != null)
@@ -23,7 +28,7 @@ namespace System.Web.Mvc
         {
             try
             {
-                return DependencyResolver.Current.GetService<IApplicationUserRepository>().All.FirstOrDefault(member => member.UserName == userName);
+                return _AppUserRepo.All.FirstOrDefault(member => member.UserName == userName);
             }
             catch (Exception ex)
             {
@@ -36,36 +41,19 @@ namespace System.Web.Mvc
             return Membership.GetUser().GetMember();
         }
 
-        public static IList<Project> Projects(this ApplicationUser user)
+        public static IQueryable<Project> Projects(this ApplicationUser user)
         {
-            try
-            {
-                var projectRepo = DependencyResolver.Current.GetService<IProjectRepository>();
-                int expirationPeriodInDays = Convert.ToInt32(ConfigurationManager.AppSettings["ProjectExpirationInDays"]) * -1;
-                var expirationDate = DateTime.Today.AddDays(expirationPeriodInDays);
-                var projects = projectRepo.AllIncluding(x => x.Users).Where(x => x.LastModifiedOn >= expirationDate).ToList();
-                return projects.Where(x => x.Users.Contains(user)).OrderByDescending(x => x.LastModifiedOn).ToList();
-            }
-            catch (Exception ex)
-            {
-                return new List<Project>();
-            }
+            int expirationPeriodInDays = Convert.ToInt32(ConfigurationManager.AppSettings["ProjectExpirationInDays"]) * -1;
+            var expirationDate = DateTime.Today.AddDays(expirationPeriodInDays);
+            return _ProjectRepo.AllIncluding(x => x.Users)
+                .Where(x => x.LastModifiedOn >= expirationDate && x.Users.Contains(user)).OrderByDescending(x => x.LastModifiedOn);
         }
 
-        public static IList<Project> ArchivedProjects(this ApplicationUser user)
+        public static IQueryable<Project> ArchivedProjects(this ApplicationUser user)
         {
-            try
-            {
-                var projectRepo = DependencyResolver.Current.GetService<IProjectRepository>();
-                int expirationPeriodInDays = Convert.ToInt32(ConfigurationManager.AppSettings["ProjectExpirationInDays"]) * -1;
-                var expirationDate = DateTime.Today.AddDays(expirationPeriodInDays);
-                var projects = projectRepo.AllIncluding(x => x.Users).Where(x => x.LastModifiedOn <= expirationDate).ToList();
-                return projects.Where(x => x.Users.Contains(user)).OrderByDescending(x => x.LastModifiedOn).ToList();
-            }
-            catch (Exception ex)
-            {
-                return new List<Project>();
-            }
+            int expirationPeriodInDays = Convert.ToInt32(ConfigurationManager.AppSettings["ProjectExpirationInDays"]) * -1;
+            var expirationDate = DateTime.Today.AddDays(expirationPeriodInDays);
+            return _ProjectRepo.AllIncluding(x => x.Users).Where(x => x.LastModifiedOn <= expirationDate && x.Users.Contains(user)).OrderByDescending(x => x.LastModifiedOn);
         }
 
         public static Decimal ProviderRetail(this Product product, Project project)
@@ -86,8 +74,7 @@ namespace System.Web.Mvc
         {
             try
             {
-                var repo = DependencyResolver.Current.GetService<IProductPriceCodeRepository>();
-                var results = repo.All.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == retailCode);
+                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == retailCode);
                 
                 return results != null ? results.Price : product.RetailPrice;
             }
@@ -118,9 +105,7 @@ namespace System.Web.Mvc
         {
             try
             {
-                var repo = DependencyResolver.Current.GetService<IProductPriceCodeRepository>();
-                
-                var results = repo.All.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == priceCode);// product.PriceCodes().FirstOrDefault(x => x.PriceCode == priceCode).Price;
+                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == priceCode);
                 return results != null ? results.Price : product.RetailPrice;
             }
             catch (Exception ex)

@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class PickupLocationsController : BaseAdminController
     {
-		private readonly IPickupLocationRepository pickuplocationRepository;
+		private readonly IRepository<PickupLocation> pickuplocationRepository;
 
-		public PickupLocationsController(IPickupLocationRepository pickuplocationRepository)
+		public PickupLocationsController(IRepository<PickupLocation> pickuplocationRepository)
         {
 			this.pickuplocationRepository = pickuplocationRepository;
         }

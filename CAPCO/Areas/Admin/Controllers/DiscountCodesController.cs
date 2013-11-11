@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class DiscountCodesController : BaseAdminController
     {
-		private readonly IDiscountCodeRepository discountcodeRepository;
+		private readonly IRepository<DiscountCode> discountcodeRepository;
 
-		public DiscountCodesController(IDiscountCodeRepository discountcodeRepository)
+		public DiscountCodesController(IRepository<DiscountCode> discountcodeRepository)
         {
 			this.discountcodeRepository = discountcodeRepository;
         }

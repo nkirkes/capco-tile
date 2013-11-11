@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class ProductStatusController : BaseAdminController
     {
-		private readonly IProductStatusRepository productstatusRepository;
+		private readonly IRepository<ProductStatus> productstatusRepository;
 
-		public ProductStatusController(IProductStatusRepository productstatusRepository)
+		public ProductStatusController(IRepository<ProductStatus> productstatusRepository)
         {
 			this.productstatusRepository = productstatusRepository;
         }

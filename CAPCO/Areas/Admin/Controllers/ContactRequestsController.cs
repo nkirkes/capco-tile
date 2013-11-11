@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {   
     public class ContactRequestsController : BaseAdminController
     {
-		private readonly IContactRequestRepository contactrequestRepository;
+		private readonly IRepository<ContactRequest> contactrequestRepository;
 
-		public ContactRequestsController(IContactRequestRepository contactrequestRepository)
+		public ContactRequestsController(IRepository<ContactRequest> contactrequestRepository)
         {
 			this.contactrequestRepository = contactrequestRepository;
         }

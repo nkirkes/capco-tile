@@ -21,8 +21,8 @@ namespace CAPCO.Infrastructure.Services
 
     public class ApplicationUserService : IApplicationUserService
     {
-        private readonly IApplicationUserRepository applicationUserRepository;
-        public ApplicationUserService(IApplicationUserRepository applicationUserRepository)
+        private readonly IRepository<ApplicationUser> applicationUserRepository;
+        public ApplicationUserService(IRepository<ApplicationUser> applicationUserRepository)
         {
             this.applicationUserRepository = applicationUserRepository;
         }

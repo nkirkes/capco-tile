@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity;
@@ -8,54 +10,92 @@ using CAPCO.Infrastructure.Domain;
 
 namespace CAPCO.Infrastructure.Data
 {
-    public abstract class RepositoryBase
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
-        protected readonly CAPCOContext context;
-        public RepositoryBase(CAPCOContext context)
+        private CAPCOContext _CapcoContext;
+        public Repository(CAPCOContext context)
         {
-            this.context = context;
+            _CapcoContext = context;
         }
 
         public void Detach(object entity)
         {
-            ((IObjectContextAdapter)context).ObjectContext.Detach(entity);
+            ((IObjectContextAdapter)_CapcoContext).ObjectContext.Detach(entity);
         }
 
-        public void CleanCollection<TEntity>(int entityId, params string[] collectionNames) where TEntity : Entity
+        public IQueryable<TEntity> All
         {
-            var entitySetProp = context.GetType().GetProperties().Where(x => x.PropertyType == typeof(DbSet<TEntity>)).FirstOrDefault();
-
-            if (entitySetProp != null)
-            {
-                var entitySet = entitySetProp.GetValue(context, null) as DbSet<TEntity>;
-                if (entitySet != null)
-                {
-                    var entity = entitySet.FirstOrDefault(x => x.Id == entityId);
-                    try
-                    {
-                        foreach (string propName in collectionNames)
-                        {
-                            var prop = entity.GetType().GetProperty(propName);
-                            if (typeof(ICollection<object>).IsAssignableFrom(prop.PropertyType))
-                            {
-                                var get = prop.GetGetMethod();
-                                if (!get.IsStatic && get.GetParameters().Length == 0)
-                                {
-                                    var collection = (ICollection<object>)get.Invoke(entity, null);
-                                    if (collection != null)
-                                        collection.Clear();
-                                }
-                            }
-                        }
-                        context.SaveChanges();
-                        this.Detach(entity);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                }
-            }
+            get { return _CapcoContext.Set<TEntity>(); }
         }
+
+        public IQueryable<TEntity> AllIncluding(params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            var query = All;
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            return query;
+        }
+
+        public TEntity Find(int id)
+        {
+            return _CapcoContext.Set<TEntity>().Find(id);
+        }
+
+        public bool InsertOrUpdate(TEntity entity)
+        {
+            try
+            {
+                _CapcoContext.Set<TEntity>().AddOrUpdate<TEntity>(entity);
+            }
+            catch
+            {
+                //TODO: Log exception
+                return false;
+            }
+            return true;
+        }
+
+        public void Delete(int id)
+        {
+            TEntity entity = Find(id);
+            _CapcoContext.Set<TEntity>().Remove(entity);
+        }
+
+        public void Save()
+        {
+            _CapcoContext.SaveChanges();
+        }
+
+        public IQueryable<TEntity> FindBySpecification(Specification<TEntity> specification)
+        {
+            if (specification == null)
+                throw new ArgumentNullException("specification", "specification is null");
+
+            var specs = new List<Specification<TEntity>> {specification};
+            return FindBySpecification(specs.ToArray());
+        }
+
+        public IQueryable<TEntity> FindBySpecification(params Specification<TEntity>[] specifications)
+        {
+            if (specifications == null || specifications.Any(x => x == null))
+                throw new ArgumentNullException("specifications", "specifications is null or collection contains a null specification");
+
+            return specifications.Aggregate(All, (current, specification) => specification.SatisfyingElementsFrom(current));
+        }
+    }
+
+    public interface IRepository<TEntity>
+    {
+        IQueryable<TEntity> FindBySpecification(Specification<TEntity> specification);
+        IQueryable<TEntity> FindBySpecification(params Specification<TEntity>[] specifications);
+        IQueryable<TEntity> All { get; }
+        IQueryable<TEntity> AllIncluding(params Expression<Func<TEntity, object>>[] includeProperties);
+        TEntity Find(int id);
+        bool InsertOrUpdate(TEntity entity);
+        void Delete(int id);
+        void Save();
+        void Detach(object entity);
     }
 }
