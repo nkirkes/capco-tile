@@ -273,6 +273,7 @@
     <Compile Include="Infrastructure\Services\CloudFilesService.cs" />
     <Compile Include="Infrastructure\Services\ContentService.cs" />
     <Compile Include="Infrastructure\Services\ApplicationUserService.cs" />
+    <Compile Include="Infrastructure\Services\IApplicationUserService.cs" />
     <Compile Include="Infrastructure\Specifications\ProductSpecification.cs" />
     <Compile Include="Infrastructure\Mailers\AdminMailer.cs" />
     <Compile Include="Models\AccountModels.cs" />

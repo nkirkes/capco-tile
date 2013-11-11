@@ -16,7 +16,6 @@ namespace CAPCO.Controllers
     
     public class ProductsController : ApplicationController
     {
-        private readonly IContentService _ContentService;
         private readonly IRepository<ProductGroup> productgroupRepository;
         private readonly IRepository<ProductCategory> productcategoryRepository;
         private readonly IRepository<ProductType> producttypeRepository;
@@ -33,10 +32,8 @@ namespace CAPCO.Controllers
             IRepository<ProductSize> productsizeRepository, 
             IRepository<ProductFinish> productfinishRepository, 
             IRepository<Product> productRepository,
-            IRepository<Project> projectRepository,
-            IContentService contentService)
+            IRepository<Project> projectRepository)
         {
-            _ContentService = contentService;
             _ProjectRepository = projectRepository;
             this.productgroupRepository = productgroupRepository;
             this.productcategoryRepository = productcategoryRepository;

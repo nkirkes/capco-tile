@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using CAPCO.Infrastructure.Domain;
 using CAPCO.Infrastructure.Data;
@@ -10,16 +7,16 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class ProductCategoriesController : BaseAdminController
     {
-		private readonly IRepository<ProductCategory> productcategoryRepository;
+		private readonly IRepository<ProductCategory> _ProductcategoryRepository;
 
 		public ProductCategoriesController(IRepository<ProductCategory> productcategoryRepository)
         {
-			this.productcategoryRepository = productcategoryRepository;
+			_ProductcategoryRepository = productcategoryRepository;
         }
 
         public ViewResult Index()
         {
-            return View(productcategoryRepository.All.ToList());
+            return View(_ProductcategoryRepository.All.ToList());
         }
 
         public ActionResult New()
@@ -31,47 +28,47 @@ namespace CAPCO.Areas.Admin.Controllers
         public ActionResult Create(ProductCategory productcategory)
         {
             if (ModelState.IsValid) {
-                productcategoryRepository.InsertOrUpdate(productcategory);
-                productcategoryRepository.Save();
+                _ProductcategoryRepository.InsertOrUpdate(productcategory);
+                _ProductcategoryRepository.Save();
 
                 this.FlashInfo("The product category was successfully created.");
 
                 return RedirectToAction("Index");
-            } else {
-                this.FlashError("There was a problem creating the product category.");
-				return View("New", productcategory);
-			}
+            }
+
+            this.FlashError("There was a problem creating the product category.");
+            return View("New", productcategory);
         }
         
         public ActionResult Edit(int id)
         {
-             return View(productcategoryRepository.Find(id));
+             return View(_ProductcategoryRepository.Find(id));
         }
 
         [HttpPut, ValidateAntiForgeryToken, ValidateInput(false)]
         public ActionResult Update(ProductCategory productcategory)
         {
             if (ModelState.IsValid) {
-                var prop = productcategoryRepository.Find(productcategory.Id);
+                var prop = _ProductcategoryRepository.Find(productcategory.Id);
                 prop.Name = productcategory.Name;
                 prop.Code = productcategory.Code;
 
-                productcategoryRepository.InsertOrUpdate(prop);
-                productcategoryRepository.Save();
+                _ProductcategoryRepository.InsertOrUpdate(prop);
+                _ProductcategoryRepository.Save();
 
 				this.FlashInfo("The product category was successfully saved.");
 
                 return RedirectToAction("Index");
-            } else {
-                this.FlashError("There was a problem saving the product category.");
-				return View("Edit", productcategory);
-			}
+            }
+
+            this.FlashError("There was a problem saving the product category.");
+            return View("Edit", productcategory);
         }
 
         public ActionResult Delete(int id)
         {
-            productcategoryRepository.Delete(id);
-            productcategoryRepository.Save();
+            _ProductcategoryRepository.Delete(id);
+            _ProductcategoryRepository.Save();
 
             this.FlashInfo("The product category was successfully deleted.");
 

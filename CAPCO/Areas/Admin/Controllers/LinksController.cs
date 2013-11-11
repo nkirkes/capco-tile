@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using CAPCO.Infrastructure.Domain;
 using CAPCO.Infrastructure.Data;
@@ -10,23 +8,18 @@ namespace CAPCO.Areas.Admin.Controllers
 {   
     public class LinksController : Controller
     {
-		private readonly IRepository<Link> linkRepository;
+		private readonly IRepository<Link> _LinkRepository;
 
 		public LinksController(IRepository<Link> linkRepository)
         {
-			this.linkRepository = linkRepository;
+			this._LinkRepository = linkRepository;
         }
 
         public ViewResult Index()
         {
-            return View(linkRepository.All);
+            return View(_LinkRepository.All);
         }
-
-        public ViewResult Show(int id)
-        {
-            return View(linkRepository.Find(id));
-        }
-
+        
         public ActionResult New()
         {
             return View();
@@ -36,22 +29,22 @@ namespace CAPCO.Areas.Admin.Controllers
         public ActionResult Create(Link link)
         {
             if (ModelState.IsValid) {
-                link.Order = linkRepository.All.Count() + 1;
-                linkRepository.InsertOrUpdate(link);
-                linkRepository.Save();
+                link.Order = _LinkRepository.All.Count() + 1;
+                _LinkRepository.InsertOrUpdate(link);
+                _LinkRepository.Save();
 
 				this.FlashInfo("The link was successfully saved.");
 
                 return RedirectToAction("Index");
-            } else {
-				this.FlashError("There was a problem creating the link.");
-				return View("New", link);
-			}
+            }
+
+            this.FlashError("There was a problem creating the link.");
+            return View("New", link);
         }
         
         public ActionResult Edit(int id)
         {
-             return View(linkRepository.Find(id));
+             return View(_LinkRepository.Find(id));
         }
 
         [HttpPut, ValidateAntiForgeryToken, ValidateInput(false)]
@@ -59,22 +52,22 @@ namespace CAPCO.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var toUpdate = linkRepository.Find(id);
+                var toUpdate = _LinkRepository.Find(id);
                 toUpdate.Description = link.Description;
                 toUpdate.Label = link.Label;
                 toUpdate.Url = link.Url;
 
                 
-                linkRepository.InsertOrUpdate(toUpdate);
-                linkRepository.Save();
+                _LinkRepository.InsertOrUpdate(toUpdate);
+                _LinkRepository.Save();
                 
                 this.FlashInfo("The link was successfully saved.");
 
                 return RedirectToAction("Index");
-            } else {
-				this.FlashError("There was a problem saving the link.");
-				return View("Edit", link);
-			}
+            }
+
+            this.FlashError("There was a problem saving the link.");
+            return View("Edit", link);
         }
 
         [HttpPost, ValidateAntiForgeryToken, ValidateInput(false)]
@@ -82,15 +75,15 @@ namespace CAPCO.Areas.Admin.Controllers
         {
             try
             {
-                var ids = itemIds.Replace("&", "").Split(new string[] { "linkItem[]=" }, StringSplitOptions.RemoveEmptyEntries);
+                var ids = itemIds.Replace("&", "").Split(new[] { "linkItem[]=" }, StringSplitOptions.RemoveEmptyEntries);
                 int index = 0;
                 foreach (var id in ids)
                 {
-                    var link = linkRepository.Find(Int32.Parse(id));
+                    var link = _LinkRepository.Find(Int32.Parse(id));
                     link.Order = index++;
-                    linkRepository.InsertOrUpdate(link);
+                    _LinkRepository.InsertOrUpdate(link);
                 }
-                linkRepository.Save();
+                _LinkRepository.Save();
 
                 this.FlashInfo("The links were reordered successfully.");
                 
@@ -105,8 +98,8 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult Delete(int id)
         {
-            linkRepository.Delete(id);
-            linkRepository.Save();
+            _LinkRepository.Delete(id);
+            _LinkRepository.Save();
 
 			this.FlashInfo("The link was successfully deleted.");
 

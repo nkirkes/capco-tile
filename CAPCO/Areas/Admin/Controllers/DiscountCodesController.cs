@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using CAPCO.Infrastructure.Domain;
 using CAPCO.Infrastructure.Data;
@@ -37,10 +33,10 @@ namespace CAPCO.Areas.Admin.Controllers
 				this.FlashInfo("The discount code was successfully created.");
 
                 return RedirectToAction("Index");
-            } else {
-                this.FlashError("There was a problem creating the discount code.");
-				return View("New", discountcode);
-			}
+            }
+
+            this.FlashError("There was a problem creating the discount code.");
+            return View("New", discountcode);
         }
         
         public ActionResult Edit(int id)
@@ -68,10 +64,10 @@ namespace CAPCO.Areas.Admin.Controllers
 				this.FlashInfo("The was successfully saved.");
 
                 return RedirectToAction("Index");
-            } else {
-				this.FlashError("There was a problem saving the discount code.");
-				return View("Edit", discountcode);
-			}
+            }
+
+            this.FlashError("There was a problem saving the discount code.");
+            return View("Edit", discountcode);
         }
 
         public ActionResult Delete(int id)
