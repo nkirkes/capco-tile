@@ -85,17 +85,4 @@ namespace CAPCO.Infrastructure.Data
             return specifications.Aggregate(All, (current, specification) => specification.SatisfyingElementsFrom(current));
         }
     }
-
-    public interface IRepository<TEntity>
-    {
-        IQueryable<TEntity> FindBySpecification(Specification<TEntity> specification);
-        IQueryable<TEntity> FindBySpecification(params Specification<TEntity>[] specifications);
-        IQueryable<TEntity> All { get; }
-        IQueryable<TEntity> AllIncluding(params Expression<Func<TEntity, object>>[] includeProperties);
-        TEntity Find(int id);
-        bool InsertOrUpdate(TEntity entity);
-        void Delete(int id);
-        void Save();
-        void Detach(object entity);
-    }
 }
