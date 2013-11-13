@@ -79,56 +79,56 @@ namespace CAPCO.Infrastructure.Domain
         //[ForeignKey("ProductGroup")]
         //public int? ProductGroupId { get; set; }
         [DisplayName("Group")]
-        public virtual ProductGroup Group { get; set; }
+        public ProductGroup Group { get; set; }
 
         //[ForeignKey("ProductStatus")]
         //public int? ProductStatusId { get; set; }
         [DisplayName("Status")]
-        public virtual ProductStatus Status { get; set; }
+        public ProductStatus Status { get; set; }
         [DisplayName("Status Changed On")]
         public DateTime? StatusChangedOn { get; set; }
         
         //[ForeignKey("ProductUnitOfMeasure")]
         //public int? ProductUnitOfMeasureId { get; set; }
         [DisplayName("Unit of Measure")]
-        public virtual ProductUnitOfMeasure UnitOfMeasure { get; set; }
+        public ProductUnitOfMeasure UnitOfMeasure { get; set; }
 
-        public virtual ProductSeries ProductSeries { get; set; }
-        public virtual ProductUsage Usage { get; set; }
+        public ProductSeries ProductSeries { get; set; }
+        public ProductUsage Usage { get; set; }
 
         //[ForeignKey("ProductVariation")]
         //public int? ProductVariationId { get; set; }
         [DisplayName("Variation")]
-        public virtual ProductVariation Variation { get; set; }
+        public ProductVariation Variation { get; set; }
 
         //[ForeignKey("ProductCategory")]
         //public int? ProductCategoryId { get; set; }
         [DisplayName("Category")]
-        public virtual ProductCategory Category { get; set; }
+        public ProductCategory Category { get; set; }
 
         //[ForeignKey("ProductType")]
         //public int? ProductTypeId { get; set; }
         [DisplayName("Type")]
-        public virtual ProductType Type { get; set; }
+        public ProductType Type { get; set; }
 
         //[ForeignKey("ProductColor")]
         //public int? ProductColorId { get; set; }
         [DisplayName("Color")]
-        public virtual ProductColor Color { get; set; }
+        public ProductColor Color { get; set; }
 
         //[ForeignKey("ProductSize")]
         //public int? ProductSizeId { get; set; }
         [DisplayName("Size Group")]
-        public virtual ProductSize Size { get; set; }
+        public ProductSize Size { get; set; }
 
         //[ForeignKey("ProductFinish")]
         //public int? ProductFinishId { get; set; }
 
         [DisplayName("Finish")]
-        public virtual ProductFinish Finish { get; set; }
+        public ProductFinish Finish { get; set; }
 
         [DisplayName("Parent Product")]
-        public virtual Product ParentProduct { get; set; }
+        public Product ParentProduct { get; set; }
 
         [NotMapped, DisplayName("Related Products")]
         public ICollection<Product> RelatedProducts 
