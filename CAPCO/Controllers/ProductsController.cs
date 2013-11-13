@@ -77,16 +77,36 @@ namespace CAPCO.Controllers
             int pageSize = 24;
             var query = CreateProductsQuery(group, type, size, color, finish, category, series, itemNumber, description);
             
-            //filters
-            ViewBag.Groups = (from p in productRepository.All where p.Group != null select p.Group).GroupBy(x => x.Name).ToList();
-            ViewBag.Categories = (from p in productRepository.All where p.Category != null select p.Category).GroupBy(x => x.Name).ToList();
-            ViewBag.Types = (from p in productRepository.All where p.Type != null select p.Type).GroupBy(x => x.Name).ToList();
-            ViewBag.Sizes = (from p in productRepository.All where p.Size != null select p.Size).GroupBy(x => x.Name).ToList();
-            ViewBag.Colors = (from p in productRepository.All where p.Color != null select p.Color).GroupBy(x => x.Name).ToList();
-            ViewBag.Finishes = (from p in productRepository.All where p.Finish != null select p.Finish).GroupBy(x => x.Name).ToList();
-            ViewBag.Series = series;
-            ViewBag.ItemNumber = itemNumber;
-            ViewBag.Description = description;
+            // filter criteria
+            var filters = new Dictionary<string, string>();
+            if (!string.IsNullOrWhiteSpace(group))
+                filters.Add("Group", group);
+            if (!string.IsNullOrWhiteSpace(type))
+                filters.Add("Type", type);
+            if (!string.IsNullOrWhiteSpace(size))
+                filters.Add("Size", size);
+            if (!string.IsNullOrWhiteSpace(color))
+                filters.Add("Color", color);
+            if (!string.IsNullOrWhiteSpace(finish))
+                filters.Add("Finish", finish);
+            if (!string.IsNullOrWhiteSpace(category))
+                filters.Add("Category", category);
+            if (!string.IsNullOrWhiteSpace(series))
+                filters.Add("Series", series);
+            if (!string.IsNullOrWhiteSpace(itemNumber))
+                filters.Add("Item Number", itemNumber);
+            if (!string.IsNullOrWhiteSpace(description))
+                filters.Add("Description", description);
+            ViewBag.Filters = filters;
+
+            // filter options
+            ViewBag.Groups = (from p in query where p.Group != null select p.Group).GroupBy(x => x.Name).ToList();
+            ViewBag.Categories = (from p in query where p.Category != null select p.Category).GroupBy(x => x.Name).ToList();
+            ViewBag.Types = (from p in query where p.Type != null select p.Type).GroupBy(x => x.Name).ToList();
+            ViewBag.Sizes = (from p in query where p.Size != null select p.Size).GroupBy(x => x.Name).ToList();
+            ViewBag.Colors = (from p in query where p.Color != null select p.Color).GroupBy(x => x.Name).ToList();
+            ViewBag.Finishes = (from p in query where p.Finish != null select p.Finish).GroupBy(x => x.Name).ToList();
+            
 
             return View(query.ToPagedList(page, pageSize));
         }
