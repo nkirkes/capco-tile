@@ -198,7 +198,11 @@
         @if (Model.Any())
         {
             int cellCount = 0;
-            <p class="alt" style="margin-bottom: 10px;">@ViewBag.ProductsMessage</p>
+            var plural = Model.TotalItemCount > 1 ? "product" : "products";
+            var message = String.Format("Showing {0} - {1} " + plural + " of {2} matching " + plural + ".", Model.FirstItemOnPage, Model.LastItemOnPage, Model.TotalItemCount);
+            
+            <p class="alt" style="margin-bottom: 10px;">@message</p>
+            
             <table style="width: auto;" border="1" cellpadding="5" cellspacing="5">
                 <tr>
                     @foreach (var prod in Model.OrderBy(x => x.ItemNumber))
