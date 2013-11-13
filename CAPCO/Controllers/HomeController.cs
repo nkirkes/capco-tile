@@ -16,10 +16,12 @@ namespace CAPCO.Controllers
     {
         private readonly IRepository<ContactRequest> _ContactRequestRepository;
         private readonly IRepository<Link> _LinkRepo;
-        public HomeController(IRepository<ContactRequest> contactRequestRepository, IRepository<Link> linkRepo)
+        private readonly IContentService _ContentService;
+        public HomeController(IRepository<ContactRequest> contactRequestRepository, IRepository<Link> linkRepo, IContentService contentService)
         {
             _LinkRepo = linkRepo;
-            _ContactRequestRepository = contactRequestRepository;            
+            _ContactRequestRepository = contactRequestRepository;
+            _ContentService = contentService;
         }
 
         public ActionResult Index(string id = "")

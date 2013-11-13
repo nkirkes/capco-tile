@@ -7,16 +7,26 @@ using PagedList;
 
 namespace CAPCO.Models
 {
+    public class PagedProductsList
+    {
+        public bool HasNext { get; set; }
+        public bool HasPrevious { get; set; }
+        public List<Product> Products { get; set; }
+        public int Count { get; set; }
+    }
+
     public class ProductsViewModel
     {
+        public static int PageSize = 24;
         public ProductsViewModel()
         {
-            AllProducts = new List<Product>();
+            AllProducts = new List<Product>().AsQueryable();
         }
 
         public ProductFilters Filters { get; set; }
-        public IPagedList<Product> Products { get; set; }
-        public List<Product> AllProducts { get; set; }
+        //public IPagedList<Product> Products { get; set; }
+        public List<Product> Products { get; set; }
+        public IQueryable<Product> AllProducts { get; set; }
         public List<ProductGroup> AvailableGroups { get; set; }
         public int ProductsInGroups { get; set; }
         public List<ProductCategory> AvailableCategories { get; set; }

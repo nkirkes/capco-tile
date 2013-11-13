@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using CAPCO.Infrastructure.Domain;
@@ -9,11 +10,11 @@ using CAPCO.Infrastructure.Data;
 using System.Drawing;
 using CAPCO.Infrastructure.Specifications;
 using CAPCO.Infrastructure.Services;
+using Elmah.ContentSyndication;
 using PagedList;
 
 namespace CAPCO.Controllers
 {
-    
     public class ProductsController : ApplicationController
     {
         private readonly IRepository<ProductGroup> productgroupRepository;
@@ -24,6 +25,7 @@ namespace CAPCO.Controllers
         private readonly IRepository<ProductFinish> productfinishRepository;
         private readonly IRepository<Product> productRepository;
         private readonly IRepository<Project> _ProjectRepository;
+        private readonly IContentService _ContentService;
         
         public ProductsController(IRepository<ProductGroup> productgroupRepository, 
             IRepository<ProductCategory> productcategoryRepository, 
@@ -32,7 +34,8 @@ namespace CAPCO.Controllers
             IRepository<ProductSize> productsizeRepository, 
             IRepository<ProductFinish> productfinishRepository, 
             IRepository<Product> productRepository,
-            IRepository<Project> projectRepository)
+            IRepository<Project> projectRepository,
+            IContentService contentService)
         {
             _ProjectRepository = projectRepository;
             this.productgroupRepository = productgroupRepository;
@@ -42,153 +45,367 @@ namespace CAPCO.Controllers
             this.productsizeRepository = productsizeRepository;
             this.productfinishRepository = productfinishRepository;
             this.productRepository = productRepository;
+            _ContentService = contentService;
         }
 
-        public ActionResult Index(
-            ProductsViewModel model,
-            int? groupId = null,
-            int? typeId = null,
-            int? sizeId = null,
-            int? colorId = null,
-            int? finishId = null,
-            int? categoryId = null,
+        public PagedProductsList GetPagedProducts(int take, int page)
+        {
+            var query = productRepository.All.OrderBy(x => x.ItemNumber);
+            var count = query.Count();
+            var products = query.Skip(page*take).Take(take).ToList();
+            
+            return new PagedProductsList
+            {
+                Products = products,//.ToPagedList(page<1?1:page, take),
+                HasNext = (page < count),
+                HasPrevious = (page*take > 0),
+                Count = count
+            };
+        }
+
+        public ActionResult Index(int page = 1, 
+            string group = "",
+            string type = "",
+            string size = "",
+            string color = "",
+            string finish = "",
+            string category = "",
             string series = "",
             string itemNumber = "",
             string description = "")
         {
+            int pageSize = 24;
+            var query = CreateProductsQuery(group, type, size, color, finish, category, series, itemNumber, description);
             
-            if (model == null)
-                model = new ProductsViewModel();
+            //filters
+            ViewBag.Groups = (from p in productRepository.All where p.Group != null select p.Group).GroupBy(x => x.Name).ToList();
+            ViewBag.Categories = (from p in productRepository.All where p.Category != null select p.Category).GroupBy(x => x.Name).ToList();
+            ViewBag.Types = (from p in productRepository.All where p.Type != null select p.Type).GroupBy(x => x.Name).ToList();
+            ViewBag.Sizes = (from p in productRepository.All where p.Size != null select p.Size).GroupBy(x => x.Name).ToList();
+            ViewBag.Colors = (from p in productRepository.All where p.Color != null select p.Color).GroupBy(x => x.Name).ToList();
+            ViewBag.Finishes = (from p in productRepository.All where p.Finish != null select p.Finish).GroupBy(x => x.Name).ToList();
+            ViewBag.Series = series;
+            ViewBag.ItemNumber = itemNumber;
+            ViewBag.Description = description;
 
-            model.Filters = new ProductFilters();
-            model.Filters.GroupId = groupId;
-            model.Filters.SizeId = sizeId;
-            model.Filters.ColorId = colorId;
-            model.Filters.CategoryId = categoryId;
-            model.Filters.FinishId = finishId;
-            model.Filters.TypeId = typeId;
-            model.Filters.Series = series.ToLower();
-            model.Filters.ItemNumber = itemNumber.ToLower();
-            model.Filters.Description = description.ToLower();
-
-            bool countGroups = false;
-            bool countCategories = false;
-            bool countFinishes = false;
-            bool countTypes = false;
-            bool countColors = false;
-            bool countSizes = false;
-
-            var specs = new List<Specification<Product>>();
-            if (model.Filters.GroupId.HasValue)
-            {
-                specs.Add(new Infrastructure.Specifications.ProductsByGroupSpecification(model.Filters.GroupId.Value));
-                ProductGroup group = productgroupRepository.Find(model.Filters.GroupId.Value);
-                model.Filters.GroupName = group != null ? group.Name : "Other Group";
-                countGroups = true;
-            }
-
-            if (model.Filters.CategoryId.HasValue)
-            {
-                specs.Add(new Infrastructure.Specifications.ProductsByCategorySpecification(model.Filters.CategoryId.Value));
-                ProductCategory category = productcategoryRepository.Find(model.Filters.CategoryId.Value);
-                model.Filters.CategoryName = category != null ? category.Name : "Other Category";
-                countCategories = true;
-            }
-
-            if (model.Filters.FinishId.HasValue)
-            {
-                specs.Add(new Infrastructure.Specifications.ProductsByFinishSpecification(model.Filters.FinishId.Value));
-                ProductFinish finish = productfinishRepository.Find(model.Filters.FinishId.Value);
-                model.Filters.FinishName = finish != null ? finish.Name : "Other Finish";
-                countFinishes = true;
-            }
-
-            if (model.Filters.TypeId.HasValue)
-            {
-                specs.Add(new Infrastructure.Specifications.ProductsByTypeSpecification(model.Filters.TypeId.Value));
-                ProductType type = producttypeRepository.Find(model.Filters.TypeId.Value);
-                model.Filters.TypeName = type != null ? type.Name : "Other Type";
-                countTypes = true;
-            }
-
-            if (model.Filters.ColorId.HasValue)
-            {
-                specs.Add(new Infrastructure.Specifications.ProductsByColorSpecification(model.Filters.ColorId.Value));
-                ProductColor color = productcolorRepository.Find(model.Filters.ColorId.Value);
-                model.Filters.ColorName = color != null ? color.Name : "Other Color";
-                countColors = true;
-            }
-
-            if (model.Filters.SizeId.HasValue)
-            {
-                specs.Add(new Infrastructure.Specifications.ProductsBySizeSpecification(model.Filters.SizeId.Value));
-                ProductSize size = productsizeRepository.Find(model.Filters.SizeId.Value);
-                model.Filters.SizeName = size != null ? size.Name : "Other Size";
-                countSizes = true;
-            }
-
-            if (!String.IsNullOrWhiteSpace(model.Filters.Series))
-            {
-                specs.Add(new ProductsBySeriesSpecification(model.Filters.Series));
-            }
-
-            if (!String.IsNullOrWhiteSpace(model.Filters.ItemNumber))
-            {
-                model.Filters.ItemNumber = model.Filters.ItemNumber.Replace(" ", "");
-                specs.Add(new ProductsByItemNumberSpecification(model.Filters.ItemNumber));
-            }
-
-            if (!String.IsNullOrWhiteSpace(model.Filters.Description))
-            {
-                specs.Add(new ProductsByDescriptionSpecification(model.Filters.Description));
-            }
-
-            //IQueryable<Product> productsQuery;
-            //if (specs.Any())
-            //{
-               var productsQuery = productRepository.FindBySpecification(specs.ToArray());
-            //}
-            //else
-            //{
-            //    productsQuery = productRepository.All;
-            //}
-
-            model.ProductsInGroups = countGroups ? productsQuery.Count(x => x.Group != null && x.Group.Id == model.Filters.GroupId.Value) : productsQuery.Count(x => x.Group != null);
-            model.ProductsInCategories = countCategories ? productsQuery.Count(x => x.Category != null && x.Category.Id == model.Filters.CategoryId.Value) : 0;
-            model.ProductsInColors = countColors ? productsQuery.Count(x => x.Color != null && x.Color.Id == model.Filters.ColorId.Value) : 0;
-            model.ProductsInSizes = countSizes ? productsQuery.Count(x => x.Size != null && x.Size.Id == model.Filters.SizeId.Value) : 0;
-            model.ProductsInTypes = countTypes ? productsQuery.Count(x => x.Type != null && x.Type.Id == model.Filters.TypeId.Value) : 0;
-            model.ProductsInFinishes = countFinishes ? productsQuery.Count(x => x.Finish != null && x.Finish.Id == model.Filters.FinishId.Value) : 0;
-
-            model.TotalCount = productsQuery.Count();
-            model.Products = productsQuery.OrderBy(x => x.ItemNumber).ToPagedList(model.Page ?? 1, 24);
-            model.AllProducts = productsQuery.ToList();
-
-            if (model.Products.Count() > 0)
-            {
-                var plural = model.Products.Count() > 1 ? "products" : "product";
-                ViewBag.ProductsMessage = String.Format("Showing {0} - {1} " + plural + " of {2} matching " + plural + ".", model.Page.HasValue && model.Page > 1 ? (model.Page - 1) * 24 + 1 : 1, (model.Page ?? 1) * model.Products.Count, model.TotalCount);
-                model.AvailableGroups = (from p in productsQuery where p.Group != null select p.Group).Distinct().ToList();
-                model.AvailableCategories = (from p in productsQuery where p.Category != null select p.Category).Distinct().ToList();
-                model.AvailableTypes = (from p in productsQuery where p.Type != null select p.Type).Distinct().ToList();
-                model.AvailableColors = (from p in productsQuery where p.Color != null select p.Color).Distinct().ToList();
-                model.AvailableSizes = (from p in productsQuery where p.Size != null select p.Size).Distinct().ToList();
-                model.AvailableFinishes = (from p in productsQuery where p.Finish != null select p.Finish).Distinct().ToList();
-            }
-            else
-            {
-                ViewBag.ProductsMessage = "There are no products to display";
-                model.AvailableCategories = productcategoryRepository.All.ToList();
-                model.AvailableGroups = productgroupRepository.All.ToList();
-                model.AvailableTypes = producttypeRepository.All.ToList();
-                model.AvailableColors = productcolorRepository.All.ToList();
-                model.AvailableSizes = productsizeRepository.All.ToList();
-                model.AvailableFinishes = productfinishRepository.All.ToList();
-            }
-
-
-            return View(model);
+            return View(query.ToPagedList(page, pageSize));
         }
+
+        private class ProductFilter
+        {
+            public string Name { get; set; }
+            public string Value { get; set; }
+            public int ProductsWithFilter { get; set; }
+        }
+
+        //private void CreateProductFilters(int? groupId = null,
+        //    int? typeId = null,
+        //    int? sizeId = null,
+        //    int? colorId = null,
+        //    int? finishId = null,
+        //    int? categoryId = null,
+        //    string series = "",
+        //    string itemNumber = "",
+        //    string description = "")
+        //{
+        //    var filters = new List<ProductFilter>();
+
+        //    if (groupId.HasValue)
+        //    {
+        //        filters.Add(new ProductFilter { Name = "Group", Value = productgroupRepository.Find(model.Filters.GroupId.Value);}
+        //        //filters.Add("Group", );
+        //        //ProductGroup group = productgroupRepository.Find(model.Filters.GroupId.Value);
+        //        //model.Filters.GroupName = group != null ? group.Name : "Other Group";
+        //        //countGroups = true;
+        //    }
+
+        //    if (categoryId.HasValue)
+        //    {
+        //        specs.Add(new ProductsByCategorySpecification(categoryId.Value));
+        //        //ProductCategory category = productcategoryRepository.Find(model.Filters.CategoryId.Value);
+        //        //model.Filters.CategoryName = category != null ? category.Name : "Other Category";
+        //        //countCategories = true;
+        //    }
+
+        //    if (finishId.HasValue)
+        //    {
+        //        specs.Add(new ProductsByFinishSpecification(finishId.Value));
+        //        //ProductFinish finish = productfinishRepository.Find(model.Filters.FinishId.Value);
+        //        //model.Filters.FinishName = finish != null ? finish.Name : "Other Finish";
+        //        //countFinishes = true;
+        //    }
+
+        //    if (typeId.HasValue)
+        //    {
+        //        specs.Add(new ProductsByTypeSpecification(typeId.Value));
+        //        //ProductType type = producttypeRepository.Find(model.Filters.TypeId.Value);
+        //        //model.Filters.TypeName = type != null ? type.Name : "Other Type";
+        //        //countTypes = true;
+        //    }
+
+        //    if (colorId.HasValue)
+        //    {
+        //        specs.Add(new ProductsByColorSpecification(colorId.Value));
+        //        //ProductColor color = productcolorRepository.Find(model.Filters.ColorId.Value);
+        //        //model.Filters.ColorName = color != null ? color.Name : "Other Color";
+        //        //countColors = true;
+        //    }
+
+        //    if (sizeId.HasValue)
+        //    {
+        //        specs.Add(new ProductsBySizeSpecification(sizeId.Value));
+        //        //ProductSize size = productsizeRepository.Find(model.Filters.SizeId.Value);
+        //        //model.Filters.SizeName = size != null ? size.Name : "Other Size";
+        //        //countSizes = true;
+        //    }
+
+        //    if (!String.IsNullOrWhiteSpace(series))
+        //    {
+        //        specs.Add(new ProductsBySeriesSpecification(series));
+        //    }
+
+        //    if (!String.IsNullOrWhiteSpace(itemNumber))
+        //    {
+        //        //model.Filters.ItemNumber = model.Filters.ItemNumber.Replace(" ", "");
+        //        specs.Add(new ProductsByItemNumberSpecification(itemNumber.Replace(" ", "")));
+        //    }
+
+        //    if (!String.IsNullOrWhiteSpace(description))
+        //    {
+        //        specs.Add(new ProductsByDescriptionSpecification(description));
+        //    }
+
+        //    if (specs.Any())
+        //    {
+        //        return productRepository.FindBySpecification(specs.ToArray()).OrderBy(x => x.ItemNumber);
+        //    }
+        //    else
+        //    {
+        //        return productRepository.All.OrderBy(x => x.ItemNumber);
+        //    }
+        //}
+
+        private IQueryable<Product> CreateProductsQuery(string group = "",
+            string type = "",
+            string size = "",
+            string color = "",
+            string finish = "",
+            string category = "",
+            string series = "",
+            string itemNumber = "",
+            string description = "")
+        {
+            var specs = new List<Specification<Product>>();
+            //var filters = new Dictionary<string, object>();
+            if (!string.IsNullOrWhiteSpace(group))
+            {
+                specs.Add(new ProductsByGroupSpecification(HttpUtility.HtmlDecode(group)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                specs.Add(new ProductsByCategorySpecification(HttpUtility.HtmlDecode(category)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(finish))
+            {
+                specs.Add(new ProductsByFinishSpecification(finish));
+            }
+
+            if (!string.IsNullOrWhiteSpace(type))
+            {
+                specs.Add(new ProductsByTypeSpecification(type));
+            }
+
+            if (!string.IsNullOrWhiteSpace(color))
+            {
+                specs.Add(new ProductsByColorSpecification(color));
+            }
+
+            if (!string.IsNullOrWhiteSpace(size))
+            {
+                specs.Add(new ProductsBySizeSpecification(size));
+            }
+
+            if (!String.IsNullOrWhiteSpace(series))
+            {
+                specs.Add(new ProductsBySeriesSpecification(series));
+            }
+
+            if (!String.IsNullOrWhiteSpace(itemNumber))
+            {
+                specs.Add(new ProductsByItemNumberSpecification(itemNumber.Replace(" ", "")));
+            }
+
+            if (!String.IsNullOrWhiteSpace(description))
+            {
+                specs.Add(new ProductsByDescriptionSpecification(description));
+            }
+
+            return specs.Any() ? productRepository.FindBySpecification(specs.ToArray()).OrderBy(x => x.ItemNumber) : productRepository.All.OrderBy(x => x.ItemNumber);
+        }
+
+        //public ActionResult Index(ProductsViewModel model, int page = 0)
+        //{
+        //    // initialize view model
+        //    if (model == null)
+        //        model = new ProductsViewModel();
+            
+
+        //    // get some products
+        //    var pagedProducts = GetPagedProducts(ProductsViewModel.PageSize, page);
+
+        //    model.Products = pagedProducts.Products;
+
+        //    return View(model);
+        //}
+
+        //public ActionResult Index(
+        //    ProductsViewModel model,
+        //    int? groupId = null,
+        //    int? typeId = null,
+        //    int? sizeId = null,
+        //    int? colorId = null,
+        //    int? finishId = null,
+        //    int? categoryId = null,
+        //    string series = "",
+        //    string itemNumber = "",
+        //    string description = "")
+        //{
+            
+        //    if (model == null)
+        //        model = new ProductsViewModel();
+
+        //    model.Filters = new ProductFilters();
+        //    model.Filters.GroupId = groupId;
+        //    model.Filters.SizeId = sizeId;
+        //    model.Filters.ColorId = colorId;
+        //    model.Filters.CategoryId = categoryId;
+        //    model.Filters.FinishId = finishId;
+        //    model.Filters.TypeId = typeId;
+        //    model.Filters.Series = series.ToLower();
+        //    model.Filters.ItemNumber = itemNumber.ToLower();
+        //    model.Filters.Description = description.ToLower();
+
+        //    bool countGroups = false;
+        //    bool countCategories = false;
+        //    bool countFinishes = false;
+        //    bool countTypes = false;
+        //    bool countColors = false;
+        //    bool countSizes = false;
+
+        //    //var specs = new List<Specification<Product>>();
+        //    //if (model.Filters.GroupId.HasValue)
+        //    //{
+        //    //    specs.Add(new Infrastructure.Specifications.ProductsByGroupSpecification(model.Filters.GroupId.Value));
+        //    //    ProductGroup group = productgroupRepository.Find(model.Filters.GroupId.Value);
+        //    //    model.Filters.GroupName = group != null ? group.Name : "Other Group";
+        //    //    countGroups = true;
+        //    //}
+
+        //    //if (model.Filters.CategoryId.HasValue)
+        //    //{
+        //    //    specs.Add(new Infrastructure.Specifications.ProductsByCategorySpecification(model.Filters.CategoryId.Value));
+        //    //    ProductCategory category = productcategoryRepository.Find(model.Filters.CategoryId.Value);
+        //    //    model.Filters.CategoryName = category != null ? category.Name : "Other Category";
+        //    //    countCategories = true;
+        //    //}
+
+        //    //if (model.Filters.FinishId.HasValue)
+        //    //{
+        //    //    specs.Add(new Infrastructure.Specifications.ProductsByFinishSpecification(model.Filters.FinishId.Value));
+        //    //    ProductFinish finish = productfinishRepository.Find(model.Filters.FinishId.Value);
+        //    //    model.Filters.FinishName = finish != null ? finish.Name : "Other Finish";
+        //    //    countFinishes = true;
+        //    //}
+
+        //    //if (model.Filters.TypeId.HasValue)
+        //    //{
+        //    //    specs.Add(new Infrastructure.Specifications.ProductsByTypeSpecification(model.Filters.TypeId.Value));
+        //    //    ProductType type = producttypeRepository.Find(model.Filters.TypeId.Value);
+        //    //    model.Filters.TypeName = type != null ? type.Name : "Other Type";
+        //    //    countTypes = true;
+        //    //}
+
+        //    //if (model.Filters.ColorId.HasValue)
+        //    //{
+        //    //    specs.Add(new Infrastructure.Specifications.ProductsByColorSpecification(model.Filters.ColorId.Value));
+        //    //    ProductColor color = productcolorRepository.Find(model.Filters.ColorId.Value);
+        //    //    model.Filters.ColorName = color != null ? color.Name : "Other Color";
+        //    //    countColors = true;
+        //    //}
+
+        //    //if (model.Filters.SizeId.HasValue)
+        //    //{
+        //    //    specs.Add(new Infrastructure.Specifications.ProductsBySizeSpecification(model.Filters.SizeId.Value));
+        //    //    ProductSize size = productsizeRepository.Find(model.Filters.SizeId.Value);
+        //    //    model.Filters.SizeName = size != null ? size.Name : "Other Size";
+        //    //    countSizes = true;
+        //    //}
+
+        //    //if (!String.IsNullOrWhiteSpace(model.Filters.Series))
+        //    //{
+        //    //    specs.Add(new ProductsBySeriesSpecification(model.Filters.Series));
+        //    //}
+
+        //    //if (!String.IsNullOrWhiteSpace(model.Filters.ItemNumber))
+        //    //{
+        //    //    model.Filters.ItemNumber = model.Filters.ItemNumber.Replace(" ", "");
+        //    //    specs.Add(new ProductsByItemNumberSpecification(model.Filters.ItemNumber));
+        //    //}
+
+        //    //if (!String.IsNullOrWhiteSpace(model.Filters.Description))
+        //    //{
+        //    //    specs.Add(new ProductsByDescriptionSpecification(model.Filters.Description));
+        //    //}
+
+        //    //IQueryable<Product> productsQuery;
+        //    //if (specs.Any())
+        //    //{
+        //       //var productsQuery = productRepository.FindBySpecification(specs.ToArray());
+        //    var productsQuery = productRepository.All;
+        //    //}
+        //    //else
+        //    //{
+        //    //    productsQuery = productRepository.All;
+        //    //}
+
+        //    model.ProductsInGroups = countGroups ? productsQuery.Count(x => x.Group != null && x.Group.Id == model.Filters.GroupId.Value) : productsQuery.Count(x => x.Group != null);
+        //    model.ProductsInCategories = countCategories ? productsQuery.Count(x => x.Category != null && x.Category.Id == model.Filters.CategoryId.Value) : 0;
+        //    model.ProductsInColors = countColors ? productsQuery.Count(x => x.Color != null && x.Color.Id == model.Filters.ColorId.Value) : 0;
+        //    model.ProductsInSizes = countSizes ? productsQuery.Count(x => x.Size != null && x.Size.Id == model.Filters.SizeId.Value) : 0;
+        //    model.ProductsInTypes = countTypes ? productsQuery.Count(x => x.Type != null && x.Type.Id == model.Filters.TypeId.Value) : 0;
+        //    model.ProductsInFinishes = countFinishes ? productsQuery.Count(x => x.Finish != null && x.Finish.Id == model.Filters.FinishId.Value) : 0;
+
+        //    model.TotalCount = productsQuery.Count();
+        //    model.Products = productsQuery.OrderBy(x => x.ItemNumber).ToPagedList(model.Page ?? 1, 24);
+        //    //model.AllProducts = productsQuery;//.ToList();
+
+        //    if (model.Products.Any())
+        //    {
+        //        var plural = model.Products.Count() > 1 ? "products" : "product";
+        //        ViewBag.ProductsMessage = String.Format("Showing {0} - {1} " + plural + " of {2} matching " + plural + ".", model.Page.HasValue && model.Page > 1 ? (model.Page - 1) * 24 + 1 : 1, (model.Page ?? 1) * model.Products.Count, model.TotalCount);
+        //        model.AvailableGroups = (from p in productsQuery where p.Group != null select p.Group).Distinct().ToList();
+        //        model.AvailableCategories = (from p in productsQuery where p.Category != null select p.Category).Distinct().ToList();
+        //        model.AvailableTypes = (from p in productsQuery where p.Type != null select p.Type).Distinct().ToList();
+        //        model.AvailableColors = (from p in productsQuery where p.Color != null select p.Color).Distinct().ToList();
+        //        model.AvailableSizes = (from p in productsQuery where p.Size != null select p.Size).Distinct().ToList();
+        //        model.AvailableFinishes = (from p in productsQuery where p.Finish != null select p.Finish).Distinct().ToList();
+        //    }
+        //    else
+        //    {
+        //        ViewBag.ProductsMessage = "There are no products to display";
+        //        model.AvailableCategories = productcategoryRepository.All.ToList();
+        //        model.AvailableGroups = productgroupRepository.All.ToList();
+        //        model.AvailableTypes = producttypeRepository.All.ToList();
+        //        model.AvailableColors = productcolorRepository.All.ToList();
+        //        model.AvailableSizes = productsizeRepository.All.ToList();
+        //        model.AvailableFinishes = productfinishRepository.All.ToList();
+        //    }
+
+
+        //    return View(model);
+        //}
 
         public ActionResult Slabs()
         {

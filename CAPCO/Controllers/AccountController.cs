@@ -25,16 +25,18 @@ namespace CAPCO.Controllers
         private readonly IRepository<ApplicationUser> _ApplicationUserRepository;
         private readonly IRepository<ProjectInvitation> _ProjectInvitationRepository;
         private readonly IRepository<Project> _ProjectRepository;
+        private readonly IContentService _ContentService;
 
         public AccountController(IApplicationUserService customerService,
             IRepository<ApplicationUser> applicationUserRepository,
             IRepository<ProjectInvitation> projectInvitationRepository,
-            IRepository<Project> projectRepository)
+            IRepository<Project> projectRepository, IContentService contentService)
         {
             _ProjectRepository = projectRepository;
             _ProjectInvitationRepository = projectInvitationRepository;
             _ApplicationUserRepository = applicationUserRepository;
             _CustomerService = customerService;
+            _ContentService = contentService;
         }
 
         public ActionResult LogIn()
