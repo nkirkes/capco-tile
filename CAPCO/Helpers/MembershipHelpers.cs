@@ -41,12 +41,12 @@ namespace System.Web.Mvc
             return Membership.GetUser().GetMember();
         }
 
-        public static IQueryable<Project> Projects(this ApplicationUser user)
+        public static List<Project> Projects(this ApplicationUser user)
         {
             int expirationPeriodInDays = Convert.ToInt32(ConfigurationManager.AppSettings["ProjectExpirationInDays"]) * -1;
             var expirationDate = DateTime.Today.AddDays(expirationPeriodInDays);
-            return _ProjectRepo.AllIncluding(x => x.Users)
-                .Where(x => x.LastModifiedOn >= expirationDate && x.Users.Contains(user)).OrderByDescending(x => x.LastModifiedOn);
+            return _ProjectRepo.All
+                .Where(x => x.LastModifiedOn >= expirationDate && x.Users.Contains(user)).OrderByDescending(x => x.LastModifiedOn).ToList();
         }
 
         public static IQueryable<Project> ArchivedProjects(this ApplicationUser user)

@@ -14,8 +14,8 @@ namespace CAPCO.Infrastructure.Domain
             
         }
 
-        public virtual Project Project { get; set; }
-        public virtual Product Product { get; set; }
+        public Project Project { get; set; }
+        public Product Product { get; set; }
         public string Comment { get; set; }
     }
 
@@ -25,14 +25,14 @@ namespace CAPCO.Infrastructure.Domain
         public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
         
-        public virtual ApplicationUser CreatedBy { get; set; }
+        public ApplicationUser CreatedBy { get; set; }
         public DateTime LastModifiedOn { get; set; }
         public string PriceDisplayPreference { get; set; }
-        public virtual ICollection<ProjectComment> Comments { get; set; }
-        public virtual ICollection<ProjectItem> Products { get; set; }
-        public virtual ICollection<ProjectInvitation> Invitations { get; set; }
+        public ICollection<ProjectComment> Comments { get; set; }
+        public ICollection<ProjectItem> Products { get; set; }
+        public ICollection<ProjectInvitation> Invitations { get; set; }
 
-        public virtual PickupLocation Location { get; set; }
+        public PickupLocation Location { get; set; }
         [NotMapped]
         public int? DiscountCode
         {
@@ -68,7 +68,7 @@ namespace CAPCO.Infrastructure.Domain
             }
         }
         
-        public virtual ICollection<ApplicationUser> Users { get; set; }
+        public ICollection<ApplicationUser> Users { get; set; }
 
         //public decimal GetTotalRetail()
         //{
@@ -126,13 +126,13 @@ namespace CAPCO.Infrastructure.Domain
 
         [ForeignKey("CreatedBy")]
         public int? CreatedById { get; set; }
-        public virtual ApplicationUser CreatedBy { get; set; }
+        public ApplicationUser CreatedBy { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
         [ForeignKey("Project")]
         public int ProjectId { get; set; }
-        public virtual Project Project { get; set; }
+        public Project Project { get; set; }
     }
 
     public class ProjectInvitation : Entity
@@ -142,11 +142,11 @@ namespace CAPCO.Infrastructure.Domain
         public DateTime CreatedOn { get; set; }
         [ForeignKey("CreatedBy")]
         public int? CreatedById { get; set; }
-        public virtual ApplicationUser CreatedBy { get; set; }
+        public ApplicationUser CreatedBy { get; set; }
 
         [ForeignKey("Project")]
         public int ProjectId { get; set; }
-        public virtual Project Project { get; set; }
+        public Project Project { get; set; }
 
         public string Email { get; set; }
     }

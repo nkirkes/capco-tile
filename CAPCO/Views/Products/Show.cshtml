@@ -20,7 +20,7 @@
             </ul>
             
             
-            @if (currentUser.Projects().Any())
+            @if (currentUser.Projects.Any())
             {
                 
                 using (Html.BeginForm("AddToProject", "products", new { id = Model.Id }, FormMethod.Post, null))

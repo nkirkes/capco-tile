@@ -11,6 +11,11 @@ namespace CAPCO.Infrastructure.Domain
 {
     public class ApplicationUser : Entity
     {
+        public ApplicationUser()
+        {
+            Projects = new List<Project>();
+        }
+
         public string UserName { get; set; }
         
         [DisplayName("First Name")]
@@ -34,10 +39,12 @@ namespace CAPCO.Infrastructure.Domain
         public bool HasRequestedAccount { get; set; }
 
         [DisplayName("Default Pickup Location")]
-        public virtual PickupLocation DefaultLocation { get; set; }
+        public PickupLocation DefaultLocation { get; set; }
         [DisplayName("Discount Code")]
-        public virtual DiscountCode DiscountCode { get; set; }
-        
+        public DiscountCode DiscountCode { get; set; }
+
+        public List<Project> Projects { get; set; }
+
         [NotMapped]
         public string PriceCode
         {
@@ -96,7 +103,7 @@ namespace CAPCO.Infrastructure.Domain
         [NotMapped()]
         public string FullName { get { return String.Format("{0} {1}", FirstName, LastName); } }
         
-        public virtual ICollection<Notification> Notifications { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
         
     }
 }

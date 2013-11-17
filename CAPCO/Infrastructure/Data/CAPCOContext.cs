@@ -58,7 +58,8 @@ namespace CAPCO.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Project>()
-                .HasMany<ApplicationUser>(c => c.Users).WithMany();
+                .HasMany<ApplicationUser>(c => c.Users).WithMany().Map(x => x.ToTable("ProjectApplicationUsers"));
+            // BUG: trying to map this...
             
             modelBuilder.Entity<Product>()
                 .HasMany<Product>(x => x.RelatedSizes)
