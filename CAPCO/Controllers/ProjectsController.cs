@@ -43,12 +43,12 @@ namespace CAPCO.Controllers
 
         public ActionResult Index()
         {
-            return View(CurrentUser.Projects());
+            return View(CurrentUser.Projects);
         }
         
         public ActionResult Archives()
         {
-            return View(CurrentUser.ArchivedProjects());
+            return View(CurrentUser.ArchivedProjects().ToList());
         }
 
         public ActionResult Show(int id)
@@ -60,7 +60,7 @@ namespace CAPCO.Controllers
                 return RedirectToAction("index", "projects");
             }
 
-            if (!project.Users.Contains(CurrentUser))
+            if (project.Users!= null && project.Users.Any() && !project.Users.Contains(CurrentUser))
             {
                 this.FlashError("You don't have permission to view that project.");
                 return RedirectToAction("index", "projects");

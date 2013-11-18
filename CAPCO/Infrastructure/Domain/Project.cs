@@ -21,6 +21,14 @@ namespace CAPCO.Infrastructure.Domain
 
     public class Project : Entity
     {
+
+        public Project()
+        {
+            Users = new List<ApplicationUser>();
+            Comments = new List<ProjectComment>();
+            Products = new List<ProjectItem>();
+            Invitations = new List<ProjectInvitation>();
+        }
         public string ProjectName { get; set; }
         public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
