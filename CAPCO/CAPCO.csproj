@@ -216,6 +216,7 @@
     <Compile Include="Areas\Admin\Controllers\ProductUnitOfMeasuresController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductUsagesController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductVariationsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SliderController.cs" />
     <Compile Include="Areas\Admin\Controllers\StoreLocationsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Controllers\_BaseAdminController.cs" />
@@ -277,6 +278,7 @@
     <Compile Include="Infrastructure\Specifications\ProductSpecification.cs" />
     <Compile Include="Infrastructure\Mailers\AdminMailer.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\HomePageViewModel.cs" />
     <Compile Include="Models\PriceListViewModel.cs" />
     <Compile Include="Models\ProductFilters.cs" />
     <Compile Include="Models\ProductSearchCriteria.cs" />
@@ -714,6 +716,10 @@
     <Content Include="Public\Javascript\modernizr-1.7.min.js" />
     <Content Include="README.jQuery.vsdoc.txt" />
     <Content Include="RecaptchaNet.ReadMe.txt" />
+    <Content Include="Areas\Admin\Views\Slider\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Slider\New.cshtml" />
+    <Content Include="Areas\Admin\Views\Slider\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Slider\_CreateOrEdit.cshtml" />
     <None Include="Properties\PublishProfiles\FileProfile.pubxml" />
     <Content Include="Public\Assets\ProjectTutorial.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -760,6 +766,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Public\Assets\uploads\" />
     <Folder Include="Public\Imports\" />
     <Folder Include="Public\Javascript\Plugins\tiny_mce\plugins\legacyoutput\" />
     <Folder Include="Public\ProductImages\" />

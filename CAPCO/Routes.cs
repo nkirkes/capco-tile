@@ -173,6 +173,11 @@ namespace CAPCO
                     pc.Member(x => x.Get("delete"));
                     pc.Collection(x => x.Post("reorder"));
                 });
+                admin.Resources<SliderController>(pc =>
+                {
+                    pc.Member(x => x.Get("delete"));
+                    pc.Collection(x => x.Post("reorder"));
+                });
                 admin.Resources<ImportController>(pc => {
                     pc.Only("index");
                     pc.As("import");
