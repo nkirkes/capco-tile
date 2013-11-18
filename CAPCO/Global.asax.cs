@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Data.Entity;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
@@ -55,9 +56,11 @@ namespace CAPCO
             
             _container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(Container));
-
+            
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            Database.SetInitializer<CAPCOContext>(null);
         }
 
         

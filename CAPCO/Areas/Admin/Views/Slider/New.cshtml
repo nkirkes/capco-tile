@@ -1,0 +1,34 @@
+@model CAPCO.Infrastructure.Domain.SliderImage
+
+@{
+    ViewBag.Title = "Create Slider Image";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("create", "slider", new { area = "admin" }, FormMethod.Post, new { enctype = "multipart/form-data"} )) {
+	@Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Slider Image</legend>
+        
+        <div class="editor-label">
+            <label>Select Image:</label>
+        </div>
+        <div class="editor-field">
+            <input type="file" name="image" id="image" />
+        </div>
+        
+        @Html.Partial("_CreateOrEdit", Model)
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

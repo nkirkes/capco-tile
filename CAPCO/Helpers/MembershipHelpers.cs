@@ -28,7 +28,12 @@ namespace System.Web.Mvc
         {
             try
             {
-                return _AppUserRepo.All.FirstOrDefault(member => member.UserName == userName);
+                if (HttpContext.Current.Session["CurrentMember"] == null)
+                {
+                    var member = _AppUserRepo.All.FirstOrDefault(x => x.UserName == userName);
+                    HttpContext.Current.Session.Add("CurrentMember", member);
+                }
+                return (ApplicationUser) HttpContext.Current.Session["CurrentMember"];
             }
             catch (Exception ex)
             {
