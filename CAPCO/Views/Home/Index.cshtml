@@ -1,54 +1,46 @@
-﻿@{
+﻿@model CAPCO.Models.HomePageViewModel
+
+@{
     ViewBag.Title = "Welcome!";
     var blogFeed = ViewBag.BlogRssFeed;
     var blogUrl = ViewBag.BlogUrl;
-    var whoWeAre = ViewBag.WhoWeAreSection as CAPCO.Infrastructure.Domain.ContentSection;
-    var whatWeDo = ViewBag.WhatWeDoSection as CAPCO.Infrastructure.Domain.ContentSection;
-    var welcome = ViewBag.WelcomeSection as CAPCO.Infrastructure.Domain.ContentSection;
-    var sliders = ViewBag.Sliders as IList<CAPCO.Infrastructure.Domain.SliderImage>;
 }
 
 <div class="span-16">
         <div style="padding: 10px;">
             <h2>Welcome to CAPCO Tile & Stone!</h2>
-            @Html.GetSectionHtml(welcome)
+            @Html.GetSectionHtml(Model.WelcomeSection)
         </div>
-
-        <div class="span-16 last">
-            <div style="padding-left: 10px;">
-                <div class="slider-wrapper theme-default">
-                    <div class="ribbon"></div>
-                    <div id="slider">
-                        @foreach (var image in sliders.OrderBy(x => x.Order))
-                        { 
-                            @Html.Image(@image.Path, "title=" + image.Caption)  
-                        }
-                        @*@Html.Image("frontpage-4.jpg", "title=FloorGres&nbsp;GeoTech&nbsp;GeoGrey&nbsp;Structured")
-                        @Html.Image("frontpage-5.jpg", "title=FloorGres&nbsp;Architech&nbsp;Forest")
-                        @Html.Image("frontpage-1.jpg")
-                        @Html.Image("frontpage-6.jpg", "title=Refin&nbsp;Graffiti")
-                        @Html.Image("frontpage-7.jpg", "title=Refin&nbsp;Pietre&nbsp;di&nbsp;Borgogna")
-                        @Html.Image("frontpage-8.jpg", "title=Refin&nbsp;Eco-Leader")
-                        @Html.Image("frontpage-3.jpg")
-                        @Html.Image("frontpage-9.jpg", "title=Imola&nbsp;Kalahari")
-                        @Html.Image("frontpage-10.jpg", "title=FloorGres&nbsp;GeoTech&nbsp;GeoBlack&nbsp;Structured")*@
+    
+        @if(Model.Sliders.Any())
+        { 
+            <div class="span-16 last">
+                <div style="padding-left: 10px;">
+                    <div class="slider-wrapper theme-default">
+                        <div class="ribbon"></div>
+                        <div id="slider">
+                            @foreach (var image in Model.Sliders)
+                            { 
+                                <img src="@image.Path" title="@image.Caption" width="618" height="306" />  
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
+        }
+    
         <div class="span-8 last">
             <div class="body-content">
             <h3>Who we are</h3>
             <div style="text-align:justify;">
-                @Html.GetSectionHtml(whoWeAre)
+                @Html.GetSectionHtml(Model.WhoWeAreSection)
             </div>
             </div>
         </div>
         <div class="span-8">
             <div class="body-content">
             <h3>What we do</h3>
-            @Html.GetSectionHtml(whatWeDo)
+            @Html.GetSectionHtml(Model.WhatWeDoSection)
             </div>
         </div>
 </div>

@@ -8,6 +8,7 @@ using System.Configuration;
 using CAPCO.Infrastructure.Services;
 using CAPCO.Infrastructure.Domain;
 using CAPCO.Infrastructure.Mailers;
+using CAPCO.Models;
 using Mvc.Mailer;
 
 namespace CAPCO.Controllers
@@ -28,12 +29,13 @@ namespace CAPCO.Controllers
 
         public ActionResult Index(string id = "")
         {
-            var contentSections = _ContentService.GetContentSections(new string[]{ ContentSectionNames.Welcome.ToString(), ContentSectionNames.WhatWeDo.ToString(), ContentSectionNames.WhoWeAre.ToString() });
-            @ViewBag.WelcomeSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.Welcome.ToString());
-            @ViewBag.WhatWeDoSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.WhatWeDo.ToString());
-            @ViewBag.WhoWeAreSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.WhoWeAre.ToString());
-            @ViewBag.Sliders = _SliderImageRepo.All.ToList();
-            return View();
+            var contentSections = _ContentService.GetContentSections(new string[] { ContentSectionNames.Welcome.ToString(), ContentSectionNames.WhatWeDo.ToString(), ContentSectionNames.WhoWeAre.ToString() });
+            var model = new HomePageViewModel();
+            model.WelcomeSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.Welcome.ToString());
+            model.WhatWeDoSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.WhatWeDo.ToString());
+            model.WhoWeAreSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.WhoWeAre.ToString());
+            model.Sliders = _SliderImageRepo.All.OrderBy(x => x.Order).ToList();
+            return View(model);
         }
 
         public ActionResult Access()

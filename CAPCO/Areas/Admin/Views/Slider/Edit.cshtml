@@ -12,8 +12,9 @@
     @Html.HttpMethodOverride(HttpVerbs.Put)
     <fieldset>
         <legend>Slider Image</legend>
+        <div><img src="~/@Model.Path"/></div>
 
-		@Html.Partial("_CreateOrEdit", Model)
+        @Html.Partial("_CreateOrEdit", Model)
 
         <p>
             <input type="submit" value="Save" />

@@ -20,17 +20,11 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
-            return View(_SliderImageRepo.All);
+            return View(_SliderImageRepo.All.ToList());
         }
 
-        public ActionResult Show(int id)
+        public ActionResult New()
         {
-            return View();
-        }
-
-        public ActionResult New(SliderImage model)
-        {
-            
             return View();
         }
 
@@ -49,10 +43,11 @@ namespace CAPCO.Areas.Admin.Controllers
                     if (!Regex.IsMatch(Path.GetExtension(image.FileName), @"^.*\.(jpg|JPG|gif|GIF|png|PNG)$"))
                         throw new Exception("You must select a valid image.");
 
-                    var fileName = Path.GetFileName(image.FileName) + "-" + DateTime.Now.Ticks;
-                    var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
-                    image.SaveAs(path);
-                    model.Path = path;
+                    var fileName = Path.GetFileNameWithoutExtension(image.FileName) + "-" + DateTime.Now.Ticks + Path.GetExtension(image.FileName);
+                    var virtualPath = "Public/Assets/uploads";
+                    var serverPath = Server.MapPath("~/" + virtualPath);
+                    image.SaveAs(Path.Combine(serverPath, fileName));
+                    model.Path = virtualPath + "/" + fileName;
 
                     model.Order = _SliderImageRepo.All.Count() + 1;
                     _SliderImageRepo.InsertOrUpdate(model);
@@ -73,40 +68,79 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
-            return View();
+            var slider = _SliderImageRepo.Find(id);
+            return View(slider);
         }
 
-        public ActionResult Update(int id, FormCollection collection)
+        public ActionResult Update(int id, SliderImage model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
+                var toUpdate = _SliderImageRepo.Find(id);
+                toUpdate.Label = model.Label;
+                toUpdate.Caption = model.Caption;
+
+
+                _SliderImageRepo.InsertOrUpdate(toUpdate);
+                _SliderImageRepo.Save();
+
+                this.FlashInfo("The slider image details were successfully saved.");
 
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+
+            this.FlashError("There was a problem saving the slider image details.");
+            return View("Edit", model);
         }
 
         public ActionResult Delete(int id)
         {
-            return View();
+            try
+            {
+                var filePath = (from si in _SliderImageRepo.All where si.Id == id select si.Path).FirstOrDefault();
+                var serverPath = Server.MapPath("~/" + filePath);
+                if (!string.IsNullOrWhiteSpace(filePath) && System.IO.File.Exists(serverPath))
+                    System.IO.File.Delete(serverPath);
+
+                _SliderImageRepo.Delete(id);
+                _SliderImageRepo.Save();
+
+
+                this.FlashInfo("The image was successfully deleted.");
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                this.FlashError("There was an error deleting the slider image: " + ex.Message);
+            }
+            return RedirectToAction("Edit", id);
         }
 
-        public ActionResult Destroy(int id, FormCollection collection)
+        [HttpPost, ValidateAntiForgeryToken, ValidateInput(false)]
+        public ActionResult Reorder(string itemIds)
         {
             try
             {
-                // TODO: Add delete logic here
+                var ids = itemIds.Replace("&", "").Split(new[] { "sliderItem[]=" }, StringSplitOptions.RemoveEmptyEntries);
+                int index = 0;
+                foreach (var id in ids)
+                {
+                    var slider = _SliderImageRepo.Find(Int32.Parse(id));
+                    slider.Order = index++;
+                    _SliderImageRepo.InsertOrUpdate(slider);
+                }
+                _SliderImageRepo.Save();
 
-                return RedirectToAction("Index");
+                this.FlashInfo("The images were reordered successfully.");
+
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                this.FlashError("There was an error updating the image order: " + ex.Message);
             }
+
+            return RedirectToAction("Index");
         }
+
     }
 }
