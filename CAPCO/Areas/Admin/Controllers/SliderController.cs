@@ -1,4 +1,6 @@
-﻿using CAPCO.Infrastructure.Data;
+﻿using System.IO;
+using System.Text.RegularExpressions;
+using CAPCO.Infrastructure.Data;
 using CAPCO.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class SliderController : Controller
     {
-        private IRepository<SliderImage> _SliderImageRepo;
+        private readonly IRepository<SliderImage> _SliderImageRepo;
         public SliderController(IRepository<SliderImage> sliderImageRepo)
         {
             _SliderImageRepo = sliderImageRepo;
@@ -26,23 +28,47 @@ namespace CAPCO.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult New()
+        public ActionResult New(SliderImage model)
         {
+            
             return View();
         }
 
-        public ActionResult Create(SliderImage model)
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Create(SliderImage model, HttpPostedFileBase image)
         {
+
             try
             {
-                // TODO: Add insert logic here
+                if (ModelState.IsValid)
+                {
+                    if (image == null || image.ContentLength <= 0 || string.IsNullOrWhiteSpace(image.FileName))
+                    {
+                        throw new Exception("You must select a valid image.");
+                    }
+                    if (!Regex.IsMatch(Path.GetExtension(image.FileName), @"^.*\.(jpg|JPG|gif|GIF|png|PNG)$"))
+                        throw new Exception("You must select a valid image.");
 
-                return RedirectToAction("Index");
+                    var fileName = Path.GetFileName(image.FileName) + "-" + DateTime.Now.Ticks;
+                    var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
+                    image.SaveAs(path);
+                    model.Path = path;
+
+                    model.Order = _SliderImageRepo.All.Count() + 1;
+                    _SliderImageRepo.InsertOrUpdate(model);
+                    _SliderImageRepo.Save();
+
+                    this.FlashInfo("The slider image was successfully saved.");
+
+                    return RedirectToAction("Index");
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                this.FlashError(ex.Message);
             }
+            return View("New", model);
+            
         }
 
         public ActionResult Edit(int id)

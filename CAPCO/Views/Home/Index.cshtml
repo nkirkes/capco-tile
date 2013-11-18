@@ -5,6 +5,7 @@
     var whoWeAre = ViewBag.WhoWeAreSection as CAPCO.Infrastructure.Domain.ContentSection;
     var whatWeDo = ViewBag.WhatWeDoSection as CAPCO.Infrastructure.Domain.ContentSection;
     var welcome = ViewBag.WelcomeSection as CAPCO.Infrastructure.Domain.ContentSection;
+    var sliders = ViewBag.Sliders as IList<CAPCO.Infrastructure.Domain.SliderImage>;
 }
 
 <div class="span-16">
@@ -18,7 +19,7 @@
                 <div class="slider-wrapper theme-default">
                     <div class="ribbon"></div>
                     <div id="slider">
-                        @foreach (var image in ViewBag.Sliders.OrderBy(x => x.Order)
+                        @foreach (var image in sliders.OrderBy(x => x.Order))
                         { 
                             @Html.Image(@image.Path, "title=" + image.Caption)  
                         }

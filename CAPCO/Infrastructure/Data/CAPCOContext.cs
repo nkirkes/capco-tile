@@ -37,9 +37,7 @@ namespace CAPCO.Infrastructure.Data
         public DbSet<Notification> Notifications { get; set; }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-
-        //public DbSet<ContentPage> ContentPages { get; set; }
-
+        
         public DbSet<PriceCode> PriceCodes { get; set; }
 
         public DbSet<CAPCO.Infrastructure.Domain.ProductStatus> ProductStatus { get; set; }
@@ -52,6 +50,8 @@ namespace CAPCO.Infrastructure.Data
         public DbSet<CAPCO.Infrastructure.Domain.ProjectComment> ProjectComments { get; set; }
 
         public DbSet<CAPCO.Infrastructure.Domain.ProjectInvitation> ProjectInvitations { get; set; }
+
+        public DbSet<CAPCO.Infrastructure.Domain.SliderImage> SliderImages { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
