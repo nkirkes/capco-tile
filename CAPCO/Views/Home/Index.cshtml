@@ -18,7 +18,11 @@
                 <div class="slider-wrapper theme-default">
                     <div class="ribbon"></div>
                     <div id="slider">
-                        @Html.Image("frontpage-4.jpg", "title=FloorGres&nbsp;GeoTech&nbsp;GeoGrey&nbsp;Structured")
+                        @foreach (var image in ViewBag.Sliders.OrderBy(x => x.Order)
+                        { 
+                            @Html.Image(@image.Path, "title=" + image.Caption)  
+                        }
+                        @*@Html.Image("frontpage-4.jpg", "title=FloorGres&nbsp;GeoTech&nbsp;GeoGrey&nbsp;Structured")
                         @Html.Image("frontpage-5.jpg", "title=FloorGres&nbsp;Architech&nbsp;Forest")
                         @Html.Image("frontpage-1.jpg")
                         @Html.Image("frontpage-6.jpg", "title=Refin&nbsp;Graffiti")
@@ -26,7 +30,7 @@
                         @Html.Image("frontpage-8.jpg", "title=Refin&nbsp;Eco-Leader")
                         @Html.Image("frontpage-3.jpg")
                         @Html.Image("frontpage-9.jpg", "title=Imola&nbsp;Kalahari")
-                        @Html.Image("frontpage-10.jpg", "title=FloorGres&nbsp;GeoTech&nbsp;GeoBlack&nbsp;Structured")
+                        @Html.Image("frontpage-10.jpg", "title=FloorGres&nbsp;GeoTech&nbsp;GeoBlack&nbsp;Structured")*@
                     </div>
                 </div>
             </div>

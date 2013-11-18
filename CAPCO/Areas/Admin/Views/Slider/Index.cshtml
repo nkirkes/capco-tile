@@ -1,0 +1,46 @@
+﻿@model IQueryable<CAPCO.Infrastructure.Domain.SliderImage>
+
+@{
+    ViewBag.Title = "Manage Slider Images";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("New Slider Image", "New")
+</p>
+
+<div id="slider-images-form">
+    @using (Html.BeginForm("Reorder", "Slider", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="itemIds" name="itemIds" value />
+        <input type="hidden" name="key" value="{{ election.key }}">
+        <input type="hidden" name="uuid" value="{{ uuid }}">
+
+        <ol id="sortable" class="sliderImages">
+            @foreach (var item in Model.OrderBy(x => x.Order))
+            {
+                <li class="ui-state-default sliderItem" id="sliderItem_@item.Id"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>@item.Label &middot; @Html.ActionLink("Edit", "Edit", new { id = item.Id })</li>
+            }
+        </ol>
+        <button type="submit">Save Order</button>
+    }
+</div>
+
+@section Scripts
+{
+    <script>
+        $(function () {
+            $("#sortable").sortable({ axis: "y", containment: "#slider-images-form", scroll: false });
+            $("#sortable").disableSelection();
+
+            $('form').submit(function () {
+
+                $('#itemIds').val($("#sortable").sortable("serialize"));
+                return true;
+            });
+        });
+
+    </script>
+}

@@ -17,19 +17,22 @@ namespace CAPCO.Controllers
         private readonly IRepository<ContactRequest> _ContactRequestRepository;
         private readonly IRepository<Link> _LinkRepo;
         private readonly IContentService _ContentService;
-        public HomeController(IRepository<ContactRequest> contactRequestRepository, IRepository<Link> linkRepo, IContentService contentService)
+        private readonly IRepository<SliderImage> _SliderImageRepo;
+        public HomeController(IRepository<ContactRequest> contactRequestRepository, IRepository<Link> linkRepo, IContentService contentService, IRepository<SliderImage> sliderImageRepo)
         {
             _LinkRepo = linkRepo;
             _ContactRequestRepository = contactRequestRepository;
             _ContentService = contentService;
+            _SliderImageRepo = sliderImageRepo;
         }
 
         public ActionResult Index(string id = "")
         {
-            @ViewBag.WelcomeSection = _ContentService.GetContentSection(ContentSectionNames.Welcome.ToString());
-            @ViewBag.WhatWeDoSection = _ContentService.GetContentSection(ContentSectionNames.WhatWeDo.ToString());
-            @ViewBag.WhoWeAreSection = _ContentService.GetContentSection(ContentSectionNames.WhoWeAre.ToString());
-
+            var contentSections = _ContentService.GetContentSections(new string[]{ ContentSectionNames.Welcome.ToString(), ContentSectionNames.WhatWeDo.ToString(), ContentSectionNames.WhoWeAre.ToString() });
+            @ViewBag.WelcomeSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.Welcome.ToString());
+            @ViewBag.WhatWeDoSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.WhatWeDo.ToString());
+            @ViewBag.WhoWeAreSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.WhoWeAre.ToString());
+            @ViewBag.Sliders = _SliderImageRepo.All.ToList();
             return View();
         }
 
