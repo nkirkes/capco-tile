@@ -58,6 +58,7 @@ namespace CAPCO
                 account.Collection(x => x.Get("resendactivation"));
                 account.Collection(x => x.Get("resetpassword"));
                 account.Collection(x => x.Post("resetpassword"));
+                account.Collection(x => x.Post("ExternalLogin"));
             });
 
             /* Price Lists */
