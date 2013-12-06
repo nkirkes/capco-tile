@@ -123,7 +123,7 @@ namespace CAPCO.Areas.Admin.Controllers
         {
             try
             {
-            	string userName = Membership.GetUser().UserName;
+                string userName = CurrentUser.UserName;
                 product.CreatedBy = userName;
                 product.CreatedOn = DateTime.Now;
                 product.LastModifiedBy = userName;
@@ -220,11 +220,13 @@ namespace CAPCO.Areas.Admin.Controllers
             try
             {
                 var prod = _productRepository.Find(product.Id);
+
+                prod.LastModifiedBy = CurrentUser.UserName;
+                prod.LastModifiedOn = DateTime.Now;
+
                 prod.RetailPrice = product.RetailPrice;
                 prod.Description = product.Description;
                 prod.ItemNumber = product.ItemNumber;
-                prod.LastModifiedBy = Membership.GetUser().UserName;
-                prod.LastModifiedOn = DateTime.Now;
                 prod.ManufacturerColor = product.ManufacturerColor;
                 prod.Usage = product.Usage;
                 prod.MadeIn = product.MadeIn;
@@ -295,7 +297,7 @@ namespace CAPCO.Areas.Admin.Controllers
                     prod.Status = _ProductStatusRepo.Find(statusId);
 
                 prod.YouTubeUrl = product.YouTubeUrl;
-
+                prod.SizeDescription = product.SizeDescription;
                 _productRepository.InsertOrUpdate(prod);
                 _productRepository.Save();
 

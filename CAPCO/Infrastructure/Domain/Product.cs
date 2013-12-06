@@ -39,7 +39,7 @@ namespace CAPCO.Infrastructure.Domain
         [DisplayName("Manufacturer Item")]
         public string ManufacturerItem { get; set; }
 
-        [DisplayName("Size")]
+        [DisplayName("Size Description")]
         public string SizeDescription { get; set; }
         [DisplayName("Made In")]
         public string MadeIn { get; set; }

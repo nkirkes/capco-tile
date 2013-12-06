@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
@@ -100,7 +101,14 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (customersFile == null || customersFile.ContentLength <= 0 || Path.GetExtension(customersFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = Server.MapPath("~/Public/Imports") + "\\" + Path.GetFileName(customersFile.FileName);
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+
+                var storedFilePath = importPath + "\\" + Path.GetFileName(customersFile.FileName);
                 customersFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedCustomer));
@@ -209,7 +217,13 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (productsFile == null || productsFile.ContentLength <= 0 || Path.GetExtension(productsFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = Server.MapPath("~/Public/Imports") + "\\" + Path.GetFileName(productsFile.FileName);
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+                var storedFilePath = importPath + "\\" + Path.GetFileName(productsFile.FileName);
                 productsFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedProduct));
@@ -265,7 +279,14 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (crossRefFile == null || crossRefFile.ContentLength <= 0 || Path.GetExtension(crossRefFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = String.Format("{0}\\{1}", Server.MapPath("~/Public/Imports"), Path.GetFileName(crossRefFile.FileName));
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+
+                var storedFilePath = String.Format("{0}\\{1}", importPath, Path.GetFileName(crossRefFile.FileName));
                 crossRefFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedCrossReference));
@@ -296,40 +317,41 @@ namespace CAPCO.Areas.Admin.Controllers
                         continue;
 
                     var parentProduct = _ProductRepository.All.FirstOrDefault(x => x.ItemNumber == item.ParentItemNumber);
+                    
                     var childProduct = _ProductRepository.All.FirstOrDefault(x => x.ItemNumber == item.ChildItemNumber);
-                    
-                    switch (item.ReferenceTypeCode)
+                    if (parentProduct != null)
                     {
-                        case 1: // other sizes
-                            //var newSize = new RelatedProductSize { Product = childProduct };
-                            //parentProduct.RelatedSizes.Add(newSize);
-                            parentProduct.RelatedSizes.Add(childProduct);
-                            _ProductRepository.InsertOrUpdate(parentProduct);
-                            _ProductRepository.Save();
-                            newReferences++;
-                            break;
-                        case 2: // accents
-                            parentProduct.RelatedAccents.Add(childProduct);
-                            _ProductRepository.InsertOrUpdate(parentProduct);
-                            _ProductRepository.Save();
-                            newReferences++;
-                            break;
-                        case 3: // trims
-                            parentProduct.RelatedTrims.Add(childProduct);
-                            _ProductRepository.InsertOrUpdate(parentProduct);
-                            _ProductRepository.Save();
-                            newReferences++;
-                            break;
-                        case 4: // finishes
-                            parentProduct.RelatedFinishes.Add(childProduct);
-                            _ProductRepository.InsertOrUpdate(parentProduct);
-                            _ProductRepository.Save();
-                            newReferences++;
-                            break;
+                        switch (item.ReferenceTypeCode)
+                        {
+                            case 1: // other sizes
+                                //var newSize = new RelatedProductSize { Product = childProduct };
+                                //parentProduct.RelatedSizes.Add(newSize);
+                                parentProduct.RelatedSizes.Add(childProduct);
+                                _ProductRepository.InsertOrUpdate(parentProduct);
+                                _ProductRepository.Save();
+                                newReferences++;
+                                break;
+                            case 2: // accents
+                                parentProduct.RelatedAccents.Add(childProduct);
+                                _ProductRepository.InsertOrUpdate(parentProduct);
+                                _ProductRepository.Save();
+                                newReferences++;
+                                break;
+                            case 3: // trims
+                                parentProduct.RelatedTrims.Add(childProduct);
+                                _ProductRepository.InsertOrUpdate(parentProduct);
+                                _ProductRepository.Save();
+                                newReferences++;
+                                break;
+                            case 4: // finishes
+                                parentProduct.RelatedFinishes.Add(childProduct);
+                                _ProductRepository.InsertOrUpdate(parentProduct);
+                                _ProductRepository.Save();
+                                newReferences++;
+                                break;
+                        }
                     }
-                    
                 }
-                               
 
                 System.IO.File.Delete(storedFilePath);
 
@@ -363,7 +385,14 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (priceCodeFile == null || priceCodeFile.ContentLength <= 0 || Path.GetExtension(priceCodeFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = String.Format("{0}\\{1}", Server.MapPath("~/Public/Imports"), Path.GetFileName(priceCodeFile.FileName));
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+
+                var storedFilePath = String.Format("{0}\\{1}", importPath, Path.GetFileName(priceCodeFile.FileName));
                 priceCodeFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedProductPriceCode));
@@ -414,7 +443,14 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (seriesFile == null || seriesFile.ContentLength <= 0 || Path.GetExtension(seriesFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = String.Format("{0}\\{1}", Server.MapPath("~/Public/Imports"), Path.GetFileName(seriesFile.FileName));
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+
+                var storedFilePath = String.Format("{0}\\{1}", importPath, Path.GetFileName(seriesFile.FileName));
                 seriesFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedProductSeries));

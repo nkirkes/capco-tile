@@ -98,8 +98,8 @@
     </div>
 
 
-    <div><label>ProductBundles: </label>
-        @(Model.Projects() == null ? "None" : Model.Projects().Count.ToString())</div>
+    <div><label>Projects: </label>
+        @(Model.Projects == null ? "None" : Model.Projects.Count.ToString())</div>
 
 </fieldset>
 <p>
