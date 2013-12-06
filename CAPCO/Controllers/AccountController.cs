@@ -196,11 +196,19 @@ namespace CAPCO.Controllers
                     }
                     else
                     {
-                        RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
 
-                        if (recaptchaResult != RecaptchaVerificationResult.Success)
+                        try
                         {
-                            throw new Exception("Incorrect captcha answer.");
+                            RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
+
+                            if (recaptchaResult != RecaptchaVerificationResult.Success)
+                            {
+                                throw new Exception("Incorrect captcha answer.");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            // swallow a server error from recaptcha and carry on.
                         }
                     }
 
