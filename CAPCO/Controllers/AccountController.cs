@@ -194,22 +194,19 @@ namespace CAPCO.Controllers
                     {
                         throw new Exception("Captcha answer cannot be empty.");
                     }
-                    else
+                    
+                    try
                     {
+                        RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
 
-                        try
+                        if (recaptchaResult != RecaptchaVerificationResult.Success)
                         {
-                            RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
-
-                            if (recaptchaResult != RecaptchaVerificationResult.Success)
-                            {
-                                throw new Exception("Incorrect captcha answer.");
-                            }
+                            throw new Exception("Incorrect captcha answer.");
                         }
-                        catch (Exception e)
-                        {
-                            // swallow a server error from recaptcha and carry on.
-                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // swallow a server error from recaptcha and carry on.
                     }
 
                     UserRoles role = model.AccountType == AccountTypes.ServiceProvider.ToString() ? UserRoles.ServiceProviders : UserRoles.Consumers;
@@ -241,14 +238,14 @@ namespace CAPCO.Controllers
                         else
                         { 
                             // hmm, no invite, just process them normally.
-                            new ApplicationUserMailer().Activation(customer).Send();
+                            new ApplicationUserMailer().Activation(customer).SendAsync();
                             this.FlashInfo("<b>Welcome to CAPCO!</b> We've sent an activation email to your email address. You'll need to grab that before you can log in.");
                             return RedirectToAction("Index", "Root", new { area = "" });
                         }
                     }
                     else
                     {
-                        new ApplicationUserMailer().Activation(customer).Send();
+                        new ApplicationUserMailer().Activation(customer).SendAsync();
                         this.FlashInfo("<b>Welcome to CAPCO!</b> We've sent an activation email to your email address. You'll need to grab that before you can log in.");
                         return RedirectToAction("Index", "Root", new { area = "" });
                     }

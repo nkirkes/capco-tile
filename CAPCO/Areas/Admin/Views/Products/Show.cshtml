@@ -23,6 +23,8 @@
     <div class="display-field"><label>Series: </label>
     @Model.Series</div>
     
+    
+
     <div class="display-field">
         <label>Manufacturer: </label>
         @(Model.Manufacturer != null ? Model.Manufacturer.Name : "Not set")
@@ -49,8 +51,13 @@
     <div class="display-field"><label>Product Color: </label>
     @(Model.Color == null ? "None" : Model.Color.Name)</div>
 
-    <div class="display-field"><label>Product Size: </label>
-    @(Model.Size == null ? "None" : Model.Size.Name)</div>
+    <div class="display-field"><label>Product Size Group: </label>
+        @(Model.Size == null ? "None" : Model.Size.Name)</div>
+    
+    <div class="display-field">
+        <label>Size: </label>
+        @Model.SizeDescription
+    </div>
 
     <div class="display-field"><label>Product Finish: </label>
     @(Model.Finish == null ? "None" : Model.Finish.Name)</div>

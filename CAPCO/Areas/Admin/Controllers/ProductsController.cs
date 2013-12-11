@@ -302,7 +302,7 @@ namespace CAPCO.Areas.Admin.Controllers
                 _productRepository.Save();
 
                 this.FlashInfo("The product was successfully saved.");
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit", new { id = product.Id });
             }
             catch (Exception ex)
             {
