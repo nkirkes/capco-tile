@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = Model.FullName;
     var currUser = MembershipHelpers.GetCurrentUser();
-    var isProfileOwner = MembershipHelpers.GetCurrentUser().Id == Model.Id;
+    var isProfileOwner = currUser.Id == Model.Id;
     var isServiceProvider = Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString());
     var isAdmin = Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.Administrators.ToString());
     bool isPricingEnabled = ViewBag.IsPricingEnabled;

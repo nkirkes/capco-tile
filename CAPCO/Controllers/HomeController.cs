@@ -115,7 +115,7 @@ namespace CAPCO.Controllers
 
                 try
                 {
-                    new AdminMailer().ContactRequest(request).SendAsync();
+                    new AdminMailer().ContactRequest(request).Send();
                 }
                 catch (Exception ex)
                 {

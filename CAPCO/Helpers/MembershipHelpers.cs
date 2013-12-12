@@ -28,18 +28,30 @@ namespace System.Web.Mvc
         {
             try
             {
-                if (HttpContext.Current.Session["CurrentMember"] == null)
-                {
-                    var member = _AppUserRepo.All.FirstOrDefault(x => x.UserName == userName);
-                    HttpContext.Current.Session.Add("CurrentMember", member);
-                }
-                return (ApplicationUser) HttpContext.Current.Session["CurrentMember"];
+                return _AppUserRepo.All.FirstOrDefault(member => member.UserName == userName);
             }
             catch (Exception ex)
             {
                 return null;
             }
         }
+
+        //public static ApplicationUser GetMember(string userName)
+        //{
+        //    try
+        //    {
+        //        if (HttpContext.Current.Session["CurrentMember"] == null)
+        //        {
+        //            var member = _AppUserRepo.All.FirstOrDefault(x => x.UserName == userName);
+        //            HttpContext.Current.Session.Add("CurrentMember", member);
+        //        }
+        //        return (ApplicationUser) HttpContext.Current.Session["CurrentMember"];
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return null;
+        //    }
+        //}
 
         public static ApplicationUser GetCurrentUser()
         {

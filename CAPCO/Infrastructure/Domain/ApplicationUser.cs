@@ -39,9 +39,9 @@ namespace CAPCO.Infrastructure.Domain
         public bool HasRequestedAccount { get; set; }
 
         [DisplayName("Default Pickup Location")]
-        public PickupLocation DefaultLocation { get; set; }
+        public virtual PickupLocation DefaultLocation { get; set; }
         [DisplayName("Discount Code")]
-        public DiscountCode DiscountCode { get; set; }
+        public virtual DiscountCode DiscountCode { get; set; }
 
         public List<Project> Projects { get; set; }
 

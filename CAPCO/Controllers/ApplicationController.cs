@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
+
+using Excel;
+
 using RestfulRouting.Format;
 using CAPCO.Infrastructure.Data;
 using CAPCO.Infrastructure.Domain;
@@ -19,10 +22,15 @@ namespace CAPCO.Controllers
         public ApplicationController()
         {
             //_ContentService = DependencyResolver.Current.GetService<IContentService>();
-            CurrentUser = Membership.GetUser().GetMember();
+            //CurrentUser = Membership.GetUser().GetMember();
         }
 
-        public ApplicationUser CurrentUser { get; set; }
+        public ApplicationUser CurrentUser {
+            get
+            {
+                return Membership.GetUser().GetMember();
+            }
+        }
 
         protected ActionResult RespondTo(Action<FormatCollection> format)
         {

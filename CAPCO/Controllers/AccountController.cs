@@ -144,7 +144,8 @@ namespace CAPCO.Controllers
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
-
+            if (HttpContext.Session != null)
+                HttpContext.Session["CurrentMember"] = null;
             return RedirectToAction("Index", "Home");
         }
 

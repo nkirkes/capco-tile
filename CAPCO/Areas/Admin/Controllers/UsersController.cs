@@ -53,7 +53,7 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult Search(PagedViewModel<ApplicationUser> model)
         {
-            var results = applicationuserRepository.FindBySpecification(new UsersByUserNameOrCompanyNameSpecification(model.Criteria));
+            var results = applicationuserRepository.FindBySpecification(new UsersByUserNameOrCompanyNameSpecification(model.Criteria)).OrderBy(x => x.UserName);
             model.TotalCount = results.Count();
             model.Entities = results.ToPagedList(model.Page ?? 1, 100);
             return View("Index", model);
