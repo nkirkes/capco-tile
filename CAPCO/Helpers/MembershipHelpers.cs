@@ -12,7 +12,7 @@ namespace System.Web.Mvc
     public static class MembershipHelpers
     {
         private static readonly IRepository<Project> _ProjectRepo = DependencyResolver.Current.GetService<IRepository<Project>>();
-        private static readonly IRepository<ProductPriceCode> _ProductPriceCodeRepo = DependencyResolver.Current.GetService<IRepository<ProductPriceCode>>();
+        //private static readonly IRepository<ProductPriceCode> _ProductPriceCodeRepo = DependencyResolver.Current.GetService<IRepository<ProductPriceCode>>();
         private static readonly IRepository<ApplicationUser> _AppUserRepo = DependencyResolver.Current.GetService<IRepository<ApplicationUser>>(); 
 
 
@@ -28,31 +28,14 @@ namespace System.Web.Mvc
         {
             try
             {
-                return _AppUserRepo.All.FirstOrDefault(member => member.UserName == userName);
+                return _AppUserRepo.AllIncluding(x => x.DiscountCode, x => x.DefaultLocation, x => x.Notifications).FirstOrDefault(member => member.UserName == userName);
             }
             catch (Exception ex)
             {
                 return null;
             }
         }
-
-        //public static ApplicationUser GetMember(string userName)
-        //{
-        //    try
-        //    {
-        //        if (HttpContext.Current.Session["CurrentMember"] == null)
-        //        {
-        //            var member = _AppUserRepo.All.FirstOrDefault(x => x.UserName == userName);
-        //            HttpContext.Current.Session.Add("CurrentMember", member);
-        //        }
-        //        return (ApplicationUser) HttpContext.Current.Session["CurrentMember"];
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return null;
-        //    }
-        //}
-
+        
         public static ApplicationUser GetCurrentUser()
         {
             return Membership.GetUser().GetMember();
@@ -66,11 +49,11 @@ namespace System.Web.Mvc
                 .Where(x => x.LastModifiedOn >= expirationDate && x.Users.Contains(user)).OrderByDescending(x => x.LastModifiedOn).ToList();
         }
 
-        public static IQueryable<Project> ArchivedProjects(this ApplicationUser user)
+        public static IEnumerable<Project> ArchivedProjects(this ApplicationUser user)
         {
             int expirationPeriodInDays = Convert.ToInt32(ConfigurationManager.AppSettings["ProjectExpirationInDays"]) * -1;
             var expirationDate = DateTime.Today.AddDays(expirationPeriodInDays);
-            return _ProjectRepo.AllIncluding(x => x.Users).Where(x => x.LastModifiedOn <= expirationDate && x.Users.Contains(user)).OrderByDescending(x => x.LastModifiedOn);
+            return user.Projects.Where(x => x.LastModifiedOn <= expirationDate).OrderByDescending(x => x.LastModifiedOn);
         }
 
         public static Decimal ProviderRetail(this Product product, Project project)
@@ -91,7 +74,7 @@ namespace System.Web.Mvc
         {
             try
             {
-                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == retailCode);
+                var results = product.PriceCodes.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == retailCode);
                 
                 return results != null ? results.Price : product.RetailPrice;
             }
@@ -122,7 +105,7 @@ namespace System.Web.Mvc
         {
             try
             {
-                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == priceCode);
+                var results = product.PriceCodes.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == priceCode);
                 return results != null ? results.Price : product.RetailPrice;
             }
             catch (Exception ex)

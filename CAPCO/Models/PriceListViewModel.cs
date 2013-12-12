@@ -25,10 +25,10 @@ namespace CAPCO.Models
         /// </summary>
         public PriceListViewModel()
         {
-            //PriceListProducts = new List<Product>();
             AllManufacturers = new List<Manufacturer>();
             SelectedManufacturers = new List<Manufacturer>();
             ProviderCosts = new List<ProductPriceCode>();
+            PriceListProducts = new List<Product>();
         }
 
 

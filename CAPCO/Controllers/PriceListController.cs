@@ -48,7 +48,7 @@ namespace CAPCO.Controllers
                 return RedirectToAction("index", "root");
 
             var model = new PriceListViewModel();
-            model.PriceListProducts = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.Variation, x => x.Size, x => x.UnitOfMeasure, x => x.Usage).ToList();
+            model.PriceListProducts = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.Variation, x => x.Size, x => x.UnitOfMeasure, x => x.Usage, x => x.ProductSeries).ToList();
             model.PriceDisplayPreference = (PricePreferences)Enum.Parse(typeof(PricePreferences), CurrentUser.PricePreference);
 
             model.ProviderCosts = new List<ProductPriceCode>();
@@ -97,12 +97,25 @@ namespace CAPCO.Controllers
                             model.SelectedManufacturers.Add(mfg);
                         }
                     }
+
                     if (model.SelectedManufacturers.Any())
                     {
-                        var spec = new ProductsByManufacturersSpecification(model.SelectedManufacturers);
-                        model.PriceListProducts = _ProductRepository.FindBySpecification(spec).ToList();
+                        foreach (var mfg in model.SelectedManufacturers)
+                        {
+                            var query =
+                                _ProductRepository.AllIncluding(
+                                    x => x.Manufacturer,
+                                    x => x.Variation,
+                                    x => x.Size,
+                                    x => x.UnitOfMeasure,
+                                    x => x.Usage,
+                                    x => x.ProductSeries).Where(x => x.Manufacturer.Id == mfg.Id);
+                            model.PriceListProducts.AddRange(query);
+                        }
 
-
+                        //var spec = new ProductsByManufacturersSpecification(model.SelectedManufacturers);
+                        //model.PriceListProducts = _ProductRepository.FindBySpecification(spec).ToList();
+                        
                         model.ProviderCosts = new List<ProductPriceCode>();
                         var reqPriceCodes = model.PriceListProducts.Select(x => x.PriceCodeGroup).Distinct();
                         model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();

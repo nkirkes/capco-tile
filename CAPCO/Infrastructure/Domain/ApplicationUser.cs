@@ -39,9 +39,9 @@ namespace CAPCO.Infrastructure.Domain
         public bool HasRequestedAccount { get; set; }
 
         [DisplayName("Default Pickup Location")]
-        public virtual PickupLocation DefaultLocation { get; set; }
+        public PickupLocation DefaultLocation { get; set; }
         [DisplayName("Discount Code")]
-        public virtual DiscountCode DiscountCode { get; set; }
+        public DiscountCode DiscountCode { get; set; }
 
         public List<Project> Projects { get; set; }
 
@@ -52,8 +52,8 @@ namespace CAPCO.Infrastructure.Domain
             {
                 if (DefaultLocation != null && DiscountCode != null)
                     return String.Format("{0}{1}", DefaultLocation.Code, DiscountCode.Code);
-                else
-                    return null;
+                
+                return null;
             }
         }
 
@@ -66,9 +66,8 @@ namespace CAPCO.Infrastructure.Domain
                 {
                     return String.Format("{0}{1}", DefaultLocation.Code, 3);
                 }
-                else
-                    return "D3";
-
+                
+                return "D3";
             }
         }
         

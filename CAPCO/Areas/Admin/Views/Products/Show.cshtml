@@ -136,13 +136,13 @@
     
     
 
-    <div>
+    @*<div>
         <h2>Associated Price Codes & Prices</h2>
-        @foreach (var ppc in Model.PriceCodes())
+        @foreach (var ppc in Model.PriceCodes)
         { 
             <label>@ppc.PriceCode:: </label> @String.Format("{0:c}", ppc.Price)<br />
         }
-    </div>
+    </div>*@
 </fieldset>
 
 

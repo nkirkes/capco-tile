@@ -186,7 +186,7 @@ namespace CAPCO.Controllers
             }
 
             var relatedProducts = productRepository.FindBySpecification(new ProductsBySeriesSpecification(product.Series)).ToList();
-            if (relatedProducts != null && relatedProducts.Any())
+            if (relatedProducts.Any())
             { 
                 if (relatedProducts.Contains(product))
                     relatedProducts.Remove(product);
