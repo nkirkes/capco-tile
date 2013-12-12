@@ -238,14 +238,14 @@ namespace CAPCO.Controllers
                         else
                         { 
                             // hmm, no invite, just process them normally.
-                            new ApplicationUserMailer().Activation(customer).SendAsync();
+                            new ApplicationUserMailer().Activation(customer).Send();
                             this.FlashInfo("<b>Welcome to CAPCO!</b> We've sent an activation email to your email address. You'll need to grab that before you can log in.");
                             return RedirectToAction("Index", "Root", new { area = "" });
                         }
                     }
                     else
                     {
-                        new ApplicationUserMailer().Activation(customer).SendAsync();
+                        new ApplicationUserMailer().Activation(customer).Send();
                         this.FlashInfo("<b>Welcome to CAPCO!</b> We've sent an activation email to your email address. You'll need to grab that before you can log in.");
                         return RedirectToAction("Index", "Root", new { area = "" });
                     }
