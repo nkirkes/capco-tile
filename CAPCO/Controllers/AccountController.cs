@@ -22,19 +22,21 @@ namespace CAPCO.Controllers
     public class AccountController : ApplicationController
     {
         private readonly IApplicationUserService _CustomerService;
-        private readonly IApplicationUserRepository _ApplicationUserRepository;
-        private readonly IProjectInvitationRepository _ProjectInvitationRepository;
-        private readonly IProjectRepository _ProjectRepository;
+        private readonly IRepository<ApplicationUser> _ApplicationUserRepository;
+        private readonly IRepository<ProjectInvitation> _ProjectInvitationRepository;
+        private readonly IRepository<Project> _ProjectRepository;
+        private readonly IContentService _ContentService;
 
-        public AccountController(IApplicationUserService customerService, 
-            IApplicationUserRepository applicationUserRepository, 
-            IProjectInvitationRepository projectInvitationRepository,
-            IProjectRepository projectRepository)
+        public AccountController(IApplicationUserService customerService,
+            IRepository<ApplicationUser> applicationUserRepository,
+            IRepository<ProjectInvitation> projectInvitationRepository,
+            IRepository<Project> projectRepository, IContentService contentService)
         {
             _ProjectRepository = projectRepository;
             _ProjectInvitationRepository = projectInvitationRepository;
             _ApplicationUserRepository = applicationUserRepository;
             _CustomerService = customerService;
+            _ContentService = contentService;
         }
 
         public ActionResult LogIn()
@@ -142,7 +144,8 @@ namespace CAPCO.Controllers
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
-
+            if (HttpContext.Session != null)
+                HttpContext.Session["CurrentMember"] = null;
             return RedirectToAction("Index", "Home");
         }
 
@@ -192,7 +195,8 @@ namespace CAPCO.Controllers
                     {
                         throw new Exception("Captcha answer cannot be empty.");
                     }
-                    else
+                    
+                    try
                     {
                         RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
 
@@ -200,6 +204,10 @@ namespace CAPCO.Controllers
                         {
                             throw new Exception("Incorrect captcha answer.");
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        // swallow a server error from recaptcha and carry on.
                     }
 
                     UserRoles role = model.AccountType == AccountTypes.ServiceProvider.ToString() ? UserRoles.ServiceProviders : UserRoles.Consumers;

@@ -16,36 +16,39 @@ namespace CAPCO.Controllers
     [CapcoAuthorizationAttribute]
     public class ProjectsController : ApplicationController
     {
-        private readonly IProductRepository _ProductRepository;
-        private readonly IProjectRepository _ProjectRepository;
-        private readonly IProjectCommentRepository _ProjectCommentRepository;
-        private readonly IPickupLocationRepository _PickupLocationRepo;
-        private readonly IProjectInvitationRepository _InviteRepo;
+        private readonly IRepository<Product> _ProductRepository;
+        private readonly IRepository<Project> _ProjectRepository;
+        private readonly IRepository<ProjectComment> _ProjectCommentRepository;
+        private readonly IRepository<PickupLocation> _PickupLocationRepo;
+        private readonly IRepository<ProjectInvitation> _InviteRepo;
+        private readonly IRepository<ApplicationUser> _AppUserRepo; 
         
         /// <summary>
         /// Initializes a new instance of the ProjectsController class.
         /// </summary>
-        public ProjectsController(IProductRepository productRepository, 
-            IProjectRepository projectRepository, 
-            IProjectCommentRepository projectCommentRepository,
-            IPickupLocationRepository pickupLocationRepo,
-            IProjectInvitationRepository inviteRepo)
+        public ProjectsController(IRepository<Product> productRepository, 
+            IRepository<Project> projectRepository, 
+            IRepository<ProjectComment> projectCommentRepository,
+            IRepository<PickupLocation> pickupLocationRepo,
+            IRepository<ProjectInvitation> inviteRepo,
+            IRepository<ApplicationUser> appUserRepo)
         {
             _InviteRepo = inviteRepo;
             _PickupLocationRepo = pickupLocationRepo;
             _ProjectCommentRepository = projectCommentRepository;
             _ProjectRepository = projectRepository;
             _ProductRepository = productRepository;
+            _AppUserRepo = appUserRepo;
         }
 
         public ActionResult Index()
         {
-            return View(CurrentUser.Projects());
+            return View(CurrentUser.Projects);
         }
         
         public ActionResult Archives()
         {
-            return View(CurrentUser.ArchivedProjects());
+            return View(CurrentUser.ArchivedProjects().ToList());
         }
 
         public ActionResult Show(int id)
@@ -57,7 +60,7 @@ namespace CAPCO.Controllers
                 return RedirectToAction("index", "projects");
             }
 
-            if (!project.Users.Contains(CurrentUser))
+            if (project.Users!= null && project.Users.Any() && !project.Users.Contains(CurrentUser))
             {
                 this.FlashError("You don't have permission to view that project.");
                 return RedirectToAction("index", "projects");

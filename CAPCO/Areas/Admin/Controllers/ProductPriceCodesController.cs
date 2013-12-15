@@ -12,9 +12,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {   
     public class ProductPriceCodesController : Controller
     {
-		private readonly IProductPriceCodeRepository productpricecodeRepository;
+		private readonly IRepository<ProductPriceCode> productpricecodeRepository;
 
-		public ProductPriceCodesController(IProductPriceCodeRepository productpricecodeRepository)
+		public ProductPriceCodesController(IRepository<ProductPriceCode> productpricecodeRepository)
         {
 			this.productpricecodeRepository = productpricecodeRepository;
         }
@@ -29,7 +29,7 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult Search(PagedViewModel<ProductPriceCode> model)
         {
-            var results = productpricecodeRepository.All.Where(x => x.PriceGroup.Contains(model.Criteria)).OrderBy(x => x.PriceGroup).ThenBy(x => x.PriceCode);
+            var results = productpricecodeRepository.All.Where(x => x.PriceGroup.GroupName.Contains(model.Criteria)).OrderBy(x => x.PriceGroup).ThenBy(x => x.PriceCode);
             model.TotalCount = results.Count();
             model.Entities = results.ToPagedList(model.Page ?? 1, 100);
             return View("Index", model);

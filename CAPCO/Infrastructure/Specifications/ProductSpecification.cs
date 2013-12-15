@@ -103,11 +103,17 @@ namespace CAPCO.Infrastructure.Specifications
 
     public class ProductsByGroupSpecification : ProductSpecificationBase
     {
-        private readonly int _GroupId;
-        
+        private readonly int? _GroupId;
+        private string _GroupName;
+
         public ProductsByGroupSpecification(int groupId)
         {
             _GroupId = groupId;            
+        }
+
+        public ProductsByGroupSpecification(string groupName)
+        {
+            _GroupName = groupName;
         }
 
         public override IQueryable<Product> SatisfyingElementsFrom(IQueryable<Product> candidates)
@@ -115,28 +121,37 @@ namespace CAPCO.Infrastructure.Specifications
             if (candidates == null)
                 throw new ArgumentNullException("candidates", "candidates is null.");
 
-            if (_GroupId > 0)
+            if (_GroupId.HasValue && _GroupId.Value > 0)
             {
                 return from c in candidates
                        where c.Group != null && c.Group.Id == _GroupId
                        select c;
             }
-            else 
+            
+            if (!string.IsNullOrWhiteSpace(_GroupName))
             {
                 return from c in candidates
-                       where c.Group == null
-                       select c;
+                    where c.Group != null && c.Group.Name == _GroupName
+                    select c;
             }
+
+            throw new Exception("A valid search criteria is required: id or name");
         }
     }
 
     public class ProductsByCategorySpecification : ProductSpecificationBase
     {
         private readonly int _Id;
+        private string _Name;
 
         public ProductsByCategorySpecification(int id)
         {
             _Id = id;
+        }
+
+        public ProductsByCategorySpecification(string name)
+        {
+            _Name = name;
         }
 
         public override IQueryable<Product> SatisfyingElementsFrom(IQueryable<Product> candidates)
@@ -150,12 +165,21 @@ namespace CAPCO.Infrastructure.Specifications
                        where c.Category != null && c.Category.Id == _Id
                        select c;
             }
-            else
+
+            if (!string.IsNullOrWhiteSpace(_Name))
             {
                 return from c in candidates
-                       where c.Category == null
+                       where c.Category != null && c.Category.Name == _Name
                        select c;
             }
+            
+            throw new Exception("A valid search criteria is required: id or name");
+            //else
+            //{
+            //    return from c in candidates
+            //           where c.Category == null
+            //           select c;
+            //}
 
         }
     }
@@ -163,10 +187,16 @@ namespace CAPCO.Infrastructure.Specifications
     public class ProductsByTypeSpecification : ProductSpecificationBase
     {
         private readonly int _Id;
+        private string _Name;
 
         public ProductsByTypeSpecification(int id)
         {
             _Id = id;
+        }
+
+        public ProductsByTypeSpecification(string name)
+        {
+            _Name = name;
         }
 
         public override IQueryable<Product> SatisfyingElementsFrom(IQueryable<Product> candidates)
@@ -180,22 +210,31 @@ namespace CAPCO.Infrastructure.Specifications
                        where c.Type != null && c.Type.Id == _Id
                        select c;
             }
-            else
+
+            if (!string.IsNullOrWhiteSpace(_Name))
             {
                 return from c in candidates
-                       where c.Type == null
+                       where c.Type != null && c.Type.Name == _Name
                        select c;
             }
+
+            throw new ArgumentException("A valid id or name is required.");
         }
     }
 
     public class ProductsByColorSpecification : ProductSpecificationBase
     {
+        private readonly string _Name;
         private readonly int _Id;
 
         public ProductsByColorSpecification(int id)
         {
             _Id = id;
+        }
+
+        public ProductsByColorSpecification(string name)
+        {
+            _Name = name;
         }
 
         public override IQueryable<Product> SatisfyingElementsFrom(IQueryable<Product> candidates)
@@ -208,12 +247,14 @@ namespace CAPCO.Infrastructure.Specifications
                        where c.Color != null && c.Color.Id == _Id
                        select c;
             }
-            else 
+            if (!string.IsNullOrWhiteSpace(_Name))
             {
                 return from c in candidates
-                       where c.Color == null || c.Color.Id == 0
+                       where c.Color != null && c.Color.Name == _Name
                        select c;
             }
+
+            throw new ArgumentException();
         }
     }
 
@@ -281,10 +322,16 @@ namespace CAPCO.Infrastructure.Specifications
     public class ProductsByFinishSpecification : ProductSpecificationBase
     {
         private readonly int _Id;
+        private string _Name;
 
         public ProductsByFinishSpecification(int id)
         {
             _Id = id;
+        }
+
+        public ProductsByFinishSpecification(string name)
+        {
+            _Name = name;
         }
 
         public override IQueryable<Product> SatisfyingElementsFrom(IQueryable<Product> candidates)
@@ -298,22 +345,31 @@ namespace CAPCO.Infrastructure.Specifications
                        where c.Finish != null && c.Finish.Id == _Id
                        select c;
             }
-            else
+
+            if (!string.IsNullOrWhiteSpace(_Name))
             {
                 return from c in candidates
-                       where c.Finish == null
+                       where c.Finish != null && c.Finish.Name == _Name
                        select c;
             }
+
+            throw new Exception("A valid search criteria is required: id or name");
         }
     }
 
     public class ProductsBySizeSpecification : ProductSpecificationBase
     {
+        private readonly string _Name;
         private readonly int _Id;
 
         public ProductsBySizeSpecification(int id)
         {
             _Id = id;
+        }
+
+        public ProductsBySizeSpecification(string name)
+        {
+            _Name = name;
         }
 
         public override IQueryable<Product> SatisfyingElementsFrom(IQueryable<Product> candidates)
@@ -327,12 +383,15 @@ namespace CAPCO.Infrastructure.Specifications
                        where c.Size != null && c.Size.Id == _Id
                        select c;
             }
-            else
+            
+            if (!string.IsNullOrWhiteSpace(_Name))
             {
                 return from c in candidates
-                       where c.Size == null
+                       where c.Size != null && c.Size.Name == _Name
                        select c;
             }
+
+            throw new ArgumentException();
         }
     }
 }

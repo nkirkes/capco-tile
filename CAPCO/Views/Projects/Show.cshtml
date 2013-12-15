@@ -30,7 +30,7 @@
     <div class="section-left">
         <h3 class="sidebar">Project Details</h3>
         <label>Name:</label> @ViewBag.Title<br />
-        <label>Branch:</label> @Model.Location.Name
+        <label>Branch:</label> @(Model.Location != null ? Model.Location.Name : "")
         <strong>Description:</strong><br />@Model.Description
     </div>
     <div class="section-left">
@@ -66,14 +66,14 @@
                         switch (pricePreference)
                         {
                             case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
-                            <th>Retail</th>
+                                <th>Retail</th>
                                 break;
                             case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
-                            <th>Cost</th>
+                                <th>Cost</th>
                                 break;
                             case CAPCO.Infrastructure.Domain.PricePreferences.Both:
-                            <th>Retail</th>
-                            <th>Cost</th>
+                                <th>Retail</th>
+                                <th>Cost</th>
                                 break;
                             default:
                                 break;
@@ -82,58 +82,62 @@
                     
                     
                 </tr>
-                @foreach (var prod in Model.Products)
+
+                @if (Model.Products != null && Model.Products.Any())
                 {
-                    if (prod.Product != null)
+                    foreach (var prod in Model.Products)
                     {
-                        <tr>
-                            <td style="vertical-align: top;">
-                                <div class="thumbnail-img-container">
-                                    @* <a href="@Url.GetProductImageUrl(prod, ImageSize.Large)" rel="ChillBox" title="@prod.Name">*@
-                                    @Html.GetProductImage(prod.Product, ImageSize.Thumb)
-                                    @*</a>*@
-                                </div>
-                            </td>
-                            <td style="vertical-align: top;" class="span-8">
-                                <span style="font-weight: bold;">@prod.Product.Description</span><br />
-                                @if (!String.IsNullOrWhiteSpace(prod.Comment))
+                        if (prod.Product != null)
+                        {
+                            <tr>
+                                <td style="vertical-align: top;">
+                                    <div class="thumbnail-img-container">
+                                        @* <a href="@Url.GetProductImageUrl(prod, ImageSize.Large)" rel="ChillBox" title="@prod.Name">*@
+                                        @Html.GetProductImage(prod.Product, ImageSize.Thumb)
+                                        @*</a>*@
+                                    </div>
+                                </td>
+                                <td style="vertical-align: top;" class="span-8">
+                                    <span style="font-weight: bold;">@prod.Product.Description</span><br />
+                                    @if (!String.IsNullOrWhiteSpace(prod.Comment))
+                                    {
+                                        <div class="span-8" style="padding: 5px; background-color: #e4e4e4;">
+                                            <strong>Item Comment:</strong><br />
+                                            <em>@prod.Comment</em></div>
+                                    }
+                                </td>
+                                <td style="vertical-align: top;">@Html.ActionLink(prod.Product.ItemNumber, "show", "products", new {id = prod.Product.Id}, null)</td>
+                                @if (isPricingEnabled && currentUser.DiscountCode != null)
                                 {
-                                    <div class="span-8" style="padding: 5px; background-color: #e4e4e4;">
-                                        <strong>Item Comment:</strong><br />
-                                        <em>@prod.Comment</em></div>
+                                    switch (pricePreference)
+                                    {
+                                        case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
+                                            <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderRetail(Model))</td>
+                                            break;
+                                        case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
+                                            <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderCost(Model))</td>
+                                            break;
+                                        case CAPCO.Infrastructure.Domain.PricePreferences.Both:
+                                            <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderRetail(Model))</td>
+                                            <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderCost(Model))</td>
+                                            break;
+                                        default:
+                                            break;
+                                    }
                                 }
-                            </td>
-                            <td style="vertical-align: top;">@Html.ActionLink(prod.Product.ItemNumber, "show", "products", new { id = prod.Product.Id }, null)</td>
-                            @if (isPricingEnabled && currentUser.DiscountCode != null)
-                            {
-                                switch (pricePreference)
-                                {
-                                    case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
-                                        <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderRetail(Model))</td>
-                                        break;
-                                    case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
-                                        <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderCost(Model))</td>
-                                        break;
-                                    case CAPCO.Infrastructure.Domain.PricePreferences.Both:
-                                        <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderRetail(Model))</td>
-                                        <td style="vertical-align: top;">@String.Format("{0:c}", prod.Product.ProviderCost(Model))</td>
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
                         
-                        </tr>
-                    }
-                    else
-                    {
-                        <tr>
-                            <td style="vertical-align: top;" colspan="5">
-                                @prod.Comment
-                            </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td style="vertical-align: top;" colspan="5">
+                                    @prod.Comment
+                                </td>
                             
                         
-                        </tr>
+                            </tr>
+                        }
                     }
                 }
                 
@@ -188,7 +192,7 @@
 
     <div class="span-8 last">
         <div class="padded-content">
-        @if (isProjectOwner && Model.Users.Count > 1)
+        @if (isProjectOwner && (Model.Users != null && Model.Users.Any()))
         {
                 <h2 class="section-title">Active Project Members</h2>
             

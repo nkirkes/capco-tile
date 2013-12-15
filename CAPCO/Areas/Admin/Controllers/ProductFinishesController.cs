@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class ProductFinishesController : BaseAdminController
     {
-		private readonly IProductFinishRepository productfinishRepository;
+		private readonly IRepository<ProductFinish> productfinishRepository;
 
-		public ProductFinishesController(IProductFinishRepository productfinishRepository)
+		public ProductFinishesController(IRepository<ProductFinish> productfinishRepository)
         {
 			this.productfinishRepository = productfinishRepository;
         }

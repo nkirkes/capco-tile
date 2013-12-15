@@ -58,6 +58,7 @@ namespace CAPCO
                 account.Collection(x => x.Get("resendactivation"));
                 account.Collection(x => x.Get("resetpassword"));
                 account.Collection(x => x.Post("resetpassword"));
+                account.Collection(x => x.Post("ExternalLogin"));
             });
 
             /* Price Lists */
@@ -170,6 +171,11 @@ namespace CAPCO
                 admin.Resources<ManufacturersController>(pc => { pc.Member(x => x.Get("delete")); });
                 admin.Resources<ProductUsagesController>(pc => { pc.Member(x => x.Get("delete")); });
                 admin.Resources<LinksController>(pc => {
+                    pc.Member(x => x.Get("delete"));
+                    pc.Collection(x => x.Post("reorder"));
+                });
+                admin.Resources<SliderController>(pc =>
+                {
                     pc.Member(x => x.Get("delete"));
                     pc.Collection(x => x.Post("reorder"));
                 });

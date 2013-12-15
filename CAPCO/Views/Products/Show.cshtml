@@ -20,14 +20,14 @@
             </ul>
             
             
-            @if (currentUser.Projects().Any())
+            @if (currentUser.Projects.Any())
             {
                 
                 using (Html.BeginForm("AddToProject", "products", new { id = Model.Id }, FormMethod.Post, null))
                 {
                     @Html.AntiForgeryToken()
                     <label>Add to an existing project: </label><br />
-                    @Html.DropDownList("projectId", ((IEnumerable<CAPCO.Infrastructure.Domain.Project>)currentUser.Projects()).Select(option => new SelectListItem
+                    @Html.DropDownList("projectId", ((IEnumerable<CAPCO.Infrastructure.Domain.Project>)currentUser.Projects).Select(option => new SelectListItem
                     {
                         Text = (option == null ? "None" : option.ProjectName),
                         Value = option.Id.ToString()

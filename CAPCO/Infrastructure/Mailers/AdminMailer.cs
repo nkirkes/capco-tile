@@ -41,7 +41,7 @@ namespace CAPCO.Infrastructure.Mailers
             mailMessage.IsBodyHtml = true;
             ViewBag.Title = "CAPCO New Profile Notification";
             ViewBag.NewProfile = user;
-            mailMessage.To.Add(ConfigurationManager.AppSettings["WebContactRecipient"]);
+            mailMessage.To.Add(ConfigurationManager.AppSettings["NewAccountActivationRecipient"]);
             PopulateBody(mailMessage, viewName: "NewAccountNotification");
             return mailMessage;
         }

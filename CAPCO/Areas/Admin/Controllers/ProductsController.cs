@@ -15,35 +15,35 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class ProductsController : BaseAdminController
     {
-		private readonly IProductGroupRepository _productgroupRepository;
-		private readonly IProductCategoryRepository _productcategoryRepository;
-        private readonly IProductStatusRepository _ProductStatusRepo;
-        private readonly IProductTypeRepository _producttypeRepository;
-		private readonly IProductColorRepository _productcolorRepository;
-		private readonly IProductSizeRepository _productsizeRepository;
-		private readonly IProductFinishRepository _productfinishRepository;
-		private readonly IProductRepository _productRepository;
-        private readonly IProductVariationRepository _VariationRepo;
-        private readonly IProductUnitOfMeasureRepository _UomRepo;
-        private readonly IManufacturerRepository _ManufacturerRepo;
-        private readonly IProductUsageRepository _ProductUsageRepo;
-        private readonly IProjectRepository _ProjectRepo;
+		private readonly IRepository<ProductGroup> _productgroupRepository;
+		private readonly IRepository<ProductCategory> _productcategoryRepository;
+        private readonly IRepository<ProductStatus> _ProductStatusRepo;
+        private readonly IRepository<ProductType> _producttypeRepository;
+		private readonly IRepository<ProductColor> _productcolorRepository;
+		private readonly IRepository<ProductSize> _productsizeRepository;
+		private readonly IRepository<ProductFinish> _productfinishRepository;
+		private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductVariation> _VariationRepo;
+        private readonly IRepository<ProductUnitOfMeasure> _UomRepo;
+        private readonly IRepository<Manufacturer> _ManufacturerRepo;
+        private readonly IRepository<ProductUsage> _ProductUsageRepo;
+        private readonly IRepository<Project> _ProjectRepo;
   
   
   
-		public ProductsController(IProductGroupRepository productgroupRepository, 
-            IProductCategoryRepository productcategoryRepository, 
-            IProductTypeRepository producttypeRepository, 
-            IProductColorRepository productcolorRepository, 
-            IProductSizeRepository productsizeRepository, 
-            IProductFinishRepository productfinishRepository, 
-            IProductRepository productRepository,
-            IProductStatusRepository productStatusRepo,
-            IProductUnitOfMeasureRepository uomRepo,
-            IProductVariationRepository variationRepo,
-            IManufacturerRepository manufacturerRepo,
-            IProductUsageRepository productUsageRepo,
-            IProjectRepository projectRepo)
+		public ProductsController(IRepository<ProductGroup> productgroupRepository, 
+            IRepository<ProductCategory> productcategoryRepository, 
+            IRepository<ProductType> producttypeRepository, 
+            IRepository<ProductColor> productcolorRepository, 
+            IRepository<ProductSize> productsizeRepository, 
+            IRepository<ProductFinish> productfinishRepository, 
+            IRepository<Product> productRepository,
+            IRepository<ProductStatus> productStatusRepo,
+            IRepository<ProductUnitOfMeasure> uomRepo,
+            IRepository<ProductVariation> variationRepo,
+            IRepository<Manufacturer> manufacturerRepo,
+            IRepository<ProductUsage> productUsageRepo,
+            IRepository<Project> projectRepo)
         {
             _ProjectRepo = projectRepo;
             _ProductUsageRepo = productUsageRepo;
@@ -123,7 +123,7 @@ namespace CAPCO.Areas.Admin.Controllers
         {
             try
             {
-            	string userName = Membership.GetUser().UserName;
+                string userName = CurrentUser.UserName;
                 product.CreatedBy = userName;
                 product.CreatedOn = DateTime.Now;
                 product.LastModifiedBy = userName;
@@ -220,11 +220,13 @@ namespace CAPCO.Areas.Admin.Controllers
             try
             {
                 var prod = _productRepository.Find(product.Id);
+
+                prod.LastModifiedBy = CurrentUser.UserName;
+                prod.LastModifiedOn = DateTime.Now;
+
                 prod.RetailPrice = product.RetailPrice;
                 prod.Description = product.Description;
                 prod.ItemNumber = product.ItemNumber;
-                prod.LastModifiedBy = Membership.GetUser().UserName;
-                prod.LastModifiedOn = DateTime.Now;
                 prod.ManufacturerColor = product.ManufacturerColor;
                 prod.Usage = product.Usage;
                 prod.MadeIn = product.MadeIn;
@@ -237,7 +239,7 @@ namespace CAPCO.Areas.Admin.Controllers
                 prod.IsFrostResistant = product.IsFrostResistant;
                 prod.ScratchHardiness = product.ScratchHardiness;
                 prod.UnitsPerPiece = product.UnitsPerPiece;
-                prod.PriceCodeGroup = product.PriceCodeGroup;
+                //prod.PriceCodeGroup = product.PriceCodeGroup;
 
                 int mfgId = 0;
                 if (Int32.TryParse(Request["SelectedManufacturer"], out mfgId))
@@ -295,12 +297,12 @@ namespace CAPCO.Areas.Admin.Controllers
                     prod.Status = _ProductStatusRepo.Find(statusId);
 
                 prod.YouTubeUrl = product.YouTubeUrl;
-
+                prod.SizeDescription = product.SizeDescription;
                 _productRepository.InsertOrUpdate(prod);
                 _productRepository.Save();
 
                 this.FlashInfo("The product was successfully saved.");
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit", new { id = product.Id });
             }
             catch (Exception ex)
             {

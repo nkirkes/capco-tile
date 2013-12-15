@@ -22,6 +22,15 @@
 
 }
 
+
+.pagedListPager { text-align: center; }
+.pagedListPager ul { list-style-type: none; margin: 0; padding: 0; }
+.pagedListPager ul li { border: 1px solid #333; background-color: #e4e4e4; list-style-type: none; margin: 0 0 0 10px; padding: 3px 5px; display: inline; font-size: 1.1em; }
+.pagedListPager ul:first-child { margin-left: 0px; }
+.pagedListPager ul li.PagedList-disabled a { text-decoration: none; font-weight: normal; color: #000; }
+
+
+
 a img { border: 0; }
 
 #container

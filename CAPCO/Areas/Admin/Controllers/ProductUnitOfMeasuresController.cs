@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class ProductUnitOfMeasuresController : BaseAdminController
     {
-		private readonly IProductUnitOfMeasureRepository productunitofmeasureRepository;
+		private readonly IRepository<ProductUnitOfMeasure> productunitofmeasureRepository;
 
-		public ProductUnitOfMeasuresController(IProductUnitOfMeasureRepository productunitofmeasureRepository)
+		public ProductUnitOfMeasuresController(IRepository<ProductUnitOfMeasure> productunitofmeasureRepository)
         {
 			this.productunitofmeasureRepository = productunitofmeasureRepository;
         }

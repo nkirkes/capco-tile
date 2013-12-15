@@ -25,12 +25,7 @@ namespace System.Web.Mvc
         {
             return ((PricePreferences)Enum.Parse(typeof(PricePreferences), value)).ToFriendlyString();
         }
-
-        //public static List<ContentPage> ContentPages(this HtmlHelper helper)
-        //{
-        //    return DependencyResolver.Current.GetService<IContentPageRepository>().All.Where(x => x.ParentPage == null).ToList();
-        //}
-
+        
         public static MvcHtmlString GetSectionHtml(this HtmlHelper helper, ContentSection section)
         { 
             if (section != null && !String.IsNullOrWhiteSpace(section.Text))

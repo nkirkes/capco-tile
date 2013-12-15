@@ -37,28 +37,30 @@ namespace CAPCO.Infrastructure.Data
         public DbSet<Notification> Notifications { get; set; }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-
-        //public DbSet<ContentPage> ContentPages { get; set; }
-
+        
         public DbSet<PriceCode> PriceCodes { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ProductStatus> ProductStatus { get; set; }
+        public DbSet<ProductStatus> ProductStatus { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ProductVariation> ProductVariations { get; set; }
+        public DbSet<ProductVariation> ProductVariations { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ProductUnitOfMeasure> ProductUnitOfMeasures { get; set; }
+        public DbSet<ProductUnitOfMeasure> ProductUnitOfMeasures { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ProjectComment> ProjectComments { get; set; }
+        public DbSet<ProjectComment> ProjectComments { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ProjectInvitation> ProjectInvitations { get; set; }
+        public DbSet<ProjectInvitation> ProjectInvitations { get; set; }
+
+        public DbSet<SliderImage> SliderImages { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            //this.Configuration.LazyLoadingEnabled = false;
+            
             modelBuilder.Entity<Project>()
-                .HasMany<ApplicationUser>(c => c.Users).WithMany();
+                .HasMany<ApplicationUser>(c => c.Users).WithMany().Map(x => x.ToTable("ProjectApplicationUsers"));
             
             modelBuilder.Entity<Product>()
                 .HasMany<Product>(x => x.RelatedSizes)
@@ -79,37 +81,47 @@ namespace CAPCO.Infrastructure.Data
                 .HasMany<Product>(x => x.RelatedFinishes)
                 .WithMany()
                 .Map(x => x.ToTable("ProductRelatedFinishes"));
+
+            modelBuilder.Entity<PriceGroup>()
+                .HasMany<ProductPriceCode>(x => x.PriceCodes)
+                .WithRequired(x => x.PriceGroup)
+                .Map(x => x.ToTable("ProductPriceCodes").MapKey("PriceGroup_Id"));
+
+            modelBuilder.Entity<Product>()
+                .HasOptional(x => x.PriceGroup)
+                .WithMany(x => x.Products);
+
         }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ContentSection> ContentSections { get; set; }
+        public DbSet<PriceGroup> PriceGroups { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.Manufacturer> Manufacturers { get; set; }
+        public DbSet<ContentSection> ContentSections { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.PickupLocation> PickupLocations { get; set; }
+        public DbSet<Manufacturer> Manufacturers { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.DiscountCode> DiscountCodes { get; set; }
+        public DbSet<PickupLocation> PickupLocations { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.StoreLocation> StoreLocations { get; set; }
+        public DbSet<DiscountCode> DiscountCodes { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ContactRequest> ContactRequests { get; set; }
+        public DbSet<StoreLocation> StoreLocations { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.AccountRequest> AccountRequests { get; set; }
+        public DbSet<ContactRequest> ContactRequests { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ProductUsage> ProductUsages { get; set; }
+        public DbSet<AccountRequest> AccountRequests { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.RelatedProductSize> OtherSizes { get; set; }
+        public DbSet<ProductUsage> ProductUsages { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.RelatedAccent> RelatedAccents { get; set; }
+        public DbSet<RelatedProductSize> OtherSizes { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.RelatedTrim> RelatedTrims { get; set; }
+        public DbSet<RelatedAccent> RelatedAccents { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ProductPriceCode> ProductPriceCodes { get; set; }
+        public DbSet<RelatedTrim> RelatedTrims { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.Link> Links { get; set; }
+        public DbSet<ProductPriceCode> ProductPriceCodes { get; set; }
 
-        public DbSet<CAPCO.Infrastructure.Domain.ProductSeries> ProductSeries { get; set; }
+        public DbSet<Link> Links { get; set; }
 
-        //public DbSet<CAPCO.Infrastructure.Domain.ProductCrossReference> ProductCrossReferences { get; set; }
+        public DbSet<ProductSeries> ProductSeries { get; set; }
 
     }
 }

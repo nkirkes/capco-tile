@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
@@ -17,50 +18,51 @@ namespace CAPCO.Areas.Admin.Controllers
     public class ImportController : BaseAdminController
     {
         private readonly IApplicationUserService _CustomerService;
-        private readonly IProductRepository _ProductRepository;
-        private readonly IProductGroupRepository _ProductgroupRepository;
-        private readonly IProductCategoryRepository _ProductcategoryRepository;
-        private readonly IProductTypeRepository _ProducttypeRepository;
-        private readonly IProductColorRepository _ProductcolorRepository;
-        private readonly IProductSizeRepository _ProductsizeRepository;
-        private readonly IProductFinishRepository _ProductfinishRepository;
-        private readonly IProductUnitOfMeasureRepository _ProductUomRepository;
-        private readonly IManufacturerRepository _ManufacturerRepository;
-        private readonly IProductUsageRepository _ProductUsageRepository;
-        private readonly IProductVariationRepository _ProductVariationRepository;
-        private readonly IProductStatusRepository _ProductStatusRepository;
-        //private readonly IProductCrossReferenceRepository _CrossReferenceRepo;
-        private readonly IPriceCodeRepository _PriceCodeRepo;
-        private readonly IRelatedProductSizeRepository _OtherSizeRepo;
-        private readonly IRelatedAccentRepository _AccentRepo;
-        private readonly IRelatedTrimRepository _TrimRepo;
-        private readonly IProductPriceCodeRepository _ProductPriceCodeRepo;
-        private readonly IProductSeriesRepository _ProductSeriesRepo;
-        private readonly IPickupLocationRepository _LocationRepo;
-        private readonly IDiscountCodeRepository _DiscountCodeRepo;
+        private readonly IRepository<Product> _ProductRepository;
+        private readonly IRepository<ProductGroup> _ProductgroupRepository;
+        private readonly IRepository<ProductCategory> _ProductcategoryRepository;
+        private readonly IRepository<ProductType> _ProducttypeRepository;
+        private readonly IRepository<ProductColor> _ProductcolorRepository;
+        private readonly IRepository<ProductSize> _ProductsizeRepository;
+        private readonly IRepository<ProductFinish> _ProductfinishRepository;
+        private readonly IRepository<ProductUnitOfMeasure> _ProductUomRepository;
+        private readonly IRepository<Manufacturer> _ManufacturerRepository;
+        private readonly IRepository<ProductUsage> _ProductUsageRepository;
+        private readonly IRepository<ProductVariation> _ProductVariationRepository;
+        private readonly IRepository<ProductStatus> _ProductStatusRepository;
+        private readonly IRepository<PriceCode> _PriceCodeRepo;
+        private readonly IRepository<RelatedProductSize> _OtherSizeRepo;
+        private readonly IRepository<RelatedAccent> _AccentRepo;
+        private readonly IRepository<RelatedTrim> _TrimRepo;
+        private readonly IRepository<ProductPriceCode> _ProductPriceCodeRepo;
+        private readonly IRepository<ProductSeries> _ProductSeriesRepo;
+        private readonly IRepository<PickupLocation> _LocationRepo;
+        private readonly IRepository<DiscountCode> _DiscountCodeRepo;
+        private readonly IRepository<ApplicationUser> _AppUserRepo; 
 
-        public ImportController(IProductRepository productRepository, 
-            IProductGroupRepository productgroupRepository,
-            IProductCategoryRepository productcategoryRepository,
-            IProductTypeRepository producttypeRepository,
-            IProductColorRepository productcolorRepository,
-            IProductSizeRepository productsizeRepository,
-            IProductFinishRepository productfinishRepository,
-            IProductUnitOfMeasureRepository productUomRepository,
-            IManufacturerRepository manufacturerRepository,
-            IProductUsageRepository productUsageRepository,
-            IProductVariationRepository productVariationRepository,
-            IProductStatusRepository productStatusRepository,
-            //IProductCrossReferenceRepository crossReferenceRepo,
-            IPriceCodeRepository priceCodeRepo,
-            IRelatedProductSizeRepository otherSizeRepo,
-            IRelatedAccentRepository accentRepo,
-            IRelatedTrimRepository trimRepo, 
-            IProductPriceCodeRepository productPriceCodeRepo,
-            IProductSeriesRepository productSeriesRepo,
+
+        public ImportController(IRepository<Product> productRepository, 
+            IRepository<ProductGroup> productgroupRepository,
+            IRepository<ProductCategory> productcategoryRepository,
+            IRepository<ProductType> producttypeRepository,
+            IRepository<ProductColor> productcolorRepository,
+            IRepository<ProductSize> productsizeRepository,
+            IRepository<ProductFinish> productfinishRepository,
+            IRepository<ProductUnitOfMeasure> productUomRepository,
+            IRepository<Manufacturer> manufacturerRepository,
+            IRepository<ProductUsage> productUsageRepository,
+            IRepository<ProductVariation> productVariationRepository,
+            IRepository<ProductStatus> productStatusRepository,
+            IRepository<PriceCode> priceCodeRepo,
+            IRepository<RelatedProductSize> otherSizeRepo,
+            IRepository<RelatedAccent> accentRepo,
+            IRepository<RelatedTrim> trimRepo, 
+            IRepository<ProductPriceCode> productPriceCodeRepo,
+            IRepository<ProductSeries> productSeriesRepo,
             IApplicationUserService customerService,
-            IPickupLocationRepository locationRepo,
-            IDiscountCodeRepository discountCodeRepo)
+            IRepository<PickupLocation> locationRepo,
+            IRepository<DiscountCode> discountCodeRepo,
+            IRepository<ApplicationUser> appUserRepo)
         {
             _ProductSeriesRepo = productSeriesRepo;
             _ProductPriceCodeRepo = productPriceCodeRepo;
@@ -68,7 +70,6 @@ namespace CAPCO.Areas.Admin.Controllers
             _AccentRepo = accentRepo;
             _OtherSizeRepo = otherSizeRepo;
             _PriceCodeRepo = priceCodeRepo;
-            //_CrossReferenceRepo = crossReferenceRepo;
             _ProductStatusRepository = productStatusRepository;
             _ProductVariationRepository = productVariationRepository;
             _ProductUsageRepository = productUsageRepository;
@@ -84,6 +85,7 @@ namespace CAPCO.Areas.Admin.Controllers
             _CustomerService = customerService;
             _LocationRepo = locationRepo;
             _DiscountCodeRepo = discountCodeRepo;
+            _AppUserRepo = appUserRepo;
         }
         
         public ActionResult Index()
@@ -99,7 +101,14 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (customersFile == null || customersFile.ContentLength <= 0 || Path.GetExtension(customersFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = Server.MapPath("~/Public/Imports") + "\\" + Path.GetFileName(customersFile.FileName);
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+
+                var storedFilePath = importPath + "\\" + Path.GetFileName(customersFile.FileName);
                 customersFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedCustomer));
@@ -208,7 +217,13 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (productsFile == null || productsFile.ContentLength <= 0 || Path.GetExtension(productsFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = Server.MapPath("~/Public/Imports") + "\\" + Path.GetFileName(productsFile.FileName);
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+                var storedFilePath = importPath + "\\" + Path.GetFileName(productsFile.FileName);
                 productsFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedProduct));
@@ -264,7 +279,14 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (crossRefFile == null || crossRefFile.ContentLength <= 0 || Path.GetExtension(crossRefFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = String.Format("{0}\\{1}", Server.MapPath("~/Public/Imports"), Path.GetFileName(crossRefFile.FileName));
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+
+                var storedFilePath = String.Format("{0}\\{1}", importPath, Path.GetFileName(crossRefFile.FileName));
                 crossRefFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedCrossReference));
@@ -295,40 +317,41 @@ namespace CAPCO.Areas.Admin.Controllers
                         continue;
 
                     var parentProduct = _ProductRepository.All.FirstOrDefault(x => x.ItemNumber == item.ParentItemNumber);
+                    
                     var childProduct = _ProductRepository.All.FirstOrDefault(x => x.ItemNumber == item.ChildItemNumber);
-                    
-                    switch (item.ReferenceTypeCode)
+                    if (parentProduct != null)
                     {
-                        case 1: // other sizes
-                            //var newSize = new RelatedProductSize { Product = childProduct };
-                            //parentProduct.RelatedSizes.Add(newSize);
-                            parentProduct.RelatedSizes.Add(childProduct);
-                            _ProductRepository.InsertOrUpdate(parentProduct);
-                            _ProductRepository.Save();
-                            newReferences++;
-                            break;
-                        case 2: // accents
-                            parentProduct.RelatedAccents.Add(childProduct);
-                            _ProductRepository.InsertOrUpdate(parentProduct);
-                            _ProductRepository.Save();
-                            newReferences++;
-                            break;
-                        case 3: // trims
-                            parentProduct.RelatedTrims.Add(childProduct);
-                            _ProductRepository.InsertOrUpdate(parentProduct);
-                            _ProductRepository.Save();
-                            newReferences++;
-                            break;
-                        case 4: // finishes
-                            parentProduct.RelatedFinishes.Add(childProduct);
-                            _ProductRepository.InsertOrUpdate(parentProduct);
-                            _ProductRepository.Save();
-                            newReferences++;
-                            break;
+                        switch (item.ReferenceTypeCode)
+                        {
+                            case 1: // other sizes
+                                //var newSize = new RelatedProductSize { Product = childProduct };
+                                //parentProduct.RelatedSizes.Add(newSize);
+                                parentProduct.RelatedSizes.Add(childProduct);
+                                _ProductRepository.InsertOrUpdate(parentProduct);
+                                _ProductRepository.Save();
+                                newReferences++;
+                                break;
+                            case 2: // accents
+                                parentProduct.RelatedAccents.Add(childProduct);
+                                _ProductRepository.InsertOrUpdate(parentProduct);
+                                _ProductRepository.Save();
+                                newReferences++;
+                                break;
+                            case 3: // trims
+                                parentProduct.RelatedTrims.Add(childProduct);
+                                _ProductRepository.InsertOrUpdate(parentProduct);
+                                _ProductRepository.Save();
+                                newReferences++;
+                                break;
+                            case 4: // finishes
+                                parentProduct.RelatedFinishes.Add(childProduct);
+                                _ProductRepository.InsertOrUpdate(parentProduct);
+                                _ProductRepository.Save();
+                                newReferences++;
+                                break;
+                        }
                     }
-                    
                 }
-                               
 
                 System.IO.File.Delete(storedFilePath);
 
@@ -362,7 +385,14 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (priceCodeFile == null || priceCodeFile.ContentLength <= 0 || Path.GetExtension(priceCodeFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = String.Format("{0}\\{1}", Server.MapPath("~/Public/Imports"), Path.GetFileName(priceCodeFile.FileName));
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+
+                var storedFilePath = String.Format("{0}\\{1}", importPath, Path.GetFileName(priceCodeFile.FileName));
                 priceCodeFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedProductPriceCode));
@@ -373,9 +403,9 @@ namespace CAPCO.Areas.Admin.Controllers
 
                 foreach (var item in importedPriceCodes)
                 {
-                    if (_ProductPriceCodeRepo.All.Any(x => x.PriceGroup == item.PriceGroup && x.PriceCode == item.PriceCode))
+                    if (_ProductPriceCodeRepo.All.Any(x => x.GroupName == item.PriceGroup && x.PriceCode == item.PriceCode))
                     {
-                        var priceCode = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup == item.PriceGroup && x.PriceCode == item.PriceCode);
+                        var priceCode = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.GroupName == item.PriceGroup && x.PriceCode == item.PriceCode);
                         priceCode.Price = item.Price;
                         _ProductPriceCodeRepo.InsertOrUpdate(priceCode);
                         updatedCodes++;
@@ -383,7 +413,7 @@ namespace CAPCO.Areas.Admin.Controllers
                     else
                     {
                         var priceCode = new ProductPriceCode();
-                        priceCode.PriceGroup = item.PriceGroup;
+                        priceCode.GroupName = item.PriceGroup;
                         priceCode.PriceCode = item.PriceCode;
                         priceCode.Price = item.Price;
                         _ProductPriceCodeRepo.InsertOrUpdate(priceCode);
@@ -413,7 +443,14 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (seriesFile == null || seriesFile.ContentLength <= 0 || Path.GetExtension(seriesFile.FileName).ToLower() != ".txt")
                     throw new Exception("You must provide a valid tab delimited txt file.");
 
-                var storedFilePath = String.Format("{0}\\{1}", Server.MapPath("~/Public/Imports"), Path.GetFileName(seriesFile.FileName));
+                string importPath = Server.MapPath("~/Public/Imports");
+                if (!Directory.Exists(importPath))
+                {
+                    var di = Directory.CreateDirectory(importPath);
+                    // TODO: permissions?
+                }
+
+                var storedFilePath = String.Format("{0}\\{1}", importPath, Path.GetFileName(seriesFile.FileName));
                 seriesFile.SaveAs(storedFilePath);
 
                 var engine = new FileHelperEngine(typeof(ImportedProductSeries));
@@ -502,7 +539,8 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (DateTime.TryParse(item.StatusChangeDate, out statusChangeDate))
                     product.StatusChangedOn = statusChangeDate;
             }
-            product.PriceCodeGroup = item.PriceCodeGroup;
+            //product.PriceCodeGroup = item.PriceCodeGroup;
+            //TODO: Need to rewire the import to accommodate the new PriceGroup entity.
 
             // relationships
             int seriesCode = 0;

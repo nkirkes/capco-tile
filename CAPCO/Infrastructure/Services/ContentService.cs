@@ -30,22 +30,33 @@ namespace CAPCO.Infrastructure.Services
     public interface IContentService
     {
         ContentSection GetContentSection(string sectionName);
+        IEnumerable<ContentSection> GetContentSections(string[] sectionNames);
     }
 
     public class ContentService : IContentService
     {
-        private readonly IContentSectionRepository _ContentSectionRepository;
+        private readonly IRepository<ContentSection> _ContentSectionRepository;
         /// <summary>
         /// Initializes a new instance of the ContentService class.
         /// </summary>
-        public ContentService(IContentSectionRepository contentSectionRepository)
+        public ContentService(IRepository<ContentSection> contentSectionRepository)
         {
-            _ContentSectionRepository = contentSectionRepository;            
+            _ContentSectionRepository = contentSectionRepository;    
         }
 
         public ContentSection GetContentSection(string sectionName)
         {
             return _ContentSectionRepository.All.FirstOrDefault(x => x.SectionName == sectionName);
+        }
+
+        public IEnumerable<ContentSection> GetContentSections(string[] sectionNames)
+        {
+            // TODO: test this for speed; could try to make it only select the sections we want, but the table is tiny.
+            var query = _ContentSectionRepository.All.ToList();
+            foreach(var name in sectionNames)
+            {
+                yield return query.FirstOrDefault(x => x.SectionName == name);
+            }
         }
     }
 }

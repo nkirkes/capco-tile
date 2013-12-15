@@ -1,4 +1,7 @@
-@model CAPCO.Models.ProductsViewModel
+@model IPagedList<CAPCO.Infrastructure.Domain.Product>
+@using CAPCO.Infrastructure.Domain
+@using PagedList.Mvc;
+@using PagedList;
 
 @{
     ViewBag.Title = "Products";
@@ -6,8 +9,7 @@
     var isPricingEnabled = ViewBag.IsPricingEnabled;
 }
 
-@using PagedList.Mvc;
-@using PagedList;
+
 
 <div class="span-6">
     <div class="section-left">
@@ -45,106 +47,142 @@
         <p>Use the filters below to narrow the products list.</p>
 
         @Html.ActionLink("Clear Filters", "index", "products", null, null)
-        
-        <h3 class="sidebar">Product Groups</h3>
-        
+        @{var filters = (Dictionary<string, string>)ViewBag.Filters;}
+            <h3 class="sidebar">Product Groups</h3>
             <ul class="sidebar">
-            @if (Model.AvailableGroups.Any())
-            {
-                foreach (var group in Model.AvailableGroups)
+                @if (ViewBag.Groups != null)
                 {
-                    var liClass = Model.Filters.GroupId.HasValue && Model.Filters.GroupId.Value == group.Id ? "selected" : "";
-                    <li class="liClass">@Html.ActionLink(group.Name, "index", "products", new { groupId = group.Id, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, colorId = Model.Filters.ColorId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Group == group).Count()]</li>
+                    foreach (IGrouping<string, ProductGroup> grouping in ViewBag.Groups)
+                    {
+                        <li class="liClass">@Html.ActionLink(@grouping.Key, "index", "products", new
+                                            {
+                                                group = grouping.Key,
+                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                                            }, null) [@grouping.Count()]</li>
+                    }
                 }
-            }
-            @if (@Model.AllProducts.Any(x => x.Group == null))
-            {
-                <li>@Html.ActionLink("Other", "index", "products", new { categoryId = Model.Filters.CategoryId, groupId = 0, typeId = Model.Filters.TypeId, colorId = Model.Filters.ColorId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Category == null).Count()]</li>
-            }
             </ul>
-        
-
         
             <h3 class="sidebar">Product Categories</h3>
             <ul class="sidebar">
-                @if (Model.AvailableCategories.Any())
+                @if (ViewBag.Categories != null)
                 {
-                    foreach (var item in Model.AvailableCategories)
+                    
+                    foreach (IGrouping<string, ProductCategory> grouping in ViewBag.Categories)
                     {
-                        <li>@Html.ActionLink(item.Name, "index", "products", new { categoryId = item.Id, groupId = Model.Filters.GroupId, typeId = Model.Filters.TypeId, colorId = Model.Filters.ColorId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Category == item).Count()]</li>
+                        <li class="liClass">
+                            @Html.ActionLink(@grouping.Key, "index", "products", new
+                                            {
+                                                category = grouping.Key,
+                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                                            }, null) [@grouping.Count()]</li>
                     }
                 }
-                @if (@Model.AllProducts.Any(x => x.Category == null))
-                {
-                    <li>@Html.ActionLink("Other", "index", "products", new { categoryId = 0, groupId = Model.Filters.GroupId, typeId = Model.Filters.TypeId, colorId = Model.Filters.ColorId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Category == null).Count()]</li>
-                }
             </ul>
-        
-
         
             <h3 class="sidebar">Product Types</h3>
             <ul class="sidebar">
-            @if (Model.AvailableTypes.Any())
-            {
-                foreach (var item in Model.AvailableTypes)
+                @if (ViewBag.Types != null)
                 {
-                    <li>@Html.ActionLink(item.Name, "index", "products", new { typeId = item.Id, categoryId = Model.Filters.CategoryId, groupId = Model.Filters.GroupId, colorId = Model.Filters.ColorId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Type == item).Count()]</li>
+                    foreach (IGrouping<string, ProductType> grouping in ViewBag.Types)
+                    {
+                        <li class="liClass">
+                            @Html.ActionLink(@grouping.Key, "index", "products", new
+                                            {
+                                                type = grouping.Key,
+                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                                            }, null) [@grouping.Count()]</li>
+                    }
                 }
-            }
-            @if (@Model.AllProducts.Any(x => x.Type == null))
-            {
-                    <li>@Html.ActionLink("Other", "index", "products", new { categoryId = Model.Filters.CategoryId, groupId = Model.Filters.GroupId, typeId = 0, colorId = Model.Filters.ColorId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Category == null).Count()]</li>
-            }
             </ul>
-        
-        
         
             <h3 class="sidebar">Product Colors</h3>
             <ul class="sidebar">
-            @if (Model.AvailableColors.Any())
-            {
-                foreach (var item in Model.AvailableColors)
+            @if (ViewBag.Colors != null)
                 {
-                    <li>@Html.ActionLink(item.Name, "index", "products", new { colorId = item.Id, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Color == item).Count()]</li>
+                    foreach (IGrouping<string, ProductColor> grouping in ViewBag.Colors)
+                    {
+                        <li class="liClass">
+                           @Html.ActionLink(@grouping.Key, "index", "products", new
+                                            {
+                                                color = grouping.Key,
+                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                                            }, null) [@grouping.Count()]</li>
+                    }
                 }
-            }
-            @if (@Model.AllProducts.Any(x => x.Color == null))
-            {
-                <li>@Html.ActionLink("Other", "index", "products", new { categoryId = Model.Filters.CategoryId, groupId = Model.Filters.GroupId, typeId = Model.Filters.TypeId, colorId = 0, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Category == null).Count()]</li>
-            }
             </ul>
-        
-        
-        
+
             <h3 class="sidebar">Product Sizes</h3>
             <ul class="sidebar">
-            @if (Model.AvailableSizes.Any())
+            @if (ViewBag.Sizes != null)
             {
-                foreach (var item in Model.AvailableSizes)
+                foreach (IGrouping<string, ProductSize> grouping in ViewBag.Sizes)
                 {
-                    <li>@Html.ActionLink(item.Name, "index", "products", new { sizeId = item.Id, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, colorId = Model.Filters.ColorId, groupId = Model.Filters.GroupId, finishId = Model.Filters.FinishId, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Size == item).Count()]</li>
+                    <li class="liClass">
+                        @Html.ActionLink(@grouping.Key, "index", "products", new
+                                            {
+                                                size = grouping.Key,
+                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                                            }, null) [@grouping.Count()]</li>
                 }
-            }
-            @if (@Model.AllProducts.Any(x => x.Size == null))
-            {
-                <li>@Html.ActionLink("Other", "index", "products", new { categoryId = Model.Filters.CategoryId, groupId = Model.Filters.GroupId, typeId = Model.Filters.TypeId, colorId = Model.Filters.ColorId, sizeId = 0, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Category == null).Count()]</li>
             }
             </ul>
-        
-        
-        
+
             <h3 class="sidebar">Product Finishes</h3>
             <ul class="sidebar">
-            @if (Model.AvailableFinishes.Any())
+            @if (ViewBag.Finishes != null)
             {
-                foreach (var item in Model.AvailableFinishes)
+                foreach (IGrouping<string, ProductFinish> grouping in ViewBag.Finishes)
                 {
-                    <li>@Html.ActionLink(item.Name, "index", "products", new { finishId = item.Id, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, colorId = Model.Filters.ColorId, sizeId = Model.Filters.SizeId, groupId = Model.Filters.GroupId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Finish == item).Count()]</li>
+                    <li class="liClass">
+                        @Html.ActionLink(@grouping.Key, "index", "products", new
+                                            {
+                                                finish = grouping.Key,
+                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                                            }, null) [@grouping.Count()]</li>
                 }
-            }
-            @if (@Model.AllProducts.Any(x => x.Finish == null))
-            {
-                <li>@Html.ActionLink("Other", "index", "products", new { categoryId = Model.Filters.CategoryId, groupId = Model.Filters.GroupId, typeId = Model.Filters.TypeId, colorId = Model.Filters.ColorId, sizeId = Model.Filters.SizeId, finishId = 0, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null) [@Model.AllProducts.Where(x => x.Category == null).Count()]</li>
             }
             </ul>
         
@@ -156,61 +194,18 @@
         <h1>Products</h1>
 
         <p><em style="font-weight:bold;">Click on a product image or item number to view product details.</em></p>
-
-        @if (Model.HasFilters)
-        { 
-            <h3>Current Filters</h3>
-            <div class="span-17" style="background-color: #e4e4e4; border: 1px solid #333; padding-bottom: 5px;">
-                
-                <div class="product-breadcrumbs">
-                    <ul>
-                        @if (Model.Filters.GroupId.HasValue)
-                        { 
-                            <li>@Model.Filters.GroupName <a href="@Url.Action("index", "products", new { colorId = Model.Filters.ColorId, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null)">@Html.Image("delete-icon.png")</a></li>
-                        }
-                        @if (Model.Filters.CategoryId.HasValue)
-                        { 
-                            <li>@Model.Filters.CategoryName <a href="@Url.Action("index", "products", new { colorId = Model.Filters.ColorId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null)">@Html.Image("delete-icon.png")</a></li>
-                        }
-                        @if (Model.Filters.TypeId.HasValue)
-                        { 
-                            <li>@Model.Filters.TypeName <a href="@Url.Action("index", "products", new { colorId = Model.Filters.ColorId, categoryId = Model.Filters.CategoryId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null)">@Html.Image("delete-icon.png")</a></li>
-                        }
-                        @if (Model.Filters.ColorId.HasValue)
-                        { 
-                            <li>@Model.Filters.ColorName <a href="@Url.Action("index", "products", new { categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null)">@Html.Image("delete-icon.png")</a></li>
-                        }
-                        @if (Model.Filters.SizeId.HasValue)
-                        { 
-                            <li>@Model.Filters.SizeName <a href="@Url.Action("index", "products", new { colorId = Model.Filters.ColorId, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null)">@Html.Image("delete-icon.png")</a></li>
-                        }
-                        @if (Model.Filters.FinishId.HasValue)
-                        { 
-                            <li>@Model.Filters.FinishName <a href="@Url.Action("index", "products", new { colorId = Model.Filters.ColorId, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }, null)">@Html.Image("delete-icon.png")</a></li>
-                        }
-                        @if (!String.IsNullOrWhiteSpace(Model.Filters.Series))
-                        { 
-                            <li>Series: @Model.Filters.Series <a href="@Url.Action("index", "products", new { colorId = Model.Filters.ColorId, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = "", itemNumber = Model.Filters.ItemNumber }, null)">@Html.Image("delete-icon.png")</a></li>
-                        }
-                        @if (!String.IsNullOrWhiteSpace(Model.Filters.ItemNumber))
-                        { 
-                            <li>Item #: @Model.Filters.ItemNumber <a href="@Url.Action("index", "products", new { colorId = Model.Filters.ColorId, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = "" }, null)">@Html.Image("delete-icon.png")</a></li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        }
-
-        @if (Model.Products.Count() > 0)
+        
+        @if (Model.Any())
         {
             int cellCount = 0;
-            <p class="alt" style="margin-bottom: 10px;">@ViewBag.ProductsMessage</p>
-            @*<div class="pagedListPager">
-                @Html.PagedListPager((IPagedList)Model.Products, page => Url.Action("Index", new { colorId = Model.Filters.ColorId, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber, page }))
-            </div>*@
+            var plural = Model.TotalItemCount > 1 ? "product" : "products";
+            var message = String.Format("Showing {0} - {1} " + plural + " of {2} matching " + plural + ".", Model.FirstItemOnPage, Model.LastItemOnPage, Model.TotalItemCount);
+            
+            <p class="alt" style="margin-bottom: 10px;">@message</p>
+            
             <table style="width: auto;" border="1" cellpadding="5" cellspacing="5">
                 <tr>
-                    @foreach (var prod in Model.Products.OrderBy(x => x.ItemNumber))
+                    @foreach (var prod in Model.OrderBy(x => x.ItemNumber))
                     {
                         <td style="width: 150px;"valign="top">
 
@@ -290,10 +285,9 @@
                 
             </table>
             <div class="pagedListPager span-17 last" style="padding-bottom: 10px;">
-                @*@Html.PagedListPager((IPagedList)Model.Products, page => Url.Action("Index", new { colorId = Model.Filters.ColorId, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber, page }))*@
-                @Html.PagedListPager(Model.Products,
-                    page => Url.Action("Index", new 
-                       { Page = page, colorId = Model.Filters.ColorId, categoryId = Model.Filters.CategoryId, typeId = Model.Filters.TypeId, groupId = Model.Filters.GroupId, sizeId = Model.Filters.SizeId, finishId = Model.Filters.FinishId, series = Model.Filters.Series, itemNumber = Model.Filters.ItemNumber }),
+                @Html.PagedListPager(Model,
+                    page => Url.Action("Index", new
+                    { page = page, colorId = ViewBag.ColorId, categoryId = ViewBag.CategoryId, typeId = ViewBag.TypeId, groupId = ViewBag.GroupId, sizeId = ViewBag.SizeId, finishId = ViewBag.FinishId, series = ViewBag.Series, itemNumber = ViewBag.ItemNumber }),
                     PagedListRenderOptions.OnlyShowFivePagesAtATime)
             </div>
         }

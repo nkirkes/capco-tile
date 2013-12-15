@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using CAPCO.Infrastructure.Data;
+using CAPCO.Infrastructure.Domain;
 using CAPCO.Models;
 
 namespace CAPCO.Controllers
 {
     public class RequestAccountController : ApplicationController
     {
-        private readonly IApplicationUserRepository _AppUserRepo;
+        private readonly IRepository<ApplicationUser> _AppUserRepo;
         /// <summary>
         /// Initializes a new instance of the RequestAccountController class.
         /// </summary>
-        public RequestAccountController(IApplicationUserRepository appUserRepo)
+        public RequestAccountController(IRepository<ApplicationUser> appUserRepo)
         {
             _AppUserRepo = appUserRepo;            
         }

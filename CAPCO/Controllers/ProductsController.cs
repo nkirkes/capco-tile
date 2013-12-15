@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using CAPCO.Infrastructure.Domain;
@@ -9,34 +11,33 @@ using CAPCO.Infrastructure.Data;
 using System.Drawing;
 using CAPCO.Infrastructure.Specifications;
 using CAPCO.Infrastructure.Services;
+using Elmah.ContentSyndication;
 using PagedList;
 
 namespace CAPCO.Controllers
 {
-    
     public class ProductsController : ApplicationController
     {
+        private readonly IRepository<ProductGroup> productgroupRepository;
+        private readonly IRepository<ProductCategory> productcategoryRepository;
+        private readonly IRepository<ProductType> producttypeRepository;
+        private readonly IRepository<ProductColor> productcolorRepository;
+        private readonly IRepository<ProductSize> productsizeRepository;
+        private readonly IRepository<ProductFinish> productfinishRepository;
+        private readonly IRepository<Product> productRepository;
+        private readonly IRepository<Project> _ProjectRepository;
         private readonly IContentService _ContentService;
-        private readonly IProductGroupRepository productgroupRepository;
-        private readonly IProductCategoryRepository productcategoryRepository;
-        private readonly IProductTypeRepository producttypeRepository;
-        private readonly IProductColorRepository productcolorRepository;
-        private readonly IProductSizeRepository productsizeRepository;
-        private readonly IProductFinishRepository productfinishRepository;
-        private readonly IProductRepository productRepository;
-        private readonly IProjectRepository _ProjectRepository;
         
-        public ProductsController(IProductGroupRepository productgroupRepository, 
-            IProductCategoryRepository productcategoryRepository, 
-            IProductTypeRepository producttypeRepository, 
-            IProductColorRepository productcolorRepository, 
-            IProductSizeRepository productsizeRepository, 
-            IProductFinishRepository productfinishRepository, 
-            IProductRepository productRepository,
-            IProjectRepository projectRepository,
+        public ProductsController(IRepository<ProductGroup> productgroupRepository, 
+            IRepository<ProductCategory> productcategoryRepository, 
+            IRepository<ProductType> producttypeRepository, 
+            IRepository<ProductColor> productcolorRepository, 
+            IRepository<ProductSize> productsizeRepository, 
+            IRepository<ProductFinish> productfinishRepository, 
+            IRepository<Product> productRepository,
+            IRepository<Project> projectRepository,
             IContentService contentService)
         {
-            _ContentService = contentService;
             _ProjectRepository = projectRepository;
             this.productgroupRepository = productgroupRepository;
             this.productcategoryRepository = productcategoryRepository;
@@ -45,152 +46,129 @@ namespace CAPCO.Controllers
             this.productsizeRepository = productsizeRepository;
             this.productfinishRepository = productfinishRepository;
             this.productRepository = productRepository;
+            _ContentService = contentService;
         }
 
-        public ActionResult Index(
-            ProductsViewModel model,
-            int? groupId = null,
-            int? typeId = null,
-            int? sizeId = null,
-            int? colorId = null,
-            int? finishId = null,
-            int? categoryId = null,
+        public PagedProductsList GetPagedProducts(int take, int page)
+        {
+            var query = productRepository.All.OrderBy(x => x.ItemNumber);
+            var count = query.Count();
+            var products = query.Skip(page*take).Take(take).ToList();
+            
+            return new PagedProductsList
+            {
+                Products = products,//.ToPagedList(page<1?1:page, take),
+                HasNext = (page < count),
+                HasPrevious = (page*take > 0),
+                Count = count
+            };
+        }
+
+        public ActionResult Index(int page = 1, 
+            string group = "",
+            string type = "",
+            string size = "",
+            string color = "",
+            string finish = "",
+            string category = "",
             string series = "",
             string itemNumber = "",
             string description = "")
         {
+            int pageSize = 24;
+            var query = CreateProductsQuery(group, type, size, color, finish, category, series, itemNumber, description);
             
-            if (model == null)
-                model = new ProductsViewModel();
+            // filter criteria
+            var filters = new Dictionary<string, string>();
+            if (!string.IsNullOrWhiteSpace(group))
+                filters.Add("Group", group);
+            if (!string.IsNullOrWhiteSpace(type))
+                filters.Add("Type", type);
+            if (!string.IsNullOrWhiteSpace(size))
+                filters.Add("Size", size);
+            if (!string.IsNullOrWhiteSpace(color))
+                filters.Add("Color", color);
+            if (!string.IsNullOrWhiteSpace(finish))
+                filters.Add("Finish", finish);
+            if (!string.IsNullOrWhiteSpace(category))
+                filters.Add("Category", category);
+            if (!string.IsNullOrWhiteSpace(series))
+                filters.Add("Series", series);
+            if (!string.IsNullOrWhiteSpace(itemNumber))
+                filters.Add("Item Number", itemNumber);
+            if (!string.IsNullOrWhiteSpace(description))
+                filters.Add("Description", description);
+            ViewBag.Filters = filters;
 
-            model.Filters = new ProductFilters();
-            model.Filters.GroupId = groupId;
-            model.Filters.SizeId = sizeId;
-            model.Filters.ColorId = colorId;
-            model.Filters.CategoryId = categoryId;
-            model.Filters.FinishId = finishId;
-            model.Filters.TypeId = typeId;
-            model.Filters.Series = series.ToLower();
-            model.Filters.ItemNumber = itemNumber.ToLower();
-            model.Filters.Description = description.ToLower();
+            // filter options
+            ViewBag.Groups = (from p in query where p.Group != null select p.Group).GroupBy(x => x.Name).ToList();
+            ViewBag.Categories = (from p in query where p.Category != null select p.Category).GroupBy(x => x.Name).ToList();
+            ViewBag.Types = (from p in query where p.Type != null select p.Type).GroupBy(x => x.Name).ToList();
+            ViewBag.Sizes = (from p in query where p.Size != null select p.Size).GroupBy(x => x.Name).ToList();
+            ViewBag.Colors = (from p in query where p.Color != null select p.Color).GroupBy(x => x.Name).ToList();
+            ViewBag.Finishes = (from p in query where p.Finish != null select p.Finish).GroupBy(x => x.Name).ToList();
 
-            bool countGroups = false;
-            bool countCategories = false;
-            bool countFinishes = false;
-            bool countTypes = false;
-            bool countColors = false;
-            bool countSizes = false;
+            return View(query.ToPagedList(page, pageSize));
+        }
 
+        private IQueryable<Product> CreateProductsQuery(string group = "",
+            string type = "",
+            string size = "",
+            string color = "",
+            string finish = "",
+            string category = "",
+            string series = "",
+            string itemNumber = "",
+            string description = "")
+        {
             var specs = new List<Specification<Product>>();
-            if (model.Filters.GroupId.HasValue)
+            
+            if (!string.IsNullOrWhiteSpace(group))
             {
-                specs.Add(new Infrastructure.Specifications.ProductsByGroupSpecification(model.Filters.GroupId.Value));
-                ProductGroup group = productgroupRepository.Find(model.Filters.GroupId.Value);
-                model.Filters.GroupName = group != null ? group.Name : "Other Group";
-                countGroups = true;
+                specs.Add(new ProductsByGroupSpecification(HttpUtility.HtmlDecode(group)));
             }
 
-            if (model.Filters.CategoryId.HasValue)
+            if (!string.IsNullOrWhiteSpace(category))
             {
-                specs.Add(new Infrastructure.Specifications.ProductsByCategorySpecification(model.Filters.CategoryId.Value));
-                ProductCategory category = productcategoryRepository.Find(model.Filters.CategoryId.Value);
-                model.Filters.CategoryName = category != null ? category.Name : "Other Category";
-                countCategories = true;
+                specs.Add(new ProductsByCategorySpecification(HttpUtility.HtmlDecode(category)));
             }
 
-            if (model.Filters.FinishId.HasValue)
+            if (!string.IsNullOrWhiteSpace(finish))
             {
-                specs.Add(new Infrastructure.Specifications.ProductsByFinishSpecification(model.Filters.FinishId.Value));
-                ProductFinish finish = productfinishRepository.Find(model.Filters.FinishId.Value);
-                model.Filters.FinishName = finish != null ? finish.Name : "Other Finish";
-                countFinishes = true;
+                specs.Add(new ProductsByFinishSpecification(finish));
             }
 
-            if (model.Filters.TypeId.HasValue)
+            if (!string.IsNullOrWhiteSpace(type))
             {
-                specs.Add(new Infrastructure.Specifications.ProductsByTypeSpecification(model.Filters.TypeId.Value));
-                ProductType type = producttypeRepository.Find(model.Filters.TypeId.Value);
-                model.Filters.TypeName = type != null ? type.Name : "Other Type";
-                countTypes = true;
+                specs.Add(new ProductsByTypeSpecification(type));
             }
 
-            if (model.Filters.ColorId.HasValue)
+            if (!string.IsNullOrWhiteSpace(color))
             {
-                specs.Add(new Infrastructure.Specifications.ProductsByColorSpecification(model.Filters.ColorId.Value));
-                ProductColor color = productcolorRepository.Find(model.Filters.ColorId.Value);
-                model.Filters.ColorName = color != null ? color.Name : "Other Color";
-                countColors = true;
+                specs.Add(new ProductsByColorSpecification(color));
             }
 
-            if (model.Filters.SizeId.HasValue)
+            if (!string.IsNullOrWhiteSpace(size))
             {
-                specs.Add(new Infrastructure.Specifications.ProductsBySizeSpecification(model.Filters.SizeId.Value));
-                ProductSize size = productsizeRepository.Find(model.Filters.SizeId.Value);
-                model.Filters.SizeName = size != null ? size.Name : "Other Size";
-                countSizes = true;
+                specs.Add(new ProductsBySizeSpecification(size));
             }
 
-            if (!String.IsNullOrWhiteSpace(model.Filters.Series))
+            if (!String.IsNullOrWhiteSpace(series))
             {
-                specs.Add(new ProductsBySeriesSpecification(model.Filters.Series));
+                specs.Add(new ProductsBySeriesSpecification(series));
             }
 
-            if (!String.IsNullOrWhiteSpace(model.Filters.ItemNumber))
+            if (!String.IsNullOrWhiteSpace(itemNumber))
             {
-                model.Filters.ItemNumber = model.Filters.ItemNumber.Replace(" ", "");
-                specs.Add(new ProductsByItemNumberSpecification(model.Filters.ItemNumber));
+                specs.Add(new ProductsByItemNumberSpecification(itemNumber.Replace(" ", "")));
             }
 
-            if (!String.IsNullOrWhiteSpace(model.Filters.Description))
+            if (!String.IsNullOrWhiteSpace(description))
             {
-                specs.Add(new ProductsByDescriptionSpecification(model.Filters.Description));
+                specs.Add(new ProductsByDescriptionSpecification(description));
             }
 
-            //IQueryable<Product> productsQuery;
-            //if (specs.Any())
-            //{
-               var productsQuery = productRepository.FindBySpecification(specs.ToArray());
-            //}
-            //else
-            //{
-            //    productsQuery = productRepository.All;
-            //}
-
-            model.ProductsInGroups = countGroups ? productsQuery.Count(x => x.Group != null && x.Group.Id == model.Filters.GroupId.Value) : productsQuery.Count(x => x.Group != null);
-            model.ProductsInCategories = countCategories ? productsQuery.Count(x => x.Category != null && x.Category.Id == model.Filters.CategoryId.Value) : 0;
-            model.ProductsInColors = countColors ? productsQuery.Count(x => x.Color != null && x.Color.Id == model.Filters.ColorId.Value) : 0;
-            model.ProductsInSizes = countSizes ? productsQuery.Count(x => x.Size != null && x.Size.Id == model.Filters.SizeId.Value) : 0;
-            model.ProductsInTypes = countTypes ? productsQuery.Count(x => x.Type != null && x.Type.Id == model.Filters.TypeId.Value) : 0;
-            model.ProductsInFinishes = countFinishes ? productsQuery.Count(x => x.Finish != null && x.Finish.Id == model.Filters.FinishId.Value) : 0;
-
-            model.TotalCount = productsQuery.Count();
-            model.Products = productsQuery.OrderBy(x => x.ItemNumber).ToPagedList(model.Page ?? 1, 24);
-            model.AllProducts = productsQuery.ToList();
-
-            if (model.Products.Count() > 0)
-            {
-                var plural = model.Products.Count() > 1 ? "products" : "product";
-                ViewBag.ProductsMessage = String.Format("Showing {0} - {1} " + plural + " of {2} matching " + plural + ".", model.Page.HasValue && model.Page > 1 ? (model.Page - 1) * 24 + 1 : 1, (model.Page ?? 1) * model.Products.Count, model.TotalCount);
-                model.AvailableGroups = (from p in productsQuery where p.Group != null select p.Group).Distinct().ToList();
-                model.AvailableCategories = (from p in productsQuery where p.Category != null select p.Category).Distinct().ToList();
-                model.AvailableTypes = (from p in productsQuery where p.Type != null select p.Type).Distinct().ToList();
-                model.AvailableColors = (from p in productsQuery where p.Color != null select p.Color).Distinct().ToList();
-                model.AvailableSizes = (from p in productsQuery where p.Size != null select p.Size).Distinct().ToList();
-                model.AvailableFinishes = (from p in productsQuery where p.Finish != null select p.Finish).Distinct().ToList();
-            }
-            else
-            {
-                ViewBag.ProductsMessage = "There are no products to display";
-                model.AvailableCategories = productcategoryRepository.All.ToList();
-                model.AvailableGroups = productgroupRepository.All.ToList();
-                model.AvailableTypes = producttypeRepository.All.ToList();
-                model.AvailableColors = productcolorRepository.All.ToList();
-                model.AvailableSizes = productsizeRepository.All.ToList();
-                model.AvailableFinishes = productfinishRepository.All.ToList();
-            }
-
-
-            return View(model);
+            return specs.Any() ? productRepository.FindBySpecification(new Expression<Func<Product, object>>[] { p => p.PriceGroup, p => p.PriceGroup.PriceCodes }, specs.ToArray()).OrderBy(x => x.ItemNumber) : productRepository.AllIncluding(p => p.PriceGroup).OrderBy(x => x.ItemNumber);
         }
 
         public ActionResult Slabs()
@@ -201,7 +179,7 @@ namespace CAPCO.Controllers
 
         public ActionResult Show(int id)
         {
-            var product = productRepository.AllIncluding(x => x.Manufacturer).FirstOrDefault(x => x.Id == id);
+            var product = productRepository.AllIncluding(x => x.Manufacturer, x => x.PriceGroup).FirstOrDefault(x => x.Id == id);
             if (product == null)
             {
                 this.FlashError("Sorry, but I couldn't find that product. Please try expanding your search.");
@@ -209,7 +187,7 @@ namespace CAPCO.Controllers
             }
 
             var relatedProducts = productRepository.FindBySpecification(new ProductsBySeriesSpecification(product.Series)).ToList();
-            if (relatedProducts != null && relatedProducts.Any())
+            if (relatedProducts.Any())
             { 
                 if (relatedProducts.Contains(product))
                     relatedProducts.Remove(product);

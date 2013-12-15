@@ -21,22 +21,19 @@ namespace CAPCO.Areas.Admin.Controllers
     public class UsersController : BaseAdminController
     {
         private readonly IApplicationUserService _AppUserService;
-        private readonly IPickupLocationRepository _LocationRepository;
-        private readonly IDiscountCodeRepository _DiscountCodeRepository;
-        private readonly IPriceCodeRepository pricecodeRepository;
-		private readonly IApplicationUserRepository applicationuserRepository;
+        private readonly IRepository<PickupLocation> _LocationRepository;
+        private readonly IRepository<DiscountCode> _DiscountCodeRepository;
+        private readonly IRepository<ApplicationUser> applicationuserRepository;
         
 
-		public UsersController(IPriceCodeRepository pricecodeRepository, 
-            IApplicationUserRepository applicationuserRepository, 
+		public UsersController(IRepository<ApplicationUser> applicationuserRepository, 
             IApplicationUserService appUserService,
-            IPickupLocationRepository locationRepository,
-            IDiscountCodeRepository discountCodeRepository)
+            IRepository<PickupLocation> locationRepository,
+            IRepository<DiscountCode> discountCodeRepository)
         {
             _DiscountCodeRepository = discountCodeRepository;
             _LocationRepository = locationRepository;
             _AppUserService = appUserService;
-            this.pricecodeRepository = pricecodeRepository;
 			this.applicationuserRepository = applicationuserRepository;
         }
 
@@ -56,7 +53,7 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult Search(PagedViewModel<ApplicationUser> model)
         {
-            var results = applicationuserRepository.FindBySpecification(new UsersByUserNameOrCompanyNameSpecification(model.Criteria));
+            var results = applicationuserRepository.FindBySpecification(new UsersByUserNameOrCompanyNameSpecification(model.Criteria)).OrderBy(x => x.UserName);
             model.TotalCount = results.Count();
             model.Entities = results.ToPagedList(model.Page ?? 1, 100);
             return View("Index", model);
@@ -248,7 +245,7 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult ResetPassword(int id)
         {
-            var appUser = _AppUserRepo.Find(id);
+            var appUser = applicationuserRepository.Find(id);
             if (appUser != null)
             {
                 try
@@ -274,7 +271,7 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult UnlockUser(int id)
         {
-            var appUser = _AppUserRepo.Find(id);
+            var appUser = applicationuserRepository.Find(id);
             if (appUser != null)
             {
                 try

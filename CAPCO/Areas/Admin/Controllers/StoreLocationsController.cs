@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {   
     public class StoreLocationsController : Controller
     {
-		private readonly IStoreLocationRepository storelocationRepository;
+		private readonly IRepository<StoreLocation> storelocationRepository;
 
-		public StoreLocationsController(IStoreLocationRepository storelocationRepository)
+		public StoreLocationsController(IRepository<StoreLocation> storelocationRepository)
         {
 			this.storelocationRepository = storelocationRepository;
         }

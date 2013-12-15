@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using CAPCO.Infrastructure.Domain;
 using CAPCO.Infrastructure.Data;
@@ -10,9 +7,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class ProductColorsController : BaseAdminController
     {
-		private readonly IProductColorRepository productcolorRepository;
+		private readonly IRepository<ProductColor> productcolorRepository;
 
-		public ProductColorsController(IProductColorRepository productcolorRepository)
+		public ProductColorsController(IRepository<ProductColor> productcolorRepository)
         {
 			this.productcolorRepository = productcolorRepository;
         }

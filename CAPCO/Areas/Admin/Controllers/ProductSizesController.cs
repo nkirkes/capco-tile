@@ -10,9 +10,9 @@ namespace CAPCO.Areas.Admin.Controllers
 {
     public class ProductSizesController : BaseAdminController
     {
-		private readonly IProductSizeRepository productsizeRepository;
+		private readonly IRepository<ProductSize> productsizeRepository;
 
-		public ProductSizesController(IProductSizeRepository productsizeRepository)
+		public ProductSizesController(IRepository<ProductSize> productsizeRepository)
         {
 			this.productsizeRepository = productsizeRepository;
         }

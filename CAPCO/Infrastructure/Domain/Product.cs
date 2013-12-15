@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,10 +17,14 @@ namespace CAPCO.Infrastructure.Domain
             RelatedAccents = new List<Product>();
             RelatedTrims = new List<Product>();
             RelatedFinishes = new List<Product>();
-            //PriceCodes = new List<ProductPriceCode>();
         }
-
-        public string PriceCodeGroup { get; set; }
+        [NotMapped]
+        public string PriceCodeGroup {
+            get
+            {
+                return PriceGroup != null ? PriceGroup.GroupName : "";
+            }
+        }
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public DateTime LastModifiedOn { get; set; }
@@ -33,13 +38,13 @@ namespace CAPCO.Infrastructure.Domain
         [DisplayName("YouTube Url")]
         public string YouTubeUrl { get; set; }
 
-        public virtual Manufacturer Manufacturer { get; set; }
+        
         [DisplayName("Manufacturer Color")]
         public string ManufacturerColor { get; set; }
         [DisplayName("Manufacturer Item")]
         public string ManufacturerItem { get; set; }
 
-        [DisplayName("Size")]
+        [DisplayName("Size Description")]
         public string SizeDescription { get; set; }
         [DisplayName("Made In")]
         public string MadeIn { get; set; }
@@ -53,8 +58,7 @@ namespace CAPCO.Infrastructure.Domain
         public string BreakingStrength { get; set; }
         [DisplayName("Water Absorption")]
         public string WaterAbsorption { get; set; }
-        //[DisplayName("Chemical Resistance")]
-        //public string ChemicalResistance { get; set; }
+
         [DisplayName("Scratch Hardiness")]
         public string ScratchHardiness { get; set; }
         [DisplayName("Units per Piece")]
@@ -72,63 +76,44 @@ namespace CAPCO.Infrastructure.Domain
             set; 
         }
 
-        //[DisplayName("Price Codes")]
-        //public virtual ICollection<ProductPriceCode> PriceCodes { get; set; }
-        
-        /* Product Properties - Used primarily for search */
-        //[ForeignKey("ProductGroup")]
-        //public int? ProductGroupId { get; set; }
-        [DisplayName("Group")]
-        public virtual ProductGroup Group { get; set; }
-
-        //[ForeignKey("ProductStatus")]
-        //public int? ProductStatusId { get; set; }
-        [DisplayName("Status")]
-        public virtual ProductStatus Status { get; set; }
         [DisplayName("Status Changed On")]
         public DateTime? StatusChangedOn { get; set; }
+
+        public Manufacturer Manufacturer { get; set; }
+
+        [DisplayName("Group")]
+        public ProductGroup Group { get; set; }
+
+        [DisplayName("Status")]
+        public ProductStatus Status { get; set; }
         
-        //[ForeignKey("ProductUnitOfMeasure")]
-        //public int? ProductUnitOfMeasureId { get; set; }
         [DisplayName("Unit of Measure")]
-        public virtual ProductUnitOfMeasure UnitOfMeasure { get; set; }
+        public ProductUnitOfMeasure UnitOfMeasure { get; set; }
 
-        public virtual ProductSeries ProductSeries { get; set; }
-        public virtual ProductUsage Usage { get; set; }
+        public ProductSeries ProductSeries { get; set; }
 
-        //[ForeignKey("ProductVariation")]
-        //public int? ProductVariationId { get; set; }
+        public ProductUsage Usage { get; set; }
+
         [DisplayName("Variation")]
-        public virtual ProductVariation Variation { get; set; }
+        public ProductVariation Variation { get; set; }
 
-        //[ForeignKey("ProductCategory")]
-        //public int? ProductCategoryId { get; set; }
         [DisplayName("Category")]
-        public virtual ProductCategory Category { get; set; }
+        public ProductCategory Category { get; set; }
 
-        //[ForeignKey("ProductType")]
-        //public int? ProductTypeId { get; set; }
         [DisplayName("Type")]
-        public virtual ProductType Type { get; set; }
+        public ProductType Type { get; set; }
 
-        //[ForeignKey("ProductColor")]
-        //public int? ProductColorId { get; set; }
         [DisplayName("Color")]
-        public virtual ProductColor Color { get; set; }
+        public ProductColor Color { get; set; }
 
-        //[ForeignKey("ProductSize")]
-        //public int? ProductSizeId { get; set; }
         [DisplayName("Size Group")]
-        public virtual ProductSize Size { get; set; }
-
-        //[ForeignKey("ProductFinish")]
-        //public int? ProductFinishId { get; set; }
+        public ProductSize Size { get; set; }
 
         [DisplayName("Finish")]
-        public virtual ProductFinish Finish { get; set; }
+        public ProductFinish Finish { get; set; }
 
         [DisplayName("Parent Product")]
-        public virtual Product ParentProduct { get; set; }
+        public Product ParentProduct { get; set; }
 
         [NotMapped, DisplayName("Related Products")]
         public ICollection<Product> RelatedProducts 
@@ -144,21 +129,29 @@ namespace CAPCO.Infrastructure.Domain
             } 
         }
 
-        public virtual ICollection<Product> RelatedSizes { get; set; }
+        public ICollection<Product> RelatedSizes { get; set; }
 
-        public virtual ICollection<Product> RelatedAccents { get; set; }
+        public ICollection<Product> RelatedAccents { get; set; }
 
-        public virtual ICollection<Product> RelatedTrims { get; set; }
+        public ICollection<Product> RelatedTrims { get; set; }
 
-        public virtual ICollection<Product> RelatedFinishes { get; set; }
-        
+        public ICollection<Product> RelatedFinishes { get; set; }
         
         [DisplayName("Projects")]
-        public virtual ICollection<Project> ProductBundles { get; set; }
+        public ICollection<Project> ProductBundles { get; set; }
 
-        //[DisplayName("Images")]
-        //public virtual ICollection<ProductImage> ProductImages { get; set; }
+        public PriceGroup PriceGroup { get; set; }
 
+        [NotMapped]
+        public ICollection<ProductPriceCode> PriceCodes {
+            get
+            {
+                if (PriceGroup != null)
+                    return PriceGroup.PriceCodes;
+                return new List<ProductPriceCode>();
+            }
+        }
+            
         [NotMapped]
         public string DetailImageFileName
         {

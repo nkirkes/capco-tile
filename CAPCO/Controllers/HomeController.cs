@@ -8,27 +8,34 @@ using System.Configuration;
 using CAPCO.Infrastructure.Services;
 using CAPCO.Infrastructure.Domain;
 using CAPCO.Infrastructure.Mailers;
+using CAPCO.Models;
 using Mvc.Mailer;
 
 namespace CAPCO.Controllers
 {
     public class HomeController : ApplicationController
     {
-        private readonly IContactRequestRepository _ContactRequestRepository;
-        private readonly ILinkRepository _LinkRepo;
-        public HomeController(IContactRequestRepository contactRequestRepository, ILinkRepository linkRepo)
+        private readonly IRepository<ContactRequest> _ContactRequestRepository;
+        private readonly IRepository<Link> _LinkRepo;
+        private readonly IContentService _ContentService;
+        private readonly IRepository<SliderImage> _SliderImageRepo;
+        public HomeController(IRepository<ContactRequest> contactRequestRepository, IRepository<Link> linkRepo, IContentService contentService, IRepository<SliderImage> sliderImageRepo)
         {
             _LinkRepo = linkRepo;
-            _ContactRequestRepository = contactRequestRepository;            
+            _ContactRequestRepository = contactRequestRepository;
+            _ContentService = contentService;
+            _SliderImageRepo = sliderImageRepo;
         }
 
         public ActionResult Index(string id = "")
         {
-            @ViewBag.WelcomeSection = _ContentService.GetContentSection(ContentSectionNames.Welcome.ToString());
-            @ViewBag.WhatWeDoSection = _ContentService.GetContentSection(ContentSectionNames.WhatWeDo.ToString());
-            @ViewBag.WhoWeAreSection = _ContentService.GetContentSection(ContentSectionNames.WhoWeAre.ToString());
-
-            return View();
+            var contentSections = _ContentService.GetContentSections(new string[] { ContentSectionNames.Welcome.ToString(), ContentSectionNames.WhatWeDo.ToString(), ContentSectionNames.WhoWeAre.ToString() });
+            var model = new HomePageViewModel();
+            model.WelcomeSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.Welcome.ToString());
+            model.WhatWeDoSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.WhatWeDo.ToString());
+            model.WhoWeAreSection = contentSections.FirstOrDefault(x => x.SectionName == ContentSectionNames.WhoWeAre.ToString());
+            model.Sliders = _SliderImageRepo.All.OrderBy(x => x.Order).ToList();
+            return View(model);
         }
 
         public ActionResult Access()
@@ -108,11 +115,11 @@ namespace CAPCO.Controllers
 
                 try
                 {
-                    new AdminMailer().ContactRequest(request).SendAsync();
+                    new AdminMailer().ContactRequest(request).Send();
                 }
                 catch (Exception ex)
                 {
-                        
+                    
                 }
 
                 _ContactRequestRepository.InsertOrUpdate(request);
