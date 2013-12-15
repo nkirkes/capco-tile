@@ -56,8 +56,8 @@ namespace CAPCO.Infrastructure.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
-            this.Configuration.LazyLoadingEnabled = false;
+
+            //this.Configuration.LazyLoadingEnabled = false;
             
             modelBuilder.Entity<Project>()
                 .HasMany<ApplicationUser>(c => c.Users).WithMany().Map(x => x.ToTable("ProjectApplicationUsers"));
@@ -82,13 +82,18 @@ namespace CAPCO.Infrastructure.Data
                 .WithMany()
                 .Map(x => x.ToTable("ProductRelatedFinishes"));
 
-            //modelBuilder.Entity<ProductPriceCode>();
+            modelBuilder.Entity<PriceGroup>()
+                .HasMany<ProductPriceCode>(x => x.PriceCodes)
+                .WithRequired(x => x.PriceGroup)
+                .Map(x => x.ToTable("ProductPriceCodes").MapKey("PriceGroup_Id"));
 
             modelBuilder.Entity<Product>()
-                .HasMany<ProductPriceCode>(x => x.PriceCodes)
-                .WithMany()
-                .Map(x => x.MapLeftKey("PriceCodeGroup").MapRightKey("PriceGroup"));
+                .HasOptional(x => x.PriceGroup)
+                .WithMany(x => x.Products);
+
         }
+
+        public DbSet<PriceGroup> PriceGroups { get; set; }
 
         public DbSet<ContentSection> ContentSections { get; set; }
 

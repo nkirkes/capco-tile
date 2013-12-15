@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,10 +17,14 @@ namespace CAPCO.Infrastructure.Domain
             RelatedAccents = new List<Product>();
             RelatedTrims = new List<Product>();
             RelatedFinishes = new List<Product>();
-            PriceCodes = new List<ProductPriceCode>();
         }
-
-        public string PriceCodeGroup { get; set; }
+        [NotMapped]
+        public string PriceCodeGroup {
+            get
+            {
+                return PriceGroup != null ? PriceGroup.GroupName : "";
+            }
+        }
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public DateTime LastModifiedOn { get; set; }
@@ -135,7 +140,17 @@ namespace CAPCO.Infrastructure.Domain
         [DisplayName("Projects")]
         public ICollection<Project> ProductBundles { get; set; }
 
-        public ICollection<ProductPriceCode> PriceCodes { get; set; }
+        public PriceGroup PriceGroup { get; set; }
+
+        [NotMapped]
+        public ICollection<ProductPriceCode> PriceCodes {
+            get
+            {
+                if (PriceGroup != null)
+                    return PriceGroup.PriceCodes;
+                return new List<ProductPriceCode>();
+            }
+        }
             
         [NotMapped]
         public string DetailImageFileName

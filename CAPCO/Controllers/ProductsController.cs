@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
@@ -167,7 +168,7 @@ namespace CAPCO.Controllers
                 specs.Add(new ProductsByDescriptionSpecification(description));
             }
 
-            return specs.Any() ? productRepository.FindBySpecification(specs.ToArray()).OrderBy(x => x.ItemNumber) : productRepository.All.OrderBy(x => x.ItemNumber);
+            return specs.Any() ? productRepository.FindBySpecification(new Expression<Func<Product, object>>[] { p => p.PriceGroup, p => p.PriceGroup.PriceCodes }, specs.ToArray()).OrderBy(x => x.ItemNumber) : productRepository.AllIncluding(p => p.PriceGroup).OrderBy(x => x.ItemNumber);
         }
 
         public ActionResult Slabs()
@@ -178,7 +179,7 @@ namespace CAPCO.Controllers
 
         public ActionResult Show(int id)
         {
-            var product = productRepository.AllIncluding(x => x.Manufacturer).FirstOrDefault(x => x.Id == id);
+            var product = productRepository.AllIncluding(x => x.Manufacturer, x => x.PriceGroup).FirstOrDefault(x => x.Id == id);
             if (product == null)
             {
                 this.FlashError("Sorry, but I couldn't find that product. Please try expanding your search.");

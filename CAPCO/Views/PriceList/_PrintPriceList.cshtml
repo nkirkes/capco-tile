@@ -88,13 +88,13 @@
                                         <td>@prod.CartonQuantity</td>
                                         <td>@prod.Usage.Code</td>
                                         @{
-                                            var ppc = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.PriceCode);
-                                            var ppr = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.RetailCode);
+                                            var ppc = prod.PriceGroup != null ? prod.PriceGroup.PriceCodes.FirstOrDefault(x => x.PriceCode == currentUser.PriceCode) : null;//Model.ProviderCosts.FirstOrDefault(x => x.GroupName == prod.PriceCodeGroup && x.PriceCode == currentUser.PriceCode);
+                                            var ppr = prod.PriceGroup!= null ? prod.PriceGroup.PriceCodes.FirstOrDefault(x => x.PriceCode == currentUser.RetailCode) : null;// Model.ProviderCosts.FirstOrDefault(x => x.GroupName == prod.PriceCodeGroup && x.PriceCode == currentUser.RetailCode);
                                         }
                                         @switch (Model.PriceDisplayPreference)
                                         {
                                             case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
-                                                <td>@String.Format("{0:c}", ppr != null ? ppr.Price : prod.RetailPrice)</td>
+                                                <td>@String.Format("{0:c}",  ppr != null ? ppr.Price : prod.RetailPrice)</td>
                                                break;
                                             case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
                                                 <td>@String.Format("{0:c}", ppc != null ? ppc.Price : prod.RetailPrice)</td>

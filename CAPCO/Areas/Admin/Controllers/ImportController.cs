@@ -403,9 +403,9 @@ namespace CAPCO.Areas.Admin.Controllers
 
                 foreach (var item in importedPriceCodes)
                 {
-                    if (_ProductPriceCodeRepo.All.Any(x => x.PriceGroup == item.PriceGroup && x.PriceCode == item.PriceCode))
+                    if (_ProductPriceCodeRepo.All.Any(x => x.GroupName == item.PriceGroup && x.PriceCode == item.PriceCode))
                     {
-                        var priceCode = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup == item.PriceGroup && x.PriceCode == item.PriceCode);
+                        var priceCode = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.GroupName == item.PriceGroup && x.PriceCode == item.PriceCode);
                         priceCode.Price = item.Price;
                         _ProductPriceCodeRepo.InsertOrUpdate(priceCode);
                         updatedCodes++;
@@ -413,7 +413,7 @@ namespace CAPCO.Areas.Admin.Controllers
                     else
                     {
                         var priceCode = new ProductPriceCode();
-                        priceCode.PriceGroup = item.PriceGroup;
+                        priceCode.GroupName = item.PriceGroup;
                         priceCode.PriceCode = item.PriceCode;
                         priceCode.Price = item.Price;
                         _ProductPriceCodeRepo.InsertOrUpdate(priceCode);
@@ -539,7 +539,8 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (DateTime.TryParse(item.StatusChangeDate, out statusChangeDate))
                     product.StatusChangedOn = statusChangeDate;
             }
-            product.PriceCodeGroup = item.PriceCodeGroup;
+            //product.PriceCodeGroup = item.PriceCodeGroup;
+            //TODO: Need to rewire the import to accommodate the new PriceGroup entity.
 
             // relationships
             int seriesCode = 0;

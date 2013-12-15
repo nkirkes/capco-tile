@@ -9,6 +9,7 @@ namespace CAPCO.Infrastructure.Data
     {
         IQueryable<TEntity> FindBySpecification(Specification<TEntity> specification);
         IQueryable<TEntity> FindBySpecification(params Specification<TEntity>[] specifications);
+        IQueryable<TEntity> FindBySpecification(Expression<Func<TEntity, object>>[] includeProperties = null, params Specification<TEntity>[] specifications);
         IQueryable<TEntity> All { get; }
         IQueryable<TEntity> AllIncluding(params Expression<Func<TEntity, object>>[] includeProperties);
         TEntity Find(int id);

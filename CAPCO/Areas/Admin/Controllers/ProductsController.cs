@@ -239,7 +239,7 @@ namespace CAPCO.Areas.Admin.Controllers
                 prod.IsFrostResistant = product.IsFrostResistant;
                 prod.ScratchHardiness = product.ScratchHardiness;
                 prod.UnitsPerPiece = product.UnitsPerPiece;
-                prod.PriceCodeGroup = product.PriceCodeGroup;
+                //prod.PriceCodeGroup = product.PriceCodeGroup;
 
                 int mfgId = 0;
                 if (Int32.TryParse(Request["SelectedManufacturer"], out mfgId))

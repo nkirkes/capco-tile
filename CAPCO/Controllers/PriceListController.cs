@@ -48,12 +48,12 @@ namespace CAPCO.Controllers
                 return RedirectToAction("index", "root");
 
             var model = new PriceListViewModel();
-            model.PriceListProducts = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.Variation, x => x.Size, x => x.UnitOfMeasure, x => x.Usage, x => x.ProductSeries).ToList();
+            model.PriceListProducts = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.Variation, x => x.Size, x => x.UnitOfMeasure, x => x.Usage, x => x.ProductSeries, x => x.PriceGroup).ToList();
             model.PriceDisplayPreference = (PricePreferences)Enum.Parse(typeof(PricePreferences), CurrentUser.PricePreference);
 
             model.ProviderCosts = new List<ProductPriceCode>();
             var reqPriceCodes = model.PriceListProducts.Select(x => x.PriceCodeGroup).Distinct();
-            model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
+            model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup.GroupName) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
                         
             model.AllManufacturers = _MfgRepo.All.ToList();
             model.SearchType = "all";
@@ -118,7 +118,7 @@ namespace CAPCO.Controllers
                         
                         model.ProviderCosts = new List<ProductPriceCode>();
                         var reqPriceCodes = model.PriceListProducts.Select(x => x.PriceCodeGroup).Distinct();
-                        model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
+                        model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup.GroupName) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
                     }
                 }
             }
@@ -164,7 +164,7 @@ namespace CAPCO.Controllers
                     
                     model.ProviderCosts = new List<ProductPriceCode>();
                     var reqPriceCodes = model.PriceListProducts.Select(x => x.PriceCodeGroup).Distinct();
-                    model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
+                    model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup.GroupName) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
                     
                 }                
             }
@@ -221,8 +221,8 @@ namespace CAPCO.Controllers
                     //write items
                     foreach (var item in model.PriceListProducts.Where(x => x.ProductSeries != null).OrderBy(x => x.Section).ThenBy(x => x.ProductSeries.Name).ThenBy(x => x.ItemNumber))
                     {
-                        var ppc = model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == item.PriceCodeGroup && x.PriceCode == CurrentUser.PriceCode);
-                        var ppr = model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == item.PriceCodeGroup && x.PriceCode == CurrentUser.RetailCode);
+                        var ppc = model.ProviderCosts.FirstOrDefault(x => x.GroupName == item.PriceCodeGroup && x.PriceCode == CurrentUser.PriceCode);
+                        var ppr = model.ProviderCosts.FirstOrDefault(x => x.GroupName == item.PriceCodeGroup && x.PriceCode == CurrentUser.RetailCode);
                         sw.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}",
                                          item.ItemNumber,
                                          item.Description.Replace(',', ' '),
@@ -244,7 +244,7 @@ namespace CAPCO.Controllers
                     //write items
                     foreach (var item in model.PriceListProducts)
                     {
-                        var ppc = model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == item.PriceCodeGroup && x.PriceCode == CurrentUser.PriceCode);
+                        var ppc = model.ProviderCosts.FirstOrDefault(x => x.GroupName == item.PriceCodeGroup && x.PriceCode == CurrentUser.PriceCode);
                         sw.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
                                          item.ItemNumber,
                                          item.Description.Replace(',', ' '),
@@ -265,7 +265,7 @@ namespace CAPCO.Controllers
                     //write items
                     foreach (var item in model.PriceListProducts)
                     {
-                        var ppr = model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == item.PriceCodeGroup && x.PriceCode == CurrentUser.RetailCode);
+                        var ppr = model.ProviderCosts.FirstOrDefault(x => x.GroupName == item.PriceCodeGroup && x.PriceCode == CurrentUser.RetailCode);
                         sw.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
                                          item.ItemNumber,
                                          item.Description.Replace(',', ' '),
@@ -351,8 +351,8 @@ namespace CAPCO.Controllers
             }
 
             model.ProviderCosts = new List<ProductPriceCode>();
-            var reqPriceCodes = model.PriceListProducts.Select(x => x.PriceCodeGroup).Distinct();
-            model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
+            //var reqPriceCodes = model.PriceListProducts.Select(x => x.PriceCodeGroup).Distinct();
+            //model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.GroupName) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
             
             ViewBag.CurrentUser = CurrentUser;
             model.SearchType = type;

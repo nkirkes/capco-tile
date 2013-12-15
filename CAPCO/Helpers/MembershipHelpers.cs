@@ -74,7 +74,7 @@ namespace System.Web.Mvc
         {
             try
             {
-                var results = product.PriceCodes.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == retailCode);
+                var results = product.PriceCodes.FirstOrDefault(x => x.PriceCode == retailCode);
                 
                 return results != null ? results.Price : product.RetailPrice;
             }
@@ -105,7 +105,7 @@ namespace System.Web.Mvc
         {
             try
             {
-                var results = product.PriceCodes.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == priceCode);
+                var results = product.PriceCodes.FirstOrDefault(x => x.PriceCode == priceCode);
                 return results != null ? results.Price : product.RetailPrice;
             }
             catch (Exception ex)

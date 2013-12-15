@@ -74,15 +74,22 @@ namespace CAPCO.Infrastructure.Data
                 throw new ArgumentNullException("specification", "specification is null");
 
             var specs = new List<Specification<TEntity>> {specification};
-            return FindBySpecification(specs.ToArray());
+            return FindBySpecification(null, specs.ToArray());
         }
 
         public IQueryable<TEntity> FindBySpecification(params Specification<TEntity>[] specifications)
         {
+            return FindBySpecification(null, specifications);
+        }
+
+        public IQueryable<TEntity> FindBySpecification(Expression<Func<TEntity, object>>[] includeProperties, params Specification<TEntity>[] specifications)
+        {
             if (specifications == null || specifications.Any(x => x == null))
                 throw new ArgumentNullException("specifications", "specifications is null or collection contains a null specification");
 
-            return specifications.Aggregate(All, (current, specification) => specification.SatisfyingElementsFrom(current));
+            var query = includeProperties != null ? AllIncluding(includeProperties) : All;
+
+            return specifications.Aggregate(query, (current, specification) => specification.SatisfyingElementsFrom(current));
         }
     }
 }
