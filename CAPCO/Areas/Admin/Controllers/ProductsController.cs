@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -67,24 +68,16 @@ namespace CAPCO.Areas.Admin.Controllers
                 var cookie = Request.Cookies["SearchCriteria"];
                 model.Page = Int32.Parse(cookie.Values["Page"]);
             }
-            
-            // TODO: Ok, need to figure out when to clear the cookie out or ignore it. Maybe a clear search button?
 
             var results = _productRepository.AllIncluding(x => x.Manufacturer, x => x.Group).OrderBy(x => x.ItemNumber);
             model.ProductsCount = results.Count();
-
-            
-            
             model.PagedProducts = results.ToPagedList(model.Page ?? 1, 100);
-
-            
-
             return View("Index", model);
         }
 
         public ActionResult Search(PagedProductsViewModel model)
         {
-            var results = _productRepository.FindBySpecification(new ProductsByItemNumberSpecification(model.Criteria.Trim()));
+            var results = _productRepository.AllIncluding(x => x.Manufacturer, x => x.Group).Where(x => x.ItemNumber.Contains(model.Criteria.Trim())).OrderBy(x => x.ItemNumber);
             model.ProductsCount = results.Count();
             model.PagedProducts = results.ToPagedList(model.Page ?? 1, 100);
 
@@ -224,11 +217,11 @@ namespace CAPCO.Areas.Admin.Controllers
                 prod.LastModifiedBy = CurrentUser.UserName;
                 prod.LastModifiedOn = DateTime.Now;
 
+                prod.Name = product.Name;
                 prod.RetailPrice = product.RetailPrice;
                 prod.Description = product.Description;
                 prod.ItemNumber = product.ItemNumber;
                 prod.ManufacturerColor = product.ManufacturerColor;
-                prod.Usage = product.Usage;
                 prod.MadeIn = product.MadeIn;
                 prod.CartonQuantity = product.CartonQuantity;
                 prod.CoefficientOfFrictionWet = product.CoefficientOfFrictionWet;
@@ -253,51 +246,97 @@ namespace CAPCO.Areas.Admin.Controllers
                 int usageId = 0;
                 if (Int32.TryParse(Request["SelectedUsage"], out usageId))
                 {
-                    var usage = _ProductUsageRepo.Find(usageId);
-                    if (usage != null)
-                        prod.Usage = usage;
+                    if (prod.Usage == null || prod.Usage.Id != usageId)
+                    { 
+                        var usage = _ProductUsageRepo.Find(usageId);
+                        if (usage != null) prod.Usage = usage;
+                    }
                 }
 
                 int catId = 0;
                 if (Int32.TryParse(Request["SelectedCategory"], out catId))
                 {
-                    prod.Category = _productcategoryRepository.Find(catId);
+                    if (prod.Category == null || prod.Category.Id != catId)
+                    {
+                        prod.Category = _productcategoryRepository.Find(catId);
+                    }
                 }
 
                 int colorId = 0;
                 if (Int32.TryParse(Request["SelectedColor"], out colorId))
-                    prod.Color = _productcolorRepository.Find(colorId);
+                {
+                    if (prod.Color == null || prod.Color.Id != colorId)
+                    {
+                        prod.Color = _productcolorRepository.Find(colorId);
+                    }
+                }
 
                 int finishId = 0;
                 if (Int32.TryParse(Request["SelectedFinish"], out finishId))
-                    prod.Finish = _productfinishRepository.Find(finishId);
+                {
+                    if (prod.Finish == null || prod.Finish.Id != finishId)
+                    {
+                        prod.Finish = _productfinishRepository.Find(finishId);
+                    }
+                }
 
                 int groupId = 0;
                 if (Int32.TryParse(Request["SelectedGroup"], out groupId))
-                    prod.Group = _productgroupRepository.Find(groupId);
+                {
+                    if (prod.Group == null || prod.Group.Id != groupId)
+                    {
+                        prod.Group = _productgroupRepository.Find(groupId);
+                    }
+                }
 
                 int sizeId = 0;
                 if (Int32.TryParse(Request["SelectedSize"], out sizeId))
-                    prod.Size = _productsizeRepository.Find(sizeId);
+                {
+                    if (prod.Size == null || prod.Size.Id != sizeId)
+                    {
+                        prod.Size = _productsizeRepository.Find(sizeId);
+                    }
+                }
 
                 int typeId = 0;
                 if (Int32.TryParse(Request["SelectedType"], out typeId))
-                    prod.Type = _producttypeRepository.Find(typeId);
+                {
+                    if (prod.Type == null || prod.Type.Id != typeId)
+                    {
+                        prod.Type = _producttypeRepository.Find(typeId);
+                    }
+                }
 
                 int varId = 0;
                 if (Int32.TryParse(Request["SelectedVariation"], out varId))
-                    prod.Variation = _VariationRepo.Find(varId);
+                {
+                    if (prod.Variation == null || prod.Variation.Id != varId)
+                    {
+                        prod.Variation = _VariationRepo.Find(varId);
+                    }
+                }
 
                 int uomId = 0;
                 if (Int32.TryParse(Request["SelectedUoM"], out uomId))
-                    prod.UnitOfMeasure = _UomRepo.Find(uomId);
+                {
+                    if (prod.UnitOfMeasure == null || prod.UnitOfMeasure.Id != uomId)
+                    {
+                        prod.UnitOfMeasure = _UomRepo.Find(uomId);
+                    }
+                }
 
                 int statusId = 0;
                 if (Int32.TryParse(Request["SelectedStatus"], out statusId))
-                    prod.Status = _ProductStatusRepo.Find(statusId);
+                {
+                    if (prod.Status == null || prod.Status.Id != statusId)
+                    {
+                        prod.Status = _ProductStatusRepo.Find(statusId);
+                    }
+                }
 
                 prod.YouTubeUrl = product.YouTubeUrl;
                 prod.SizeDescription = product.SizeDescription;
+
                 _productRepository.InsertOrUpdate(prod);
                 _productRepository.Save();
 

@@ -40,10 +40,11 @@ namespace CAPCO.Infrastructure.Domain
 
         [DisplayName("Default Pickup Location")]
         public virtual PickupLocation DefaultLocation { get; set; }
+
         [DisplayName("Discount Code")]
         public virtual DiscountCode DiscountCode { get; set; }
 
-        public List<Project> Projects { get; set; }
+        public virtual List<Project> Projects { get; set; }
 
         [NotMapped]
         public string PriceCode

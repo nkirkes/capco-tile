@@ -48,16 +48,15 @@ namespace CAPCO.Controllers
                 return RedirectToAction("index", "root");
 
             var model = new PriceListViewModel();
-            model.PriceListProducts = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.Variation, x => x.Size, x => x.UnitOfMeasure, x => x.Usage).ToList();
             model.PriceDisplayPreference = (PricePreferences)Enum.Parse(typeof(PricePreferences), CurrentUser.PricePreference);
-
+            var query = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.ProductSeries, x => x.Usage, x => x.Category, x => x.Color, x => x.Finish, x => x.Group, x => x.Size, x => x.Status, x => x.Type, x => x.UnitOfMeasure, x => x.Variation);
             model.ProviderCosts = new List<ProductPriceCode>();
-            var reqPriceCodes = model.PriceListProducts.Select(x => x.PriceCodeGroup).Distinct();
+            var reqPriceCodes = query.Select(x => x.PriceCodeGroup).Distinct();
             model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
                         
             model.AllManufacturers = _MfgRepo.All.ToList();
             model.SearchType = "all";
-            
+            model.PriceListProducts = query.ToList();
             ViewBag.CurrentUser = CurrentUser;
             return View("index", model);
         }
@@ -99,10 +98,9 @@ namespace CAPCO.Controllers
                     }
                     if (model.SelectedManufacturers.Any())
                     {
-                        var spec = new ProductsByManufacturersSpecification(model.SelectedManufacturers);
-                        model.PriceListProducts = _ProductRepository.FindBySpecification(spec).ToList();
-
-
+                        var query = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.ProductSeries, x => x.Usage, x => x.Category, x => x.Color, x => x.Finish, x => x.Group, x => x.Size, x => x.Status, x => x.Type, x => x.UnitOfMeasure, x => x.Variation);
+                        model.PriceListProducts = query.Where(u => selectedSections.Contains(u.Section)).ToList();
+                        
                         model.ProviderCosts = new List<ProductPriceCode>();
                         var reqPriceCodes = model.PriceListProducts.Select(x => x.PriceCodeGroup).Distinct();
                         model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
@@ -146,13 +144,15 @@ namespace CAPCO.Controllers
                 {
                     var selectedMonth = DateTime.Parse(Request["SelectedMonth"]);
                     var startDate = new DateTime(selectedMonth.Year, selectedMonth.Month, 1);
-                    var spec = new ProductsByRecentUpdatesSpecification(startDate);
-                    model.PriceListProducts = _ProductRepository.FindBySpecification(spec).ToList();
+                    var query = _ProductRepository
+                        .AllIncluding(x => x.Manufacturer, x => x.ProductSeries, x => x.Usage, x => x.Category, x => x.Color, x => x.Finish, x => x.Group, x => x.Size, x => x.Status, x => x.Type, x => x.UnitOfMeasure, x => x.Variation)
+                        .Where(x => x.LastModifiedOn >= startDate);
                     
                     model.ProviderCosts = new List<ProductPriceCode>();
-                    var reqPriceCodes = model.PriceListProducts.Select(x => x.PriceCodeGroup).Distinct();
+                    var reqPriceCodes = query.Select(x => x.PriceCodeGroup).Distinct();
+
                     model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
-                    
+                    model.PriceListProducts = query.ToList();
                 }                
             }
             catch (Exception ex)
@@ -300,6 +300,7 @@ namespace CAPCO.Controllers
         {
             var model = new PriceListViewModel();
             model.PriceDisplayPreference = (PricePreferences)Enum.Parse(typeof(PricePreferences), CurrentUser.PricePreference);
+            var query = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.ProductSeries, x => x.Usage, x => x.Category, x => x.Color, x => x.Finish, x => x.Group, x => x.Size, x => x.Status, x => x.Type, x => x.UnitOfMeasure, x => x.Variation);
             switch (type)
             {
                 case "section":
@@ -307,18 +308,10 @@ namespace CAPCO.Controllers
                     if (!String.IsNullOrWhiteSpace(criteria))
                     {
                         var selectedSections = criteria.Split(',');
-                        foreach (string section in selectedSections)
-                        {
-                            var mfg = _MfgRepo.All.FirstOrDefault(x => x.Section == section);
-                            if (mfg != null)
-                            {
-                                selectedManufacturers.Add(mfg);
-                            }
-                        }
+                        selectedManufacturers.AddRange(selectedSections.Select(section => this._MfgRepo.All.FirstOrDefault(x => x.Section == section)).Where(mfg => mfg != null));
                         if (selectedManufacturers.Any())
                         {
-                            var spec = new ProductsByManufacturersSpecification(selectedManufacturers);
-                            model.PriceListProducts = _ProductRepository.FindBySpecification(spec).ToList();
+                            model.PriceListProducts = query.Where(u => selectedSections.Contains(u.Section)).ToList();
                         }
                     }
                     break;
@@ -327,13 +320,11 @@ namespace CAPCO.Controllers
                     {
                         var selectedMonth = DateTime.Parse(criteria);
                         var startDate = new DateTime(selectedMonth.Year, selectedMonth.Month, 1);
-                        var spec = new ProductsByRecentUpdatesSpecification(startDate);
-                        model.PriceListProducts = _ProductRepository.FindBySpecification(spec).ToList();
+                        model.PriceListProducts = query.Where(x => x.LastModifiedOn >= startDate).ToList();
                     }
                     break;
                 default:
-                    model.PriceListProducts = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.ProductSeries, x => x.Variation, x => x.UnitOfMeasure, x => x.Usage).ToList();
-                   
+                    model.PriceListProducts = query.ToList();
                     break;
             }
 

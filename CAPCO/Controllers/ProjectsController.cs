@@ -48,7 +48,10 @@ namespace CAPCO.Controllers
         
         public ActionResult Archives()
         {
-            return View(CurrentUser.ArchivedProjects().ToList());
+            int expirationPeriodInDays = Convert.ToInt32(ConfigurationManager.AppSettings["ProjectExpirationInDays"]) * -1;
+            var expirationDate = DateTime.Today.AddDays(expirationPeriodInDays);
+            
+            return View(CurrentUser.Projects.Where(x => x.LastModifiedOn <= expirationDate).ToList());
         }
 
         public ActionResult Show(int id)

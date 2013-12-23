@@ -49,7 +49,7 @@
         </div>*@        
     </div>
     
-    <div class="container" id="footer">
+    <div class="container" id="footer" style="background-color: #000000; height: 275px;">
         <div class="span-8">
             <div class="footer-content">
                 @Html.GetSectionHtml(footer)
@@ -64,6 +64,8 @@
                 Fax 303-756-3416<br />
                 Toll Free 800-727-2272<br />
                 @Html.ActionLink("Contact Us", "contact", "home", new { area = "" }, null)
+                <br /><br /><br /><br /><br />
+                <a title="Click for the Business Review of Capco Tile & Stone, LLC, a Tile - Ceramic - Manufacturers & Distributors in Denver CO" href="http://www.bbb.org/denver/business-reviews/tile-ceramic-manufacturers-and-distributors/capco-tile-and-stone-in-denver-co-21816#sealclick" target="_blank"><img alt="Click for the BBB Business Review of this Tile - Ceramic - Manufacturers & Distributors in Denver CO" style="border: 0;" src="http://seal-denver.bbb.org/seals/blue-seal-250-52-capcotilestonellc-21816.png" /></a>
             </div>
         </div>
         <div class="span-8 last">
@@ -72,17 +74,20 @@
                     <ul>
                         <li>@Html.ActionLink("Home", "index", "home", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("Products", "index", "products", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("About Us", "about", "home", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("About Us", "about", "home", new { area = "", section = "home" }, null)</li>
                         <li>@Html.ActionLink("Locations", "locations", "home", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("Contact", "contact", "home", new { area = "" }, null)</li>
                         <li><a href="@ViewBag.BlogUrl" target="_blank">Blog</a></li>
+                        <li>@Html.ActionLink("Links", "links", "home", new { area = "" }, null)</li>
                         @Html.Partial("_LogOnPartial")
                     </ul>
                 </div>
                 <div style="text-align: right;">
                     <a href="http://twitter.com" target="_blank">@Html.Image("twitter.png")</a><br />
                     <a href="https://www.facebook.com/capcotile" target="_blank">@Html.Image("facebook.png")</a><br />
-                    <a href="http://capco.posterous.com/rss.xml" target="_blank">@Html.Image("feed.png")</a>
+                    <a href="@ViewBag.BlogUrl" target="_blank">@Html.Image("feed.png")</a><br />
+                    <a href="http://www.pinterest.com/capcotilestone/boards/" target="_blank">@Html.Image("pinterest.png")</a><br />
+                    <a href="http://www.youtube.com/user/CAPCOTileandStone" target="_blank">@Html.Image("youtube.png")</a>
                 </div>
             </div>
         </div>
@@ -90,7 +95,8 @@
 
     <div class="container" id="copyright">
         <div class="span-24">
-            &copy;2011 CAPCO Tile & Stone &middot; A Hi-Fi Software Effort
+            &copy;2011 CAPCO Tile & Stone<br />
+            Version: @ViewBag.BuildVersion
         </div>
     </div>
     

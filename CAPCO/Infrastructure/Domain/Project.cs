@@ -14,8 +14,8 @@ namespace CAPCO.Infrastructure.Domain
             
         }
 
-        public Project Project { get; set; }
-        public Product Product { get; set; }
+        public virtual Project Project { get; set; }
+        public virtual Product Product { get; set; }
         public string Comment { get; set; }
     }
 
@@ -33,14 +33,14 @@ namespace CAPCO.Infrastructure.Domain
         public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
         
-        public ApplicationUser CreatedBy { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
         public DateTime LastModifiedOn { get; set; }
         public string PriceDisplayPreference { get; set; }
         public ICollection<ProjectComment> Comments { get; set; }
         public ICollection<ProjectItem> Products { get; set; }
         public ICollection<ProjectInvitation> Invitations { get; set; }
 
-        public PickupLocation Location { get; set; }
+        public virtual PickupLocation Location { get; set; }
         [NotMapped]
         public int? DiscountCode
         {
