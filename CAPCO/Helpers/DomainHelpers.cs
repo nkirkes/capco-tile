@@ -108,7 +108,7 @@ namespace System.Web.Mvc
 
         public static IQueryable<ProductPriceCode> PriceCodes(this Product product)
         {
-            return _ProductPriceCodeRepo.All.Where(x => x.PriceGroup == product.PriceCodeGroup);
+            return _ProductPriceCodeRepo.All.Where(x => x.PriceGroup.Trim() == product.PriceCodeGroup.Trim());
         }
     }
 }

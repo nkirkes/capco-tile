@@ -539,7 +539,7 @@ namespace CAPCO.Areas.Admin.Controllers
                 if (DateTime.TryParse(item.StatusChangeDate, out statusChangeDate))
                     product.StatusChangedOn = statusChangeDate;
             }
-            product.PriceCodeGroup = item.PriceCodeGroup;
+            product.PriceCodeGroup = item.PriceCodeGroup.Trim();
 
             // relationships
             int seriesCode = 0;

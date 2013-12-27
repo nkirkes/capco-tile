@@ -91,7 +91,7 @@ namespace System.Web.Mvc
         {
             try
             {
-                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == retailCode);
+                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup.Trim() == product.PriceCodeGroup.Trim() && x.PriceCode == retailCode);
                 
                 return results != null ? results.Price : product.RetailPrice;
             }
@@ -122,7 +122,7 @@ namespace System.Web.Mvc
         {
             try
             {
-                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup == product.PriceCodeGroup && x.PriceCode == priceCode);
+                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup.Trim() == product.PriceCodeGroup.Trim() && x.PriceCode == priceCode);
                 return results != null ? results.Price : product.RetailPrice;
             }
             catch (Exception ex)

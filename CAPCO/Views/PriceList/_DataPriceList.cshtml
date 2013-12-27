@@ -56,8 +56,8 @@
                         <td>@prod.Usage.Code</td>
                         <td>@(prod.StatusChangedOn.HasValue ? prod.StatusChangedOn.Value.ToShortDateString() : "")</td>
                         @{
-                            var ppc = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.PriceCode);
-                            var ppr = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup == prod.PriceCodeGroup && x.PriceCode == currentUser.RetailCode);
+                            var ppc = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup.Trim() == prod.PriceCodeGroup.Trim() && x.PriceCode == currentUser.PriceCode);
+                            var ppr = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup.Trim() == prod.PriceCodeGroup.Trim() && x.PriceCode == currentUser.RetailCode);
                         }
                         @switch (Model.PriceDisplayPreference)
                         {
