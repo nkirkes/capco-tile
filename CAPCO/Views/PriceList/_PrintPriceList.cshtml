@@ -88,8 +88,8 @@
                                         <td>@prod.CartonQuantity</td>
                                         <td>@prod.Usage.Code</td>
                                         @{
-                                            var ppc = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup.Trim() == prod.PriceCodeGroup.Trim() && x.PriceCode == currentUser.PriceCode);
-                                            var ppr = Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup.Trim() == prod.PriceCodeGroup.Trim() && x.PriceCode == currentUser.RetailCode);
+                                            var ppc = prod.PriceCodeGroup != null ? Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup.Trim() == prod.PriceCodeGroup.Trim() && x.PriceCode == currentUser.PriceCode) : null;
+                                            var ppr = prod.PriceCodeGroup != null ? Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup.Trim() == prod.PriceCodeGroup.Trim() && x.PriceCode == currentUser.RetailCode) : null;
                                         }
                                         @switch (Model.PriceDisplayPreference)
                                         {
