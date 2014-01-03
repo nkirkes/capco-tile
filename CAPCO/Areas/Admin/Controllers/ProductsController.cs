@@ -359,12 +359,12 @@ namespace CAPCO.Areas.Admin.Controllers
                 var prod = _productRepository.Find(id);
                 if (prod != null)
                 {
-                    var projects = _ProjectRepo.All.Where(x => x.Products.Any(y => y.Product.Id == prod.Id));
+                    var projects = _ProjectRepo.AllIncluding(x => x.Products).Where(x => x.Products.Any(y => y.Product.Id == prod.Id));
                     if (projects.Any())
                     {
                         foreach (var project in projects)
                         {
-                            var items = project.Products.Where(x => x.Product.Id == prod.Id);
+                            var items = project.Products.Where(x => x.Product != null && x.Product.Id == prod.Id);
                             foreach (var projectItem in items)
                             {
                                 projectItem.Comment +=
@@ -380,9 +380,9 @@ namespace CAPCO.Areas.Admin.Controllers
                         
                     }
 
-                    var relProds = _productRepository.AllIncluding(x => x.RelatedSizes, x => x.RelatedAccents, x => x.RelatedTrims)
-                        .Where(x => x.RelatedSizes.Any(y => y.Id == prod.Id) || x.RelatedTrims.Any(y => y.Id == prod.Id) || x.RelatedAccents.Any(y => y.Id == prod.Id)).ToList();
-                    if (relProds != null && relProds.Count > 0)
+                    var relProds = _productRepository.AllIncluding(x => x.RelatedSizes, x => x.RelatedAccents, x => x.RelatedTrims, x => x.RelatedFinishes)
+                        .Where(x => x.RelatedSizes.Any(y => y.Id == prod.Id) || x.RelatedTrims.Any(y => y.Id == prod.Id) || x.RelatedAccents.Any(y => y.Id == prod.Id) || x.RelatedFinishes.Any(y => y.Id == prod.Id)).ToList();
+                    if (relProds.Count > 0)
                     {
                         foreach (var relProd in relProds)
                         {
@@ -390,6 +390,7 @@ namespace CAPCO.Areas.Admin.Controllers
                             relProd.RelatedSizes.Remove(prod);
                             relProd.RelatedAccents.Remove(prod);
                             relProd.RelatedTrims.Remove(prod);
+                            relProd.RelatedFinishes.Remove(prod);
 
                             _productRepository.InsertOrUpdate(relProd);
                             _productRepository.Save();
@@ -401,7 +402,7 @@ namespace CAPCO.Areas.Admin.Controllers
                     prod.RelatedTrims.Clear();
                     prod.RelatedProducts.Clear();
                     prod.RelatedSizes.Clear();
-
+                    prod.RelatedFinishes.Clear();
                 }
 
                 _productRepository.InsertOrUpdate(prod);
