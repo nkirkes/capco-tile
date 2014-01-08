@@ -56,7 +56,7 @@ namespace CAPCO.Controllers
 
         public ActionResult Show(int id)
         {
-            var project = _ProjectRepository.Find(id);
+            var project = _ProjectRepository.AllIncluding(x => x.Products).FirstOrDefault(x => x.Id == id);
             if (project == null)
             {
                 this.FlashError("Oops. Looks like that project doesn't exist.");

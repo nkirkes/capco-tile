@@ -65,14 +65,14 @@
                             switch (userPricePreference)
                             {
                                 case CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly:
-                                    <td>@String.Format("{0:c}", proj.Products.Sum(x => x.Product.ProviderRetail(proj)))</td>
+                                    <td>@String.Format("{0:c}", proj.Products.Where(x => x.Product != null).Sum(x => x.Product.ProviderRetail(proj)))</td>
                                    break;
                                 case CAPCO.Infrastructure.Domain.PricePreferences.CostOnly:
-                                    <td>@String.Format("{0:c}", proj.Products.Sum(x => x.Product.ProviderCost(proj)))</td>
+                                    <td>@String.Format("{0:c}", proj.Products.Where(x => x.Product != null).Sum(x => x.Product.ProviderCost(proj)))</td>
                                    break;
                                 case CAPCO.Infrastructure.Domain.PricePreferences.Both:
-                                    <td>@String.Format("{0:c}", proj.Products.Sum(x => x.Product.ProviderRetail(proj)))</td>
-                                    <td>@String.Format("{0:c}", proj.Products.Sum(x => x.Product.ProviderCost(proj)))</td>
+                                    <td>@String.Format("{0:c}", proj.Products.Where(x => x.Product != null).Sum(x => x.Product.ProviderRetail(proj)))</td>
+                                    <td>@String.Format("{0:c}", proj.Products.Where(x => x.Product != null).Sum(x => x.Product.ProviderCost(proj)))</td>
                                    break;
                                 default:
                                    break;

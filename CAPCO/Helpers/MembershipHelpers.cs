@@ -97,7 +97,7 @@ namespace System.Web.Mvc
             }
             catch (Exception ex)
             {
-                return product.RetailPrice;
+                return product != null ? product.RetailPrice : 0;
             }
         }
 
