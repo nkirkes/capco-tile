@@ -46,7 +46,7 @@ namespace CAPCO.Infrastructure.Specifications
                 throw new ArgumentNullException("candidates", "candidates is null.");
 
             return from c in candidates
-                   where c.UserName.Contains(_Criteria) || c.CompanyName.Contains(_Criteria)
+                   where c.FirstName.Contains(_Criteria) || c.LastName.Contains(_Criteria) || c.UserName.Contains(_Criteria) || c.CompanyName.Contains(_Criteria)
                    select c;
         }
     }
