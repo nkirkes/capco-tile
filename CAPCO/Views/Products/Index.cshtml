@@ -8,6 +8,7 @@
     //var currentUser = MembershipHelpers.GetCurrentUser();
     var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
     var isPricingEnabled = ViewBag.IsPricingEnabled;
+    var filters = (Dictionary<string, string>)ViewBag.Filters;
 }
 
 
@@ -48,7 +49,7 @@
         <p>Use the filters below to narrow the products list.</p>
 
         @Html.ActionLink("Clear Filters", "index", "products", null, null)
-        @{var filters = (Dictionary<string, string>)ViewBag.Filters;}
+        
             <h3 class="sidebar">Product Groups</h3>
             <ul class="sidebar">
                 @if (ViewBag.Groups != null)
@@ -56,17 +57,17 @@
                     foreach (IGrouping<string, ProductGroup> grouping in ViewBag.Groups)
                     {
                         <li class="liClass">@Html.ActionLink(@grouping.Key, "index", "products", new
-                                            {
-                                                group = grouping.Key,
-                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
-                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
-                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
-                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
-                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
-                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
-                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
-                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
-                                            }, null) [@grouping.Count()]</li>
+                                       {
+                                           group = grouping.Key,
+                                           category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                                           type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                                           color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                                           size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                                           finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                                           series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                                           itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                                           description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                                       }, null) [@grouping.Count()]</li>
                     }
                 }
             </ul>
@@ -75,22 +76,22 @@
             <ul class="sidebar">
                 @if (ViewBag.Categories != null)
                 {
-                    
+
                     foreach (IGrouping<string, ProductCategory> grouping in ViewBag.Categories)
                     {
                         <li class="liClass">
                             @Html.ActionLink(@grouping.Key, "index", "products", new
-                                            {
-                                                category = grouping.Key,
-                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
-                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
-                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
-                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
-                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
-                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
-                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
-                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
-                                            }, null) [@grouping.Count()]</li>
+                       {
+                           category = grouping.Key,
+                           group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                           type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                           color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                           size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                           finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                           series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                           itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                           description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                       }, null) [@grouping.Count()]</li>
                     }
                 }
             </ul>
@@ -103,17 +104,17 @@
                     {
                         <li class="liClass">
                             @Html.ActionLink(@grouping.Key, "index", "products", new
-                                            {
-                                                type = grouping.Key,
-                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
-                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
-                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
-                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
-                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
-                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
-                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
-                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
-                                            }, null) [@grouping.Count()]</li>
+                       {
+                           type = grouping.Key,
+                           category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                           group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                           color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                           size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                           finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                           series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                           itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                           description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                       }, null) [@grouping.Count()]</li>
                     }
                 }
             </ul>
@@ -121,24 +122,24 @@
             <h3 class="sidebar">Product Colors</h3>
             <ul class="sidebar">
             @if (ViewBag.Colors != null)
+            {
+                foreach (IGrouping<string, ProductColor> grouping in ViewBag.Colors)
                 {
-                    foreach (IGrouping<string, ProductColor> grouping in ViewBag.Colors)
-                    {
                         <li class="liClass">
                            @Html.ActionLink(@grouping.Key, "index", "products", new
-                                            {
-                                                color = grouping.Key,
-                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
-                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
-                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
-                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
-                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
-                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
-                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
-                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
-                                            }, null) [@grouping.Count()]</li>
-                    }
+                      {
+                          color = grouping.Key,
+                          category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                          type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                          group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                          size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                          finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                          series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                          itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                          description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                      }, null) [@grouping.Count()]</li>
                 }
+            }
             </ul>
 
             <h3 class="sidebar">Product Sizes</h3>
@@ -149,17 +150,17 @@
                 {
                     <li class="liClass">
                         @Html.ActionLink(@grouping.Key, "index", "products", new
-                                            {
-                                                size = grouping.Key,
-                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
-                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
-                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
-                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
-                                                finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
-                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
-                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
-                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
-                                            }, null) [@grouping.Count()]</li>
+                   {
+                       size = grouping.Key,
+                       category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                       type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                       color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                       group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                       finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                       series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                       itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                       description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                   }, null) [@grouping.Count()]</li>
                 }
             }
             </ul>
@@ -172,17 +173,17 @@
                 {
                     <li class="liClass">
                         @Html.ActionLink(@grouping.Key, "index", "products", new
-                                            {
-                                                finish = grouping.Key,
-                                                category = filters.ContainsKey("Category") ? filters["Category"] : "",
-                                                type = filters.ContainsKey("Type") ? filters["Type"] : "",
-                                                color = filters.ContainsKey("Color") ? filters["Color"] : "",
-                                                size = filters.ContainsKey("Size") ? filters["Size"] : "",
-                                                group = filters.ContainsKey("Group") ? filters["Group"] : "",
-                                                series = filters.ContainsKey("Series") ? filters["Series"] : "",
-                                                itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
-                                                description = filters.ContainsKey("Description") ? filters["Description"] : "",
-                                            }, null) [@grouping.Count()]</li>
+                   {
+                       finish = grouping.Key,
+                       category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                       type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                       color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                       size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                       group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                       series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                       itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                       description = filters.ContainsKey("Description") ? filters["Description"] : "",
+                   }, null) [@grouping.Count()]</li>
                 }
             }
             </ul>
@@ -288,7 +289,18 @@
             <div class="pagedListPager span-17 last" style="padding-bottom: 10px;">
                 @Html.PagedListPager(Model,
                     page => Url.Action("Index", new
-                    { page = page, colorId = ViewBag.ColorId, categoryId = ViewBag.CategoryId, typeId = ViewBag.TypeId, groupId = ViewBag.GroupId, sizeId = ViewBag.SizeId, finishId = ViewBag.FinishId, series = ViewBag.Series, itemNumber = ViewBag.ItemNumber }),
+                    {
+                        page,
+                        finish = filters.ContainsKey("Finish") ? filters["Finish"] : "",
+                        category = filters.ContainsKey("Category") ? filters["Category"] : "",
+                        type = filters.ContainsKey("Type") ? filters["Type"] : "",
+                        color = filters.ContainsKey("Color") ? filters["Color"] : "",
+                        size = filters.ContainsKey("Size") ? filters["Size"] : "",
+                        group = filters.ContainsKey("Group") ? filters["Group"] : "",
+                        series = filters.ContainsKey("Series") ? filters["Series"] : "",
+                        itemNumber = filters.ContainsKey("Item Number") ? filters["Item Number"] : "",
+                        description = filters.ContainsKey("Description") ? filters["Description"] : ""
+                    }),
                     PagedListRenderOptions.OnlyShowFivePagesAtATime)
             </div>
         }
