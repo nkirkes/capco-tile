@@ -179,6 +179,11 @@ namespace CAPCO.Infrastructure.Data
                 .HasMany<Product>(x => x.RelatedFinishes)
                 .WithMany()
                 .Map(x => x.ToTable("ProductRelatedFinishes"));
+
+            modelBuilder.Entity<Product>()
+                .HasMany<ProductPriceCode>(x => x.ProductPriceCodes)
+                .WithMany(x => x.Products)
+                .Map(x => x.ToTable("ProductPriceCodes").MapLeftKey("PriceGroup").MapRightKey("PriceCodeGroup"));
         }
     }
 }

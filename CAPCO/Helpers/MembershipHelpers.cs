@@ -79,11 +79,11 @@ namespace System.Web.Mvc
 
         public static Decimal ProviderRetail(this Product product, string retailCode)
         {
-            IRepository<ProductPriceCode> _ProductPriceCodeRepo = DependencyResolver.Current.GetService<IRepository<ProductPriceCode>>();
+            //IRepository<ProductPriceCode> _ProductPriceCodeRepo = DependencyResolver.Current.GetService<IRepository<ProductPriceCode>>();
             try
             {
-                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup.Trim() == product.PriceCodeGroup.Trim() && x.PriceCode == retailCode);
-                
+                //var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup.Trim() == product.PriceCodeGroup.Trim() && x.PriceCode == retailCode);
+                var results = product.ProductPriceCodes.FirstOrDefault(x => x.PriceCode == retailCode);
                 return results != null ? results.Price : product.RetailPrice;
             }
             catch (Exception ex)
@@ -111,10 +111,12 @@ namespace System.Web.Mvc
 
         public static Decimal ProviderCost(this Product product, string priceCode)
         {
-            IRepository<ProductPriceCode> _ProductPriceCodeRepo = DependencyResolver.Current.GetService<IRepository<ProductPriceCode>>();
+            //IRepository<ProductPriceCode> _ProductPriceCodeRepo = DependencyResolver.Current.GetService<IRepository<ProductPriceCode>>();
             try
             {
-                var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup.Trim() == product.PriceCodeGroup.Trim() && x.PriceCode == priceCode);
+                //var results = _ProductPriceCodeRepo.All.FirstOrDefault(x => x.PriceGroup.Trim() == product.PriceCodeGroup.Trim() && x.PriceCode == priceCode);
+                var results = product.ProductPriceCodes.FirstOrDefault(x => x.PriceCode == priceCode);
+                
                 return results != null ? results.Price : product.RetailPrice;
             }
             catch (Exception ex)

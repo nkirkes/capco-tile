@@ -133,7 +133,9 @@ namespace CAPCO.Infrastructure.Domain
         [DisplayName("Projects")]
         public virtual ICollection<Project> ProductBundles { get; set; }
 
-        [NotMapped]
+        public virtual ICollection<ProductPriceCode> ProductPriceCodes { get; set; }
+
+
         public string DetailImageFileName
         {
             get 

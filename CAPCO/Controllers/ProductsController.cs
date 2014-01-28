@@ -167,7 +167,7 @@ namespace CAPCO.Controllers
                 specs.Add(new ProductsByDescriptionSpecification(description));
             }
 
-            return specs.Any() ? productRepository.FindBySpecification(specs.ToArray()).OrderBy(x => x.ItemNumber) : productRepository.All.OrderBy(x => x.ItemNumber);
+            return specs.Any() ? productRepository.FindBySpecification(specs.ToArray()).OrderBy(x => x.ItemNumber) : productRepository.AllIncluding(x => x.ProductPriceCodes).OrderBy(x => x.ItemNumber);
         }
 
         public ActionResult Slabs()
