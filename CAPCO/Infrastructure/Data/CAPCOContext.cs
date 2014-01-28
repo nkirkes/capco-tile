@@ -8,16 +8,87 @@ using CAPCO.Infrastructure.Domain;
 
 namespace CAPCO.Infrastructure.Data
 {
-    public class CAPCOContext : DbContext
+    public interface IDataContext : IDisposable
+    {
+        DbSet<ProductGroup> ProductGroups { get; set; }
+
+        DbSet<ProductType> ProductTypes { get; set; }
+
+        DbSet<ProductCategory> ProductCategories { get; set; }
+
+        DbSet<ProductColor> ProductColors { get; set; }
+
+        DbSet<ProductSize> ProductSizes { get; set; }
+
+        DbSet<ProductFinish> ProductFinishes { get; set; }
+
+        DbSet<Product> Products { get; set; }
+
+        DbSet<Project> ProductBundles { get; set; }
+
+        DbSet<Notification> Notifications { get; set; }
+
+        DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+        DbSet<PriceCode> PriceCodes { get; set; }
+
+        DbSet<ProductStatus> ProductStatus { get; set; }
+
+        DbSet<ProductVariation> ProductVariations { get; set; }
+
+        DbSet<ProductUnitOfMeasure> ProductUnitOfMeasures { get; set; }
+
+        DbSet<ProductImage> ProductImages { get; set; }
+
+        DbSet<ProjectComment> ProjectComments { get; set; }
+
+        DbSet<ProjectInvitation> ProjectInvitations { get; set; }
+
+        DbSet<SliderImage> SliderImages { get; set; }
+
+        DbSet<ContentSection> ContentSections { get; set; }
+
+        DbSet<Manufacturer> Manufacturers { get; set; }
+
+        DbSet<PickupLocation> PickupLocations { get; set; }
+
+        DbSet<DiscountCode> DiscountCodes { get; set; }
+
+        DbSet<StoreLocation> StoreLocations { get; set; }
+
+        DbSet<ContactRequest> ContactRequests { get; set; }
+
+        DbSet<AccountRequest> AccountRequests { get; set; }
+
+        DbSet<ProductUsage> ProductUsages { get; set; }
+
+        DbSet<RelatedProductSize> OtherSizes { get; set; }
+
+        DbSet<RelatedAccent> RelatedAccents { get; set; }
+
+        DbSet<RelatedTrim> RelatedTrims { get; set; }
+
+        DbSet<ProductPriceCode> ProductPriceCodes { get; set; }
+
+        DbSet<Link> Links { get; set; }
+
+        DbSet<ProductSeries> ProductSeries { get; set; }
+
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
+        DbSet Set(Type entityType);
+        int SaveChanges();
+    }
+
+    public class CAPCOContext : DbContext, IDataContext
     {
         /// <summary>
-        /// Initializes a new instance of the ThePypeContext class.
+        /// Initializes a new instance of the data context class.
         /// </summary>
         public CAPCOContext() : base(ConfigurationManager.ConnectionStrings["CAPCO.Web"].ConnectionString)
         {
             
         }
-
+        
         public DbSet<ProductGroup> ProductGroups { get; set; }
 
         public DbSet<ProductType> ProductTypes { get; set; }
@@ -54,34 +125,6 @@ namespace CAPCO.Infrastructure.Data
 
         public DbSet<SliderImage> SliderImages { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Project>()
-                .HasMany<ApplicationUser>(c => c.Users).WithMany().Map(x => x.ToTable("ProjectApplicationUsers"));
-            
-            modelBuilder.Entity<Product>()
-                .HasMany<Product>(x => x.RelatedSizes)
-                .WithMany()
-                .Map(x => x.ToTable("ProductRelatedSizes"));
-
-            modelBuilder.Entity<Product>()
-                .HasMany<Product>(x => x.RelatedAccents)
-                .WithMany()
-                .Map(x => x.ToTable("ProductRelatedAccents"));
-
-            modelBuilder.Entity<Product>()
-                .HasMany<Product>(x => x.RelatedTrims)
-                .WithMany()
-                .Map(x => x.ToTable("ProductRelatedTrims"));
-
-            modelBuilder.Entity<Product>()
-                .HasMany<Product>(x => x.RelatedFinishes)
-                .WithMany()
-                .Map(x => x.ToTable("ProductRelatedFinishes"));
-        }
-
         public DbSet<ContentSection> ContentSections { get; set; }
 
         public DbSet<Manufacturer> Manufacturers { get; set; }
@@ -110,5 +153,32 @@ namespace CAPCO.Infrastructure.Data
 
         public DbSet<ProductSeries> ProductSeries { get; set; }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Project>()
+                .HasMany<ApplicationUser>(c => c.Users).WithMany().Map(x => x.ToTable("ProjectApplicationUsers"));
+
+            modelBuilder.Entity<Product>()
+                .HasMany<Product>(x => x.RelatedSizes)
+                .WithMany()
+                .Map(x => x.ToTable("ProductRelatedSizes"));
+
+            modelBuilder.Entity<Product>()
+                .HasMany<Product>(x => x.RelatedAccents)
+                .WithMany()
+                .Map(x => x.ToTable("ProductRelatedAccents"));
+
+            modelBuilder.Entity<Product>()
+                .HasMany<Product>(x => x.RelatedTrims)
+                .WithMany()
+                .Map(x => x.ToTable("ProductRelatedTrims"));
+
+            modelBuilder.Entity<Product>()
+                .HasMany<Product>(x => x.RelatedFinishes)
+                .WithMany()
+                .Map(x => x.ToTable("ProductRelatedFinishes"));
+        }
     }
 }

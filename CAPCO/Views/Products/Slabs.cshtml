@@ -1,6 +1,7 @@
 ﻿@{
 
-    var currentUser = MembershipHelpers.GetCurrentUser();
+    //var currentUser = MembershipHelpers.GetCurrentUser();
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
     var content = ViewBag.SlabContent as CAPCO.Infrastructure.Domain.ContentSection;
     ViewBag.Title = content.Title;
     Layout = "~/Views/Shared/_WideLayout.cshtml";

@@ -24,8 +24,6 @@ namespace System.Web.Mvc
         const string productImagesDir = "ProductImages";
         static string productImagesPath = ConfigurationManager.AppSettings["ProductImagePath"];
 
-        private static readonly IRepository<ProductPriceCode> _ProductPriceCodeRepo = DependencyResolver.Current.GetService<IRepository<ProductPriceCode>>();
-
         private static string GetPublicUrl(this HtmlHelper helper)
         {
             var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
@@ -108,6 +106,7 @@ namespace System.Web.Mvc
 
         public static IQueryable<ProductPriceCode> PriceCodes(this Product product)
         {
+            IRepository<ProductPriceCode> _ProductPriceCodeRepo = DependencyResolver.Current.GetService<IRepository<ProductPriceCode>>();
             return _ProductPriceCodeRepo.All.Where(x => x.PriceGroup.Trim() == product.PriceCodeGroup.Trim());
         }
     }

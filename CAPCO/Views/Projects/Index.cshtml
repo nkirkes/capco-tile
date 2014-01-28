@@ -1,7 +1,8 @@
 ﻿@model ICollection<CAPCO.Infrastructure.Domain.Project>
 @{
     ViewBag.Title = "My Projects";
-    var currentUser = MembershipHelpers.GetCurrentUser();
+    //var currentUser = MembershipHelpers.GetCurrentUser();
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
     var userPricePreference = (CAPCO.Infrastructure.Domain.PricePreferences)Enum.Parse(typeof(CAPCO.Infrastructure.Domain.PricePreferences), currentUser.PricePreference);
     var isServiceProvider = Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString());
     var isPricingEnabled = ViewBag.IsPricingEnabled;

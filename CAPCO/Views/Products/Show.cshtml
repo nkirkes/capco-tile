@@ -2,7 +2,8 @@
 
 @{
     ViewBag.Title = Model != null ? Model.ItemNumber : "Product Details";
-    var currentUser = MembershipHelpers.GetCurrentUser();
+    //var currentUser = MembershipHelpers.GetCurrentUser();
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
     var isPricingEnabled = ViewBag.IsPricingEnabled;
 }
 

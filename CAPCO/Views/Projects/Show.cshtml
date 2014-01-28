@@ -1,7 +1,8 @@
 ﻿@model CAPCO.Infrastructure.Domain.Project
 @{
     ViewBag.Title = Model.ProjectName;
-    var currentUser = MembershipHelpers.GetCurrentUser();
+    //var currentUser = MembershipHelpers.GetCurrentUser();
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
     var isProjectOwner = currentUser == Model.CreatedBy;
     var pricePreference = !String.IsNullOrWhiteSpace(Model.PriceDisplayPreference) ? (CAPCO.Infrastructure.Domain.PricePreferences)Enum.Parse(typeof(CAPCO.Infrastructure.Domain.PricePreferences), Model.PriceDisplayPreference) : CAPCO.Infrastructure.Domain.PricePreferences.None;
     var isPricingEnabled = ViewBag.IsPricingEnabled;

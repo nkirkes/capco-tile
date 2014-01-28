@@ -51,7 +51,6 @@ namespace CAPCO.Infrastructure.Services
 
         public IEnumerable<ContentSection> GetContentSections(string[] sectionNames)
         {
-            // TODO: test this for speed; could try to make it only select the sections we want, but the table is tiny.
             var query = _ContentSectionRepository.All.ToList();
             foreach(var name in sectionNames)
             {

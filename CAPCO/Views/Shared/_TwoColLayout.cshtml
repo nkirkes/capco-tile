@@ -1,6 +1,7 @@
 ﻿@{ 
     Layout = "~/Views/Shared/_Global.cshtml";
-    var currentUser = Membership.GetUser() != null ? Membership.GetUser().GetMember() : null;
+    //var currentUser = Membership.GetUser() != null ? Membership.GetUser().GetMember() : null;
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser; 
 }
 <section id="main" style="min-height: 500px;">
     <div class="container">

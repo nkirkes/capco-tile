@@ -1,5 +1,6 @@
 ﻿@{
-    var currentUser = MembershipHelpers.GetCurrentUser();
+    //var currentUser = MembershipHelpers.GetCurrentUser();
+    var currentUser = ViewBag.CurrentUser as CAPCO.Infrastructure.Domain.ApplicationUser;
     var inviteKey = Request.QueryString["t"] ?? "";
 }
 

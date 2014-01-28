@@ -28,7 +28,7 @@ namespace CAPCO.Controllers
         public ApplicationUser CurrentUser {
             get
             {
-                return Membership.GetUser().GetMember();
+                return MembershipHelpers.GetCurrentUser();// Membership.GetUser().GetMember();
             }
         }
 
@@ -39,6 +39,7 @@ namespace CAPCO.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            ViewBag.CurrentUser = CurrentUser;
             ViewBag.BuildVersion = Assembly.GetAssembly(typeof(ApplicationController)).GetName().Version.ToString();
             ViewBag.FooterSection = _ContentService.GetContentSection(ContentSectionNames.Footer.ToString());
             @ViewBag.BlogUrl = ConfigurationManager.AppSettings["BlogUrl"];

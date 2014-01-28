@@ -12,8 +12,8 @@ namespace CAPCO.Infrastructure.Data
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
-        private readonly CAPCOContext _CapcoContext;
-        public Repository(CAPCOContext context)
+        private readonly IDataContext _CapcoContext;
+        public Repository(IDataContext context)
         {
             _CapcoContext = context;
         }
