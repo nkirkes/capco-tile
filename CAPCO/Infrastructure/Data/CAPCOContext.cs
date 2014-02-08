@@ -180,10 +180,15 @@ namespace CAPCO.Infrastructure.Data
                 .WithMany()
                 .Map(x => x.ToTable("ProductRelatedFinishes"));
 
-            modelBuilder.Entity<Product>()
-                .HasMany<ProductPriceCode>(x => x.ProductPriceCodes)
-                .WithMany(x => x.Products)
-                .Map(x => x.ToTable("ProductPriceCodes").MapLeftKey("PriceGroup").MapRightKey("PriceCodeGroup"));
+            //modelBuilder.Entity<Product>()
+            //.HasMany<ProductPrice>(p => p.Prices)
+            //.WithMany()
+            //.Map(t => t.MapLeftKey("ProductId"));
+
+            //modelBuilder.Entity<Product>().HasOptional(x => x.ProductPriceCodes).WithOptionalDependent().Map(x => x.MapKey("ProductPriceCode").ToTable("ProductPriceCodes"));
+                //.HasMany<ProductPriceCode>(x => x.ProductPriceCodes)
+                //.WithMany(x => x.Products)
+                //.Map(x => x.ToTable("ProductPriceCodes").MapLeftKey("PriceGroup").MapRightKey("PriceCodeGroup"));
         }
     }
 }

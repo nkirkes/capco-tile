@@ -16,6 +16,7 @@ namespace CAPCO.Infrastructure.Domain
             RelatedAccents = new List<Product>();
             RelatedTrims = new List<Product>();
             RelatedFinishes = new List<Product>();
+            Prices = new List<ProductPrice>();
         }
 
         public string PriceCodeGroup { get; set; }
@@ -132,9 +133,9 @@ namespace CAPCO.Infrastructure.Domain
         
         [DisplayName("Projects")]
         public virtual ICollection<Project> ProductBundles { get; set; }
-
+        //[ForeignKey("PriceGroup")]
         public virtual ICollection<ProductPriceCode> ProductPriceCodes { get; set; }
-
+        public virtual ICollection<ProductPrice> Prices { get; set; } 
 
         public string DetailImageFileName
         {

@@ -17,4 +17,12 @@ namespace CAPCO.Infrastructure.Domain
         public decimal Price { get; set; }
         public ICollection<Product> Products { get; set; }
     }
+
+    [Table("vw_ProductPrices")]
+    public class ProductPrice : Entity
+    {
+        public Product Product { get; set; }
+        public string PriceCode { get; set; }
+        public decimal Price { get; set; }
+    }
 }
