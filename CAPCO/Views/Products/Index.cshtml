@@ -244,22 +244,10 @@
                                                 { 
                                                     <label>Use:</label> @prod.Usage.Name<br />
                                                 }
-                                                @if (isPricingEnabled && currentUser != null && (Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString()) && currentUser.DiscountCode != null))
+                                                @if (currentUser != null && Roles.IsUserInRole(CAPCO.Infrastructure.Domain.UserRoles.ServiceProviders.ToString()))
                                                 {
-                                                    if (currentUser.PricePreference == CAPCO.Infrastructure.Domain.PricePreferences.CostOnly.ToString())
-                                                    {
-                                                        <div><label class="product-details">Cost: </label>@String.Format("{0:c}", prod.ProviderCost(currentUser))</div>
-                                                    }
-                                                    else if (currentUser.PricePreference == CAPCO.Infrastructure.Domain.PricePreferences.Both.ToString())
-                                                    {
-                                                        <div><label class="product-details">Retail: </label>@String.Format("{0:c}", prod.ProviderRetail(currentUser))</div>
-                                                        <div><label class="product-details">Cost: </label>@String.Format("{0:c}", prod.ProviderCost(currentUser))</div>
-                                                    }
-                                                    else if (currentUser.PricePreference == CAPCO.Infrastructure.Domain.PricePreferences.RetailOnly.ToString())
-                                                    {
-                                                        <div><label class="product-details">Retail: </label>@String.Format("{0:c}", prod.ProviderRetail(currentUser))</div>
-                                                    }
-                                                }
+						                            <br /><label>To view pricing, click the item number.</label>
+						                        }
                                             </div>   
                                     </td>
                                 </tr>

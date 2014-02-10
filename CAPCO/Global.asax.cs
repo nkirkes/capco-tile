@@ -17,12 +17,12 @@ namespace CAPCO
     {
         protected void Application_BeginRequest()
         {
-            //if (Request.IsLocal) { MiniProfiler.Start(); }
+            if (Request.IsLocal) { MiniProfiler.Start(); }
         }
 
         protected void Application_EndRequest()
         {
-            //MiniProfiler.Stop();
+            MiniProfiler.Stop();
         }
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
@@ -43,13 +43,12 @@ namespace CAPCO
 
         protected void Application_Start()
         {
-            //MiniProfilerEF.Initialize();
+            MiniProfilerEF.Initialize();
             AreaRegistration.RegisterAllAreas();
 
             var builder = new ContainerBuilder();
             builder.RegisterControllers(Assembly.GetExecutingAssembly());
 
-            //builder.Register(c => new CAPCOContext()).InstancePerLifetimeScope();
             builder.RegisterType<CAPCOContext>()
                    .As<IDataContext>()
                    .InstancePerLifetimeScope();
