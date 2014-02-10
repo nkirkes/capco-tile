@@ -178,20 +178,20 @@ namespace CAPCO.Controllers
 
         public ActionResult Show(int id)
         {
-            var product = productRepository.AllIncluding(x => x.Manufacturer).FirstOrDefault(x => x.Id == id);
+            var product = productRepository.AllIncluding(x => x.ProductSeries, x => x.Manufacturer, x => x.RelatedSizes, x => x.RelatedAccents, x => x.RelatedTrims, x => x.RelatedFinishes).FirstOrDefault(x => x.Id == id);
             if (product == null)
             {
                 this.FlashError("Sorry, but I couldn't find that product. Please try expanding your search.");
                 return RedirectToAction("Search");
             }
 
-            var relatedProducts = productRepository.FindBySpecification(new ProductsBySeriesSpecification(product.Series)).ToList();
-            if (relatedProducts != null && relatedProducts.Any())
-            { 
-                if (relatedProducts.Contains(product))
-                    relatedProducts.Remove(product);
-                ViewBag.RelatedProducts = relatedProducts.Take(4).ToList();
-            }
+            //var relatedProducts = productRepository.FindBySpecification(new ProductsBySeriesSpecification(product.Series)).ToList();
+            //if (relatedProducts != null && relatedProducts.Any())
+            //{ 
+            //    if (relatedProducts.Contains(product))
+            //        relatedProducts.Remove(product);
+            //    ViewBag.RelatedProducts = relatedProducts.Take(4).ToList();
+            //}
 
             return View(productRepository.Find(id));
         }

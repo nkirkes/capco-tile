@@ -734,6 +734,7 @@
     <Content Include="Areas\Admin\Views\Slider\New.cshtml" />
     <Content Include="Areas\Admin\Views\Slider\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Slider\_CreateOrEdit.cshtml" />
+    <None Include="Properties\PublishProfiles\File System.pubxml" />
     <None Include="Properties\PublishProfiles\File.pubxml" />
     <None Include="Properties\PublishProfiles\FileProfile.pubxml" />
     <Content Include="Public\Assets\ProjectTutorial.pdf">

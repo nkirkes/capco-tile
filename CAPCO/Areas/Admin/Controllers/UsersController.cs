@@ -24,17 +24,19 @@ namespace CAPCO.Areas.Admin.Controllers
         private readonly IRepository<PickupLocation> _LocationRepository;
         private readonly IRepository<DiscountCode> _DiscountCodeRepository;
         private readonly IRepository<ApplicationUser> applicationuserRepository;
+        private readonly IRepository<AccountRequest> _AccountRequestRepository;
         
 
 		public UsersController(IRepository<ApplicationUser> applicationuserRepository, 
             IApplicationUserService appUserService,
             IRepository<PickupLocation> locationRepository,
-            IRepository<DiscountCode> discountCodeRepository)
+            IRepository<DiscountCode> discountCodeRepository, IRepository<AccountRequest> accountRequestRepository)
         {
             _DiscountCodeRepository = discountCodeRepository;
             _LocationRepository = locationRepository;
             _AppUserService = appUserService;
 			this.applicationuserRepository = applicationuserRepository;
+            _AccountRequestRepository = accountRequestRepository;
         }
 
         private void Init()
@@ -226,6 +228,17 @@ namespace CAPCO.Areas.Admin.Controllers
             {
                 var user = applicationuserRepository.Find(id);
                 string username = user.UserName;
+
+
+
+                var accountRequestIds = _AccountRequestRepository.All.Where(x => x.User.Id == id).Select(x => x.Id);
+                if (accountRequestIds.Any())
+                {
+                    foreach (var requestId in accountRequestIds)
+                    {
+                        _AccountRequestRepository.Delete(requestId);
+                    }
+                }
 
                 applicationuserRepository.Detach(user);
                 applicationuserRepository.Delete(id);
