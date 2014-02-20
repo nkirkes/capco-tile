@@ -44,20 +44,21 @@ namespace CAPCO.Controllers
 
         public ActionResult All()
         {
-            if (CurrentUser == null)
+            var currUser = (ApplicationUser)ViewBag.CurrentUser;
+            if (currUser == null)
                 return RedirectToAction("index", "root");
 
             var model = new PriceListViewModel();
-            model.PriceDisplayPreference = (PricePreferences)Enum.Parse(typeof(PricePreferences), CurrentUser.PricePreference);
+            model.PriceDisplayPreference = (PricePreferences)Enum.Parse(typeof(PricePreferences), currUser.PricePreference);
             var query = _ProductRepository.AllIncluding(x => x.Manufacturer, x => x.ProductSeries, x => x.Usage, x => x.Category, x => x.Color, x => x.Finish, x => x.Group, x => x.Size, x => x.Status, x => x.Type, x => x.UnitOfMeasure, x => x.Variation);
             model.ProviderCosts = new List<ProductPriceCode>();
             var reqPriceCodes = query.Select(x => x.PriceCodeGroup).Distinct();
-            model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == CurrentUser.PriceCode || ppc.PriceCode == CurrentUser.RetailCode)) select ppc).ToList();
+            model.ProviderCosts = (from ppc in _ProductPriceCodeRepo.All where (reqPriceCodes.Contains(ppc.PriceGroup) && (ppc.PriceCode == currUser.PriceCode || ppc.PriceCode == currUser.RetailCode)) select ppc).ToList();
                         
             model.AllManufacturers = _MfgRepo.All.ToList();
             model.SearchType = "all";
             model.PriceListProducts = query.ToList();
-            ViewBag.CurrentUser = CurrentUser;
+            //ViewBag.CurrentUser = CurrentUser;
             return View("index", model);
         }
 
