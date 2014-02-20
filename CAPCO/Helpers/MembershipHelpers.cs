@@ -29,15 +29,14 @@ namespace System.Web.Mvc
         {
             IRepository<ApplicationUser> _AppUserRepo = DependencyResolver.Current.GetService<IRepository<ApplicationUser>>(); 
             
-
-                try
-                {
-                    return _AppUserRepo.All.FirstOrDefault(member => member.UserName == userName);
-                }
-                catch (Exception ex)
-                {
-                    return null;
-                }
+            try
+            {
+                return _AppUserRepo.AllIncluding(x => x.DiscountCode, x => x.DefaultLocation, x => x.Projects, x => x.Notifications).FirstOrDefault(member => member.UserName == userName);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
             
         }
 
