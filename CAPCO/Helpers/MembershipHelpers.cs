@@ -6,6 +6,7 @@ using System.Web.Security;
 using CAPCO.Infrastructure.Data;
 using CAPCO.Infrastructure.Domain;
 using System.Configuration;
+using Glimpse.AspNet.Tab;
 
 namespace System.Web.Mvc
 {
@@ -42,7 +43,23 @@ namespace System.Web.Mvc
 
         public static ApplicationUser GetCurrentUser()
         {
-            return Membership.GetUser().GetMember();
+            if (HttpContext.Current.Session != null)
+            {
+                if (HttpContext.Current.Request.IsAuthenticated)
+                {
+                    if (HttpContext.Current.Session != null && HttpContext.Current.Session["CurrentUser"] == null)
+                        HttpContext.Current.Session.Add("CurrentUser", Membership.GetUser().GetMember());
+
+                    return (ApplicationUser) HttpContext.Current.Session["CurrentUser"];
+                }
+
+                // not auth'd, user shouldn't be stored, let's ensure they are cleared out.
+                if (HttpContext.Current.Session["CurrentUser"] != null)
+                    HttpContext.Current.Session.Remove("CurrentUser");
+            }
+
+            return null;
+
         }
 
         public static List<Project> Projects(this ApplicationUser user)

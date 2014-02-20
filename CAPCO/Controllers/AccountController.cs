@@ -93,7 +93,7 @@ namespace CAPCO.Controllers
                         }
 
                         FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-
+                        
                         if (!String.IsNullOrWhiteSpace(model.InvitationKey))
                         {
                             // this is an invitee, so we need to activate them, log them in, and take them to the project
@@ -144,8 +144,8 @@ namespace CAPCO.Controllers
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
-            if (HttpContext.Session != null)
-                HttpContext.Session["CurrentMember"] = null;
+            if (HttpContext.Session != null && HttpContext.Session["CurrentUser"] != null)
+                HttpContext.Session.Remove("CurrentUser");
             return RedirectToAction("Index", "Home");
         }
 
@@ -447,6 +447,21 @@ namespace CAPCO.Controllers
             }
 
             return RedirectToAction("Index", "Root", new { area = "" });
+        }
+
+
+        private void StoreCurrentUser(HttpContext httpContext, ApplicationUser currentUser)
+        {
+            if (httpContext.Request.IsAuthenticated)
+            {
+                if (httpContext.Session["CurrentUser"] == null)
+                    httpContext.Session.Add("CurrentUser", Membership.GetUser().GetMember());
+            }
+
+            // user shouldn't be stored, let's ensure they are cleared out.
+            if (httpContext.Session["CurrentUser"] != null)
+                httpContext.Session.Remove("CurrentUser");
+
         }
     }
 }

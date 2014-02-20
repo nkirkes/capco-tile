@@ -22,13 +22,12 @@ namespace CAPCO.Controllers
         public ApplicationController()
         {
             _ContentService = DependencyResolver.Current.GetService<IContentService>();
-            //CurrentUser = Membership.GetUser().GetMember();
         }
 
         public ApplicationUser CurrentUser {
             get
             {
-                return MembershipHelpers.GetCurrentUser();// Membership.GetUser().GetMember();
+                return MembershipHelpers.GetCurrentUser();
             }
         }
 
