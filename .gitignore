@@ -2,6 +2,7 @@
 [Bb]in/
 [Bb]in (1)/
 [Oo]bj/
+builds/
 
 # Data Folders and files
 *.mdf
