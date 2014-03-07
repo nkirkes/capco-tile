@@ -146,7 +146,7 @@ namespace CAPCO.Controllers
 
         public ActionResult Edit(int id)
         {
-            var project = _ProjectRepository.Find(id);
+            var project = _ProjectRepository.AllIncluding(x => x.Comments, x => x.Invitations, x => x.Products, x => x.Users).FirstOrDefault(x => x.Id == id);
             if (project == null)
             {
                 this.FlashError("Oops, that project doesn't seem to exist.");
@@ -165,7 +165,7 @@ namespace CAPCO.Controllers
         [HttpPut, ValidateAntiForgeryToken()]
         public ActionResult Update(int id, Project project)
         {
-            var projectToUpdate = _ProjectRepository.Find(id);
+            var projectToUpdate = _ProjectRepository.AllIncluding(x => x.Comments, x => x.Invitations, x => x.Products, x => x.Users).FirstOrDefault(x => x.Id == id);
             if (projectToUpdate == null)
             {
                 this.FlashError("Oops, that project doesn't seem to exist.");
@@ -217,7 +217,7 @@ namespace CAPCO.Controllers
 
         public ActionResult RemoveProduct(int id, int productId) // productId refers to ProjectItem Id
         {
-            var projectToUpdate = _ProjectRepository.Find(id);
+            var projectToUpdate = _ProjectRepository.AllIncluding(x => x.Comments, x => x.Invitations, x => x.Products, x => x.Users).FirstOrDefault(x => x.Id == id);
             if (projectToUpdate == null)
             {
                 this.FlashError("Oops, that project doesn't seem to exist.");
@@ -252,7 +252,7 @@ namespace CAPCO.Controllers
 
         public ActionResult UpdateItemComment(int id, int projectId)
         {
-            var project = _ProjectRepository.Find(projectId);
+            var project = _ProjectRepository.AllIncluding(x => x.Comments, x => x.Invitations, x => x.Products, x => x.Users).FirstOrDefault(x => x.Id == id);
             var item = project.Products.FirstOrDefault(x => x.Id == id);
 
             try
@@ -272,7 +272,7 @@ namespace CAPCO.Controllers
 
         public ActionResult RemoveMember(int id, int memberId)
         {
-            var projectToUpdate = _ProjectRepository.Find(id);
+            var projectToUpdate = _ProjectRepository.AllIncluding(x => x.Comments, x => x.Invitations, x => x.Products, x => x.Users).FirstOrDefault(x => x.Id == id);
             if (projectToUpdate == null)
             {
                 this.FlashError("Oops, that project doesn't seem to exist.");
@@ -307,7 +307,7 @@ namespace CAPCO.Controllers
 
         public ActionResult RemoveInvite(int id, int inviteId)
         {
-            var projectToUpdate = _ProjectRepository.Find(id);
+            var projectToUpdate = _ProjectRepository.AllIncluding(x => x.Comments, x => x.Invitations, x => x.Products, x => x.Users).FirstOrDefault(x => x.Id == id);
             if (projectToUpdate == null)
             {
                 this.FlashError("Oops, that project doesn't seem to exist.");
