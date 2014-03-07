@@ -420,7 +420,7 @@ namespace CAPCO.Controllers
 
         public ActionResult Delete(int id)
         {
-            var project = _ProjectRepository.Find(id);
+            var project = _ProjectRepository.AllIncluding(x => x.Comments, x => x.Invitations, x => x.Products, x => x.Users).FirstOrDefault(x => x.Id == id);
             if (project.CreatedBy == CurrentUser)
             {
                 while (project.Products.Any())
