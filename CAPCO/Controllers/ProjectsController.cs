@@ -43,7 +43,12 @@ namespace CAPCO.Controllers
 
         public ActionResult Index()
         {
-            return View(CurrentUser.Projects);
+            var projects =
+                _ProjectRepository.AllIncluding(x => x.Comments, x => x.Products, x => x.Users, x => x.Invitations)
+                    .Where(x => x.CreatedBy.UserName == CurrentUser.UserName)
+                    .ToList();
+
+            return View(projects);
         }
         
         public ActionResult Archives()
