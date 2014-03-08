@@ -336,7 +336,7 @@ namespace CAPCO.Controllers
 
         public ActionResult DeleteComment(int id)
         {
-            var comment = _ProjectCommentRepository.Find(id);
+            var comment = _ProjectCommentRepository.AllIncluding(x => x.Project).FirstOrDefault(x => x.Id == id);
             if (comment == null)
             {
                 this.FlashError("Oops, that comment doesn't seem to exist.");
