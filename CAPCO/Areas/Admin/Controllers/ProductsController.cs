@@ -88,7 +88,18 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ViewResult Show(int id)
         {
-            return View(_productRepository.Find(id));
+            Product prod = _productRepository
+                .AllIncluding(x =>
+                    x.Category,
+                    x => x.Color,
+                    x => x.Finish,
+                    x => x.Group,
+                    x => x.Manufacturer,
+                    x => x.Size,
+                    x => x.Status,
+                    x => x.Type,
+                    x => x.Variation).FirstOrDefault(x => x.Id == id);
+            return View(prod);
         }
 
         public ActionResult New()
@@ -195,7 +206,18 @@ namespace CAPCO.Areas.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
-            Product prod = _productRepository.AllIncluding(x => x.Category, x => x.Color, x => x.Finish, x => x.Group, x => x.Manufacturer, x => x.Size, x => x.Status, x => x.Type, x => x.Variation).FirstOrDefault(x => x.Id == id);
+            Product prod = _productRepository
+                .AllIncluding(x =>
+                    x.Category,
+                    x => x.Color,
+                    x => x.Finish,
+                    x => x.Group,
+                    x => x.Manufacturer,
+                    x => x.Size,
+                    x => x.Status,
+                    x => x.Type,
+                    x => x.Variation).FirstOrDefault(x => x.Id == id);
+            //Product prod = _productRepository.Find(id, x => x.Group);
             if (prod == null)
             {
                 this.FlashError("There is no product in the database with that id.");

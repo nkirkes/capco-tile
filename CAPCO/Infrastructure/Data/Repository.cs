@@ -35,7 +35,7 @@ namespace CAPCO.Infrastructure.Data
             {
                 query = query.Include(includeProperty);
             }
-            return query;
+            return query.ToList().AsQueryable();
         }
 
         public TEntity Find(int id)
