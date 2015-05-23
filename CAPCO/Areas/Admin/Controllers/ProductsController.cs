@@ -29,6 +29,7 @@ namespace CAPCO.Areas.Admin.Controllers
         private readonly IRepository<Manufacturer> _ManufacturerRepo;
         private readonly IRepository<ProductUsage> _ProductUsageRepo;
         private readonly IRepository<Project> _ProjectRepo;
+        private readonly IRepository<ProjectItem> _ProjectItemRepo; 
   
   
   
@@ -44,7 +45,8 @@ namespace CAPCO.Areas.Admin.Controllers
             IRepository<ProductVariation> variationRepo,
             IRepository<Manufacturer> manufacturerRepo,
             IRepository<ProductUsage> productUsageRepo,
-            IRepository<Project> projectRepo)
+            IRepository<Project> projectRepo,
+            IRepository<ProjectItem> projectItemRepo)
         {
             _ProjectRepo = projectRepo;
             _ProductUsageRepo = productUsageRepo;
@@ -59,6 +61,7 @@ namespace CAPCO.Areas.Admin.Controllers
 			this._productsizeRepository = productsizeRepository;
 			this._productfinishRepository = productfinishRepository;
 			this._productRepository = productRepository;
+		    _ProjectItemRepo = projectItemRepo;
         }
 
         public ViewResult Index(PagedProductsViewModel model)
@@ -379,36 +382,43 @@ namespace CAPCO.Areas.Admin.Controllers
             try
             {
                 var prod = _productRepository.Find(id);
+
                 if (prod != null)
                 {
-                    var projects = _ProjectRepo.AllIncluding(x => x.Products).Where(x => x.Products.Any(y => y.Product.Id == prod.Id));
-                    if (projects.Any())
+                    // related projects
+
+                    // any related project items?
+                    var projectItems = _ProjectItemRepo.All.Where(x => x.Product.Id == id).ToList();
+                
+                    if (projectItems.Any())
                     {
-                        foreach (var project in projects)
+                        foreach (var item in projectItems)
                         {
-                            var items = project.Products.Where(x => x.Product != null && x.Product.Id == prod.Id);
-                            foreach (var projectItem in items)
+                            if (item.Project != null)
                             {
-                                projectItem.Comment +=
-                                    string.Format(
-                                        "<p>Item number {0} has been removed from our catalog and is no longer associated with your project. If you have any questions or concerns, please contact us.</p>",
-                                        prod.ItemNumber);
-                                projectItem.Product = null;
-                                
+                                item.Comment +=
+                                        string.Format(
+                                            "<p>Item number {0} has been removed from our catalog and is no longer associated with your project. If you have any questions or concerns, please contact us.</p>",
+                                            prod.ItemNumber);
+                                item.Product = null;
+                                _ProjectItemRepo.InsertOrUpdate(item);
                             }
-                            _ProjectRepo.InsertOrUpdate(project);
-                            
+                            else
+                            {
+                                _ProjectItemRepo.Delete(item.Id);
+                            }
                         }
-                        
+                        _ProjectItemRepo.Save();
                     }
 
-                    var relProds = _productRepository.AllIncluding(x => x.RelatedSizes, x => x.RelatedAccents, x => x.RelatedTrims, x => x.RelatedFinishes)
+                    // related products
+                    var relProds = _productRepository
+                        .AllIncluding(x => x.RelatedSizes, x => x.RelatedAccents, x => x.RelatedTrims, x => x.RelatedFinishes)
                         .Where(x => x.RelatedSizes.Any(y => y.Id == prod.Id) || x.RelatedTrims.Any(y => y.Id == prod.Id) || x.RelatedAccents.Any(y => y.Id == prod.Id) || x.RelatedFinishes.Any(y => y.Id == prod.Id)).ToList();
                     if (relProds.Count > 0)
                     {
                         foreach (var relProd in relProds)
                         {
-                            //if (relProd.RelatedSizes.Any(x => x.Id == prod.Id))
                             relProd.RelatedSizes.Remove(prod);
                             relProd.RelatedAccents.Remove(prod);
                             relProd.RelatedTrims.Remove(prod);
@@ -425,15 +435,15 @@ namespace CAPCO.Areas.Admin.Controllers
                     prod.RelatedProducts.Clear();
                     prod.RelatedSizes.Clear();
                     prod.RelatedFinishes.Clear();
-                }
 
-                _productRepository.InsertOrUpdate(prod);
-                _productRepository.Save();
+                    _productRepository.InsertOrUpdate(prod);
+                    _productRepository.Save();
+                }
 
                 _productRepository.Delete(id);
                 _productRepository.Save();
 
-                _ProjectRepo.Save();
+                //_ProjectRepo.Save();
 
                 this.FlashInfo("The product was successfully deleted.");
             }

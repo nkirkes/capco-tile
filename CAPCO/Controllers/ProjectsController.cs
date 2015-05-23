@@ -21,7 +21,8 @@ namespace CAPCO.Controllers
         private readonly IRepository<ProjectComment> _ProjectCommentRepository;
         private readonly IRepository<PickupLocation> _PickupLocationRepo;
         private readonly IRepository<ProjectInvitation> _InviteRepo;
-        private readonly IRepository<ApplicationUser> _AppUserRepo; 
+        private readonly IRepository<ApplicationUser> _AppUserRepo;
+        private readonly IRepository<ProjectItem> _ProjectItemRepo; 
         
         /// <summary>
         /// Initializes a new instance of the ProjectsController class.
@@ -31,7 +32,8 @@ namespace CAPCO.Controllers
             IRepository<ProjectComment> projectCommentRepository,
             IRepository<PickupLocation> pickupLocationRepo,
             IRepository<ProjectInvitation> inviteRepo,
-            IRepository<ApplicationUser> appUserRepo)
+            IRepository<ApplicationUser> appUserRepo,
+            IRepository<ProjectItem> projectItemRepo)
         {
             _InviteRepo = inviteRepo;
             _PickupLocationRepo = pickupLocationRepo;
@@ -39,6 +41,7 @@ namespace CAPCO.Controllers
             _ProjectRepository = projectRepository;
             _ProductRepository = productRepository;
             _AppUserRepo = appUserRepo;
+            _ProjectItemRepo = projectItemRepo;
         }
 
         public ActionResult Index()
@@ -428,9 +431,14 @@ namespace CAPCO.Controllers
             var project = _ProjectRepository.AllIncluding(x => x.Comments, x => x.Invitations, x => x.Products, x => x.Users).FirstOrDefault(x => x.Id == id);
             if (project.CreatedBy == CurrentUser)
             {
-                while (project.Products.Any())
+                if (project.Products.Any())
                 {
-                    project.Products.Remove(project.Products.First());
+                    var productItemIds = project.Products.Select(x => x.Product.Id).ToList();
+                    foreach (var productItemId in productItemIds)
+                    {
+                        _ProjectItemRepo.Delete(productItemId);
+                        _ProjectItemRepo.Save();
+                    }
                 }
 
                 _ProjectRepository.Delete(id);
