@@ -40,12 +40,14 @@ namespace CAPCO.Controllers
 
         public ActionResult Access()
         {
-            return Redirect("http://216.197.120.185/access");
+            var uri = ConfigurationManager.AppSettings["access-uri"];
+            return Redirect(uri);
         }
 
         public ActionResult Showroom()
         {
-            return Redirect("http://216.197.120.185/showroom");
+            var uri = ConfigurationManager.AppSettings["showroom-uri"];
+            return Redirect(uri);
         }
 
         
