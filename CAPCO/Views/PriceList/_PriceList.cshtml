@@ -14,7 +14,7 @@
         {
             <h2>@group.Key.Section</h2>
                 
-                <p>All Prices FOB CAPCO @currentUser.DefaultLocation.Name - Prices subject to change without notice<br />
+                <p>All Prices FOB CAPCO @currentUser.DefaultLocation.Name @(currentUser.DiscountCode == null ? "" : String.Format("- {0}", currentUser.DiscountCode.Code)) - Prices subject to change without notice<br />
                     Inspect before installation - Use constitutes acceptance</p>
             
             foreach (var series in group.Value.OrderBy(x => x.Key.Name))

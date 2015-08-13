@@ -201,6 +201,10 @@ namespace CAPCO.Controllers
             // build string
             var sw = new StringWriter();
             //write the header
+            sw.WriteLine("Price list generated {0} for {1} - {2}",
+                        DateTime.Today.ToShortDateString(),
+                        CurrentUser.DefaultLocation.Name,
+                        CurrentUser.DiscountCode.Code);
             switch (CurrentUser.PricePreference)
             {
                 case "Both":

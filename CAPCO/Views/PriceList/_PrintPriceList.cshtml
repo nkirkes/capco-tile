@@ -24,14 +24,14 @@
                     <td width="10">&nbsp;</td>
                     <td valign="top" colspan="2">
                         <div class="headline">
-                            <font>Price List for @(!String.IsNullOrWhiteSpace(currentUser.CompanyName) ? currentUser.CompanyName : currentUser.FullName)</font>
+                            <font>Price List for @(!String.IsNullOrWhiteSpace(currentUser.CompanyName) ? currentUser.CompanyName : currentUser.FullName) - @currentUser.DefaultLocation.Name @(currentUser.DiscountCode == null ? "" : String.Format("- {0}", currentUser.DiscountCode.Code))</font>
                         </div>
                         @DateTime.Today.ToString("MMMM dd yyyy")<br>
                         <div align="center">
                             <h2>@group.Key.Section</h2>
                         </div>
                         <div align="center">
-                            <p>All Prices FOB CAPCO @currentUser.DefaultLocation.Name - Prices subject to change without notice<br />
+                            <p>All Prices FOB CAPCO @currentUser.DefaultLocation.Name @(currentUser.DiscountCode == null ? "" : String.Format("- {0}", currentUser.DiscountCode.Code)) - Prices subject to change without notice<br />
                                 Inspect before installation - Use constitutes acceptance</p> 
                         </div>
                     </td>

@@ -8,7 +8,9 @@
                .ToDictionary(e => e.Key, e => e));
 }
 
-<div style="width:750px;font-weight:bold;text-align:center;">Price list for @DateTime.Today.ToString("MMMM dd yyyy")</div>
+<div style="width:750px;font-weight:bold;text-align:center;">
+    Price List for @(currentUser.DefaultLocation == null ? "" : currentUser.DefaultLocation.Name) @(currentUser.DiscountCode == null ? "" : String.Format("- {0}", currentUser.DiscountCode.Code)). Generated @DateTime.Today.ToString("MMMM dd yyyy")
+</div>
     @if (Model.PriceListProducts != null && Model.PriceListProducts.Any())
     {
         <table style="width: 750px;" border="1" cellpadding="3" cellspacing="0">
