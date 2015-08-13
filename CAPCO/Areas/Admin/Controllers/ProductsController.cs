@@ -251,6 +251,7 @@ namespace CAPCO.Areas.Admin.Controllers
                 prod.CartonQuantity = product.CartonQuantity;
                 prod.CoefficientOfFrictionWet = product.CoefficientOfFrictionWet;
                 prod.CoefficientOfFrictionDry = product.CoefficientOfFrictionDry;
+                prod.Dcof = product.Dcof;
                 prod.BreakingStrength = product.BreakingStrength;
                 prod.WaterAbsorption = product.WaterAbsorption;
                 prod.IsChemicalResistant = product.IsChemicalResistant;

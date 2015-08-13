@@ -58,6 +58,7 @@ namespace CAPCO.Areas.Admin.Models
         public bool OptInSystem;
     }
 
+    // Property order is important! It maps to the incoming CSV format.
     [DelimitedRecord("\t"), IgnoreEmptyLines]
     public class ImportedProduct
     {
@@ -97,5 +98,6 @@ namespace CAPCO.Areas.Admin.Models
         public string StatusChange;
         public string StatusChangeDate;
         public string PriceCodeGroup;
+        public decimal? Dcof;
     }
 }

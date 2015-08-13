@@ -67,6 +67,14 @@
 </div>
 
 <div class="editor-label">
+    @Html.LabelFor(model => model.Dcof)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Dcof)
+    @Html.ValidationMessageFor(model => model.Dcof)
+</div>
+
+<div class="editor-label">
     @Html.LabelFor(model => model.BreakingStrength)
 </div>
 <div class="editor-field">

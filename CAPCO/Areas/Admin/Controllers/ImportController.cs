@@ -518,6 +518,7 @@ namespace CAPCO.Areas.Admin.Controllers
             product.CartonQuantity = item.CartonSize;
             product.CoefficientOfFrictionDry = item.CofDry;
             product.CoefficientOfFrictionWet = item.CofWet;
+            product.Dcof = item.Dcof;
             product.Description = item.Description;
             product.IsChemicalResistant = item.Chemical ?? false;
             product.IsFrostResistant = item.Frost ?? false;

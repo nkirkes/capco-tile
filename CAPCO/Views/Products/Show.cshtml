@@ -210,6 +210,11 @@
                 {
                     <div><label class="product-details">Coefficient Of Friction - Wet:</label> @Model.CoefficientOfFrictionWet</div>
                 }
+                
+                @if (Model.Dcof.HasValue)
+                {
+                    <div><label class="product-details">DCof:</label> @Model.Dcof</div>
+                }
             </div>
         </div>
 

@@ -48,6 +48,9 @@ namespace CAPCO.Infrastructure.Domain
         public decimal? CoefficientOfFrictionDry { get; set; }
         [DisplayName("Coefficient of Friction - Wet")]
         public decimal? CoefficientOfFrictionWet { get; set; }
+        [DisplayName("DCof")]
+        public decimal? Dcof { get; set; }
+
         [DisplayName("Breaking Strength")]
         public string BreakingStrength { get; set; }
         [DisplayName("Water Absorption")]
