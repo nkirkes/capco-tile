@@ -556,6 +556,7 @@ namespace CAPCO.Areas.Admin.Controllers
                 {
                     series = new ProductSeries { Code = Int32.Parse(item.Series) };
                     _ProductSeriesRepo.InsertOrUpdate(series);
+                    _ProductSeriesRepo.Save();
                 }
             }
             
