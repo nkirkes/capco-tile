@@ -98,6 +98,7 @@ namespace CAPCO.Areas.Admin.Models
         public string StatusChange;
         public string StatusChangeDate;
         public string PriceCodeGroup;
-        public decimal? Dcof;
+        public decimal? DcofWet;
+        public decimal? DcofDry;
     }
 }

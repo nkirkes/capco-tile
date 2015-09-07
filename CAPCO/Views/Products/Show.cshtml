@@ -182,40 +182,9 @@
                 
             </div>
 
-            <div class="padded-content" id="product-details">
-                <h2 class="section-title">Technical Data</h2>
-                <p style="font-size: 11px; font-style:italic;">*This technical information is given as accurately as possible and was provided by the manufacturer of this item.</p>
-                @if (!String.IsNullOrWhiteSpace(Model.WaterAbsorption))
-                {
-                    <div><label class="product-details">Water Absorption:</label> @Model.WaterAbsorption</div>
-                }
-                
-                @if (!String.IsNullOrWhiteSpace(Model.BreakingStrength))
-                {
-                    <div><label class="product-details">Breaking Strength:</label> @Model.BreakingStrength</div>
-                }
-                
-                <div><label class="product-details">Chemical Resistance:</label> @(Model.IsChemicalResistant ? "Yes" : "No")</div>
-                <div><label class="product-details">Frost Resistance:</label> @(Model.IsChemicalResistant ? "Yes" : "No")</div>
-                @if (!String.IsNullOrWhiteSpace(Model.ScratchHardiness))
-                {
-                    <div><label class="product-details">Scratch Hardiness:</label> @Model.ScratchHardiness</div>
-                }
-                @if (Model.CoefficientOfFrictionDry.HasValue)
-                {
-                    <div><label class="product-details">Coefficient Of Friction - Dry:</label> @Model.CoefficientOfFrictionDry</div>
-                }
-                
-                @if (Model.CoefficientOfFrictionWet.HasValue)
-                {
-                    <div><label class="product-details">Coefficient Of Friction - Wet:</label> @Model.CoefficientOfFrictionWet</div>
-                }
-                
-                @if (Model.Dcof.HasValue)
-                {
-                    <div><label class="product-details">DCof:</label> @Model.Dcof</div>
-                }
-            </div>
+<!-- Technical Data removed 07/09/15 until data issues are corrected              -->
+<!-- Original page retained as "Show- with Tech Data.cshtml" in "Products" folder -->
+            
         </div>
 
         @if (Model.RelatedSizes.Any())

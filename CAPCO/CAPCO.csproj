@@ -290,6 +290,15 @@
     <Compile Include="Routes.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Public\Archives\frontpage-1-635203927527673515.jpg" />
+    <Content Include="Public\Archives\frontpage-10-635203934987655152.jpg" />
+    <Content Include="Public\Archives\frontpage-3-635203927649900843.jpg" />
+    <Content Include="Public\Archives\frontpage-4-635203927814474101.jpg" />
+    <Content Include="Public\Archives\frontpage-5-635203927926055008.jpg" />
+    <Content Include="Public\Archives\frontpage-6-635203928089565198.jpg" />
+    <Content Include="Public\Archives\frontpage-7-635203928203479267.jpg" />
+    <Content Include="Public\Archives\frontpage-8-635203928315362965.jpg" />
+    <Content Include="Public\Archives\frontpage-9-635203934869195778.jpg" />
     <Content Include="Public\Assets\uploads\frontpage-1-635203927527673515.jpg" />
     <Content Include="Public\Assets\uploads\frontpage-10-635203934987655152.jpg" />
     <Content Include="Public\Assets\uploads\frontpage-3-635203927649900843.jpg" />

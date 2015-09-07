@@ -31,6 +31,7 @@
        column.For(x => MvcHtmlString.Create("<a href='mailto:'" + x.Email + "'>" + x.Email + "</a>")).Named("Email");
        column.For(x => x.Phone).Named("Phone");
        column.For(x => x.Status).Named("Status");
+       column.For(x => x.IsActivated).Named("Is Activated?");
        //column.For(x => Membership.GetUser(x.UserName).IsLockedOut).Named("Locked Out?");
    }).Attributes(id => "resultsGrid")
     </div>

@@ -251,7 +251,6 @@ namespace CAPCO.Areas.Admin.Controllers
                 prod.CartonQuantity = product.CartonQuantity;
                 prod.CoefficientOfFrictionWet = product.CoefficientOfFrictionWet;
                 prod.CoefficientOfFrictionDry = product.CoefficientOfFrictionDry;
-                prod.Dcof = product.Dcof;
                 prod.BreakingStrength = product.BreakingStrength;
                 prod.WaterAbsorption = product.WaterAbsorption;
                 prod.IsChemicalResistant = product.IsChemicalResistant;
@@ -362,6 +361,8 @@ namespace CAPCO.Areas.Admin.Controllers
 
                 prod.YouTubeUrl = product.YouTubeUrl;
                 prod.SizeDescription = product.SizeDescription;
+                prod.DcofWet = product.DcofWet;
+                prod.DcofDry = product.DcofDry;
 
                 _productRepository.InsertOrUpdate(prod);
                 _productRepository.Save();

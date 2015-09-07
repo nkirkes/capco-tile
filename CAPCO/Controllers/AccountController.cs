@@ -438,7 +438,7 @@ namespace CAPCO.Controllers
                 if (customer != null)
                 {
                     new ApplicationUserMailer().Activation(customer).Send();
-                    this.FlashInfo(@"<b>Welcome to The Pype!</b> We have re-sent your activation link via email. It should arrive shortly (but double check your spam filter if it doesn't).");
+                    this.FlashInfo(@"<b>Welcome to Capco Tile!</b> We have re-sent your activation link via email. It should arrive shortly (but double check your spam filter if it doesn't).");
                 }
             }
             catch (Exception ex)

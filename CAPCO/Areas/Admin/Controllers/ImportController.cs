@@ -518,7 +518,6 @@ namespace CAPCO.Areas.Admin.Controllers
             product.CartonQuantity = item.CartonSize;
             product.CoefficientOfFrictionDry = item.CofDry;
             product.CoefficientOfFrictionWet = item.CofWet;
-            product.Dcof = item.Dcof;
             product.Description = item.Description;
             product.IsChemicalResistant = item.Chemical ?? false;
             product.IsFrostResistant = item.Frost ?? false;
@@ -557,6 +556,7 @@ namespace CAPCO.Areas.Admin.Controllers
                     series = new ProductSeries { Code = Int32.Parse(item.Series) };
                     _ProductSeriesRepo.InsertOrUpdate(series);
                     _ProductSeriesRepo.Save();
+                    product.ProductSeries = series;
                 }
             }
             
@@ -597,6 +597,9 @@ namespace CAPCO.Areas.Admin.Controllers
                 product.Usage = _ProductUsageRepository.All.FirstOrDefault(x => x.Code == item.UseCode.Value);
             if (item.Variation.HasValue && item.Variation.Value > 0)
                 product.Variation = _ProductVariationRepository.All.FirstOrDefault(x => x.Code == item.Variation.Value);
+
+            product.DcofWet = item.DcofWet;
+            product.DcofDry = item.DcofDry;
         }
     }
 }

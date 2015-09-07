@@ -154,7 +154,14 @@ namespace CAPCO.Areas.Admin.Controllers
             try
             {
                 var user = applicationuserRepository.Find(applicationuser.Id);
+                
+                
                 var memUser = Membership.GetUser(user.UserName);
+                if (memUser == null && applicationuser.IsActivated)
+                {
+
+                    user.IsActivated = true;
+                }
 
                 user.Email = applicationuser.Email;
 
@@ -171,7 +178,7 @@ namespace CAPCO.Areas.Admin.Controllers
                 user.AccountNumber = applicationuser.AccountNumber;
                 user.City = applicationuser.City;
                 user.CompanyName = applicationuser.CompanyName;
-                
+
                 user.Fax = applicationuser.Fax;
                 user.FirstName = applicationuser.FirstName;
                 user.IsActivated = applicationuser.IsActivated;
