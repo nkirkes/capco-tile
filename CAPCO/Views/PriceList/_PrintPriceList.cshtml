@@ -86,7 +86,7 @@
                                         <td>@(prod.UnitOfMeasure != null ? prod.UnitOfMeasure.Code : "")</td>
                                         <td>@prod.UnitsPerPiece</td>
                                         <td>@prod.CartonQuantity</td>
-                                        <td>@prod.Usage.Code</td>
+                                        <td>@(prod.Usage != null ? prod.Usage.Code.ToString() : "")</td>
                                         @{
                                             var ppc = prod.PriceCodeGroup != null ? Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup.Trim() == prod.PriceCodeGroup.Trim() && x.PriceCode == currentUser.PriceCode) : null;
                                             var ppr = prod.PriceCodeGroup != null ? Model.ProviderCosts.FirstOrDefault(x => x.PriceGroup.Trim() == prod.PriceCodeGroup.Trim() && x.PriceCode == currentUser.RetailCode) : null;
